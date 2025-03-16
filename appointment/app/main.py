@@ -3,7 +3,6 @@ from api.appointment import router as appointment_router
 
 app = FastAPI(title=" API", description="", version="1.0")
 
-# Router'ları ekle
 app.include_router(appointment_router)
 
 if __name__ == "__main__":
