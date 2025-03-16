@@ -1,25 +1,31 @@
 version: "3.8"
 services:
+   rabbitmq:
+      image: rabbitmq:3-management
+      container_name: rabbitmq
+      ports:
+         - "5672:5672"   # AMQP protokolü için
+         - "15672:15672" # RabbitMQ Management UI için
+      environment:
+         RABBITMQ_DEFAULT_USER: guest
+         RABBITMQ_DEFAULT_PASS: guest
+
    notification:
-      
       build:
          context: .
          dockerfile: notification/Dockerfile
-    
       container_name: notificationservice
-
       ports:
          - "8002:8000"
+      depends_on:
+         - rabbitmq
 
-
-  
    appointment:
-    
       build:
-          context: .
-          dockerfile: appointment/Dockerfile
-    
+         context: .
+         dockerfile: appointment/Dockerfile
       container_name: appointmentservice
-
       ports:
-          - "8004:8000"
+         - "8004:8000"
+      depends_on:
+         - rabbitmq
