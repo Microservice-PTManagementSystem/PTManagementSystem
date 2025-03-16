@@ -1,6 +1,6 @@
 from fastapi import APIRouter
-from ..models.notification_model import notification_model
-from ..controllers.chat_controller import send_notification1
+from models.notification_model import notification_model
+from controllers.chat_controller import send_notification1
 
 router = APIRouter(prefix="/send_notification", tags=["notification"])
 

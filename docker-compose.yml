@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+   notification:
+      
+      build:
+         context: .
+         dockerfile: notification/Dockerfile
+    
+      container_name: notificationservice
+
+      ports:
+         - "8002:8000"
+
+
+  
+   appointment:
+    
+      build:
+          context: .
+          dockerfile: appointment/Dockerfile
+    
+      container_name: appointmentservice
+
+      ports:
+          - "8004:8000"
