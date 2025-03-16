@@ -4,9 +4,9 @@ from services.publish_reservation_event import publish_reservation_event
 
 def make_reservation(data):
     
-    print(f"DATAAAAAAAAAA   {data}")
+    print(f"DATA:  {data}")
 
-    print(f"DATAAAAAAAAAA   {type(data)}")
+    print(f"DATA:  {type(data)}")
  
     publish_reservation_event(data)
  
