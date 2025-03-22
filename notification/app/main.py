@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from api.notification import router as appointment_router
-from consumers.rabbitmq_consumer import start_consumer
+from services.rabbitmq_consumer import start_consumer
 
 app = FastAPI(title="API", description="", version="1.0")
 

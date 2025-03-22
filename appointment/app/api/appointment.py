@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 from models.reservation_model import reservation_model
-from controllers.chat_controller import make_reservation
+from controllers.appointment_controller import make_reservation
 
 router = APIRouter(prefix="/make_reservation", tags=["appointment"])
 

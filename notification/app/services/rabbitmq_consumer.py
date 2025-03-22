@@ -10,7 +10,7 @@ def callback(ch, method, properties, body):
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
 def process_reservation_notification(reservation_data):
-    print(f"Reservation date: {reservation_data['date']}", flush=True)
+    print(f"Reservation date: {reservation_data['appointment_date']}", flush=True)
     
 def start_consumer():
     try:
