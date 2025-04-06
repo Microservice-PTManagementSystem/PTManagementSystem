@@ -6,7 +6,7 @@ def appointment_completed_event(appointment_data):
     channel = connection.channel()
     channel.queue_declare(queue='completedQueue')
 
-    message = appointment_data.json()
+    message = appointment_data.json() 
 
     channel.basic_publish(exchange='', routing_key='completedQueue', body=message)
 

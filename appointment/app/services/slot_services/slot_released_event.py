@@ -6,7 +6,7 @@ def slot_released_event(release_data):
     channel = connection.channel()
     channel.queue_declare(queue='releaseQueue')
 
-    message = release_data.json() 
+    message = release_data.json()
 
     channel.basic_publish(exchange='', routing_key='releaseQueue', body=message)
 

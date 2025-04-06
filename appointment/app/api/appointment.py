@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from models import slot_reserved_event_model
+from models.event_models.slot_reserved_event_model import slot_reserved_event_model
 from controllers.appointment_controller import make_reservation
 
 router = APIRouter(prefix="/make_reservation", tags=["appointment"])
