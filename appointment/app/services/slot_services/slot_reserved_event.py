@@ -8,7 +8,7 @@ def slot_reserved_event(reservation_data):
     channel.queue_declare(queue='reservationQueue')  
 
     
-    message = reservation_data.json()  
+    message = json.loads(reservation_data)
 
     channel.basic_publish(exchange='', routing_key='reservationQueue', body=message)
  

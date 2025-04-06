@@ -6,7 +6,7 @@ def appointment_rescheduled_event(reschedule_data):
     channel = connection.channel()
     channel.queue_declare(queue='rescheduleQueue')
 
-    message = reschedule_data.json()  # Assuming reschedule_data is a Pydantic model or similar
+    message = reschedule_data.json() 
 
     channel.basic_publish(exchange='', routing_key='rescheduleQueue', body=message)
 

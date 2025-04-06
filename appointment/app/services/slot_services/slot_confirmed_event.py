@@ -7,7 +7,7 @@ def slot_confirmed_event(confirmation_data):
     channel = connection.channel()
     channel.queue_declare(queue='confirmationQueue')
 
-    message = confirmation_data.json()  # Assuming confirmation_data is a Pydantic model or similar
+    message = confirmation_data.json() 
 
     channel.basic_publish(exchange='', routing_key='confirmationQueue', body=message)
 

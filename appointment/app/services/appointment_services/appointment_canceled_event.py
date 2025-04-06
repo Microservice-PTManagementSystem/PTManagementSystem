@@ -8,7 +8,7 @@ def appointment_canceled_event(cancellation_data):
     channel = connection.channel()
     channel.queue_declare(queue='cancellationQueue')
 
-    message = cancellation_data.json()  # Assuming cancellation_data is a Pydantic model or similar
+    message = cancellation_data.json() 
 
     channel.basic_publish(exchange='', routing_key='cancellationQueue', body=message)
 
