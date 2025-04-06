@@ -1,0 +1,127 @@
+classDiagram
+    class Slot {
+        +str slot_id
+        +str trainer_id
+        +datetime start_time
+        +int duration
+        +SlotStatus status
+        +str appointment_id
+        +__init__(trainer_id: str, start_time: datetime, duration: int)
+        +reserve(user_id: str) bool
+        +confirm() bool
+        +release() bool
+        +complete() bool
+        +cancel() bool
+    }
+
+    class SlotStatus {
+        <<enumeration>>
+        AVAILABLE
+        RESERVED
+        CONFIRMED
+        COMPLETED
+        CANCELLED
+    }
+
+    class Appointment {
+        +str appointment_id
+        +str slot_id
+        +str user_id
+        +str trainer_id
+        +datetime created_at
+        +AppointmentStatus status
+        +__init__(slot_id: str, user_id: str, trainer_id: str)
+        +confirm() bool
+        +complete() bool
+        +cancel() bool
+        +reschedule(new_slot_id: str) bool
+    }
+
+    class AppointmentStatus {
+        <<enumeration>>
+        RESERVED
+        CONFIRMED
+        COMPLETED
+        CANCELLED
+    }
+
+    class Notification {
+        +str notification_id
+        +str recipient_id
+        +NotificationType type
+        +str message
+        +datetime created_at
+        +NotificationStatus status
+        +__init__(recipient_id: str, type: NotificationType, message: str)
+        +send() bool
+        +retry() bool
+    }
+
+    class NotificationStatus {
+        <<enumeration>>
+        PENDING
+        SENT
+        FAILED
+    }
+
+    class NotificationType {
+        <<enumeration>>
+        APPOINTMENT_CONFIRMATION
+        APPOINTMENT_CANCELLATION
+        APPOINTMENT_REMINDER
+        PAYMENT_REQUIRED
+        PAYMENT_FAILED
+    }
+
+    class SlotRepository {
+        <<interface>>
+        +create(slot: Slot) Slot
+        +find_by_id(slot_id: str) Slot
+        +find_available(trainer_id: str, date: datetime) List[Slot]
+        +update(slot: Slot) Slot
+        +delete(slot_id: str) bool
+    }
+
+    class AppointmentRepository {
+        <<interface>>
+        +create(appointment: Appointment) Appointment
+        +find_by_id(appointment_id: str) Appointment
+        +find_by_user(user_id: str) List[Appointment]
+        +update(appointment: Appointment) Appointment
+    }
+
+    class NotificationRepository {
+        <<interface>>
+        +create(notification: Notification) Notification
+        +find_by_id(notification_id: str) Notification
+        +update(notification: Notification) Notification
+    }
+
+    class EventPublisher {
+        <<interface>>
+        +publish_event(event: Event) bool
+    }
+
+    class RabbitMQPublisher {
+        -connection: Connection
+        -channel: Channel
+        +__init__(connection_url: str)
+        +publish_event(event: Event) bool
+    }
+
+    class Event {
+        <<interface>>
+        +str event_type
+        +dict payload
+        +datetime timestamp
+    }
+
+    Slot -- SlotStatus
+    Appointment -- AppointmentStatus
+    Notification -- NotificationStatus
+    Notification -- NotificationType
+    EventPublisher <|.. RabbitMQPublisher
+    RabbitMQPublisher ..> Event
+    SlotRepository ..> Slot
+    AppointmentRepository ..> Appointment
+    NotificationRepository ..> Notification

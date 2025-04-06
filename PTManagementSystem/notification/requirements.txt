@@ -1,0 +1,6 @@
+# PTManagementSystem/notification/requirements.txt
+fastapi==0.68.1
+uvicorn==0.15.0
+pydantic==1.8.2
+aio-pika==6.8.0
+python-dateutil==2.8.2

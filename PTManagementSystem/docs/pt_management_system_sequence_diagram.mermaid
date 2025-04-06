@@ -1,0 +1,67 @@
+sequenceDiagram
+    participant Client
+    participant AppointmentAPI
+    participant SlotService
+    participant AppointmentService
+    participant EventPublisher
+    participant NotificationService
+    participant RabbitMQ
+
+    %% Create Slot Flow
+    Client->>AppointmentAPI: POST /api/v1/slots
+    AppointmentAPI->>SlotService: create_slot(trainer_id, start_time, duration)
+    SlotService->>SlotService: validate_slot_data()
+    SlotService->>SlotRepository: create(slot)
+    SlotRepository-->>SlotService: slot
+    SlotService-->>AppointmentAPI: slot
+    AppointmentAPI-->>Client: 201 Created
+
+    %% Reserve Slot Flow
+    Client->>AppointmentAPI: POST /api/v1/appointments
+    AppointmentAPI->>AppointmentService: create_appointment(slot_id, user_id)
+    AppointmentService->>SlotService: reserve_slot(slot_id)
+    SlotService->>SlotRepository: update(slot)
+    SlotRepository-->>SlotService: updated_slot
+    AppointmentService->>AppointmentRepository: create(appointment)
+    AppointmentRepository-->>AppointmentService: appointment
+    AppointmentService->>EventPublisher: publish(SlotReservedEvent)
+    EventPublisher->>RabbitMQ: publish
+    AppointmentService->>EventPublisher: publish(SlotConfirmedEvent)
+    EventPublisher->>RabbitMQ: publish
+    AppointmentService-->>AppointmentAPI: appointment
+    AppointmentAPI-->>Client: 201 Created
+
+    %% Payment Success Flow
+    RabbitMQ->>AppointmentService: PaymentSuccessEvent
+    AppointmentService->>AppointmentRepository: find_by_id(appointment_id)
+    AppointmentRepository-->>AppointmentService: appointment
+    AppointmentService->>SlotService: confirm_slot(slot_id)
+    SlotService->>SlotRepository: update(slot)
+    SlotRepository-->>SlotService: updated_slot
+    AppointmentService->>EventPublisher: publish(AppointmentConfirmedEvent)
+    EventPublisher->>RabbitMQ: publish
+
+    %% Payment Failed Flow
+    RabbitMQ->>AppointmentService: PaymentFailedEvent
+    AppointmentService->>AppointmentRepository: find_by_id(appointment_id)
+    AppointmentRepository-->>AppointmentService: appointment
+    AppointmentService->>SlotService: release_slot(slot_id)
+    SlotService->>SlotRepository: update(slot)
+    SlotRepository-->>SlotService: updated_slot
+    AppointmentService->>EventPublisher: publish(SlotReleasedEvent)
+    EventPublisher->>RabbitMQ: publish
+
+    %% Notification Flow
+    RabbitMQ->>NotificationService: AppointmentEvent
+    NotificationService->>NotificationService: create_notification(event_data)
+    NotificationService->>NotificationRepository: create(notification)
+    NotificationRepository-->>NotificationService: notification
+    NotificationService->>NotificationService: send_notification()
+    alt success
+        NotificationService->>EventPublisher: publish(NotificationSentEvent)
+        EventPublisher->>RabbitMQ: publish
+    else failure
+        NotificationService->>EventPublisher: publish(NotificationFailedEvent)
+        EventPublisher->>RabbitMQ: publish
+        NotificationService->>NotificationService: schedule_retry()
+    end
