@@ -11,3 +11,13 @@ public class PaymentListener {
         System.out.println("Received payment message: " + message);
     }
 }
+/*@Component
+public class PaymentListener {
+
+    @RabbitListener(queues = "payment.queue")
+    public void handlePayment(PaymentRequest request) {
+        // Ödeme işleme mantığı buraya yazılır.
+        System.out.println("Payment received: " + request);
+    }
+}
+ */

@@ -56,7 +56,7 @@ services:
          - RABBITMQ_HOST=rabbitmq
       
       ports:
-         - "8082:8082"
+         - "8006:8000"
       networks:
          - mynetwork      
 networks:
