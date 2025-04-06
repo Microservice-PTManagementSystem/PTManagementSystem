@@ -1,0 +1,48 @@
+version: "3.8"
+services:
+   rabbitmq:
+      image: "rabbitmq:3-management"
+      container_name: rabbitmq
+      ports:
+         - "5672:5672"
+         - "15672:15672"
+      healthcheck:
+         test: ["CMD", "rabbitmqctl", "status"]
+         interval: 10s
+         timeout: 5s
+         retries: 5
+      networks:
+         - mynetwork
+
+   notification:
+      build:
+         context: .
+         dockerfile: notification/Dockerfile
+      container_name: notificationservice
+      depends_on:
+         rabbitmq:
+            condition: service_healthy
+      environment:
+         - RABBITMQ_HOST=rabbitmq
+      ports:
+         - "8002:8000"
+      networks:
+         - mynetwork
+
+   appointment:
+      build:
+         context: .
+         dockerfile: appointment/Dockerfile
+      container_name: appointmentservice
+      depends_on:
+         rabbitmq:
+            condition: service_healthy
+      environment:
+         - RABBITMQ_HOST=rabbitmq
+      ports:
+         - "8004:8000"
+      networks:
+         - mynetwork
+networks:
+   mynetwork:
+      driver: bridge
