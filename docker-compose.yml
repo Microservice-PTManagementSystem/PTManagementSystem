@@ -46,8 +46,8 @@ services:
 
    payment:
       build:
-         context: ./payment/paymentDemo
-         dockerfile: ../Dockerfile
+         context: ./payment/paymentDemo      # <- pom.xml ve Dockerfile burada
+         dockerfile: Dockerfile
       container_name: paymentservice
       depends_on:
          rabbitmq:
@@ -56,7 +56,7 @@ services:
          - RABBITMQ_HOST=rabbitmq
       
       ports:
-         - "8006:8000"
+         - "8006:8080"
       networks:
          - mynetwork      
 networks:

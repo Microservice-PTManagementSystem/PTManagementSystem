@@ -1,11 +1,20 @@
-FROM openjdk:21
+# === Build aşaması ===
+FROM maven:3.9.5-eclipse-temurin-17 AS build
+ARG BUILD_CONFIGURATION=release
+WORKDIR /app
 
-WORKDIR /src
+# pom.xml ve src klasörünü kopyala
+COPY pom.xml .
+COPY src ./src
 
-ARG JAR_FILE=target/paymentDemo-0.0.1-SNAPSHOT.jar
+# Bağımlılıkları indir
+RUN mvn dependency:resolve
 
-COPY ${JAR_FILE} payment-service.jar
+# Projeyi build et
+RUN mvn clean package -DskipTests
 
-ENTRYPOINT ["java", "-jar", "payment-service.jar"]
-
-
+# === Final aşama (sadece jar dosyasıyla hafif image) ===
+FROM eclipse-temurin:17-jdk AS final
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+ENTRYPOINT ["java", "-jar", "app.jar"]
