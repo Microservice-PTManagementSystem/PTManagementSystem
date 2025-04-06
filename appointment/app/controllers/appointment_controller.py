@@ -1,6 +1,6 @@
 import json
 
-from services.publish_reservation_event import publish_reservation_event
+from appointment.app.services.slot_reserved_event import slot_reserved_event
 
 def make_reservation(data):
     
@@ -8,7 +8,7 @@ def make_reservation(data):
 
     print(f"DATA:  {type(data)}")
  
-    publish_reservation_event(data)
+    slot_reserved_event(data)
  
     return data
 

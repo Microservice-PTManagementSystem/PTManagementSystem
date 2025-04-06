@@ -1,7 +1,7 @@
 import pika
 import json
  
-def publish_reservation_event(reservation_data):
+def slot_reserved_event(reservation_data):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
  
