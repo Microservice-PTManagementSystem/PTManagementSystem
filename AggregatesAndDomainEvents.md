@@ -11,8 +11,7 @@ Value Objects:
 -  AppointmentStatus (SCHEDULED, CONFIRMED, COMPLETED, CANCELLED, RESCHEDULED)
 -  Price
 -  AppointmentType (SINGLE, RECURRING)
-   Entities:
--  AppointmentNotes
+  
    References:
 -  UserId (client)
 -  TrainerId
@@ -45,7 +44,7 @@ Value Objects:
 -  Status (PENDING, COMPLETED, FAILED, REFUNDED)
 -  Amount
 -  BillingDetails
--  TransactionId
+  
    References:
 -  UserId
 -  AppointmentId
@@ -59,6 +58,7 @@ Value Objects:
 -  SendStatus (PENDING, SENT, FAILED)
 -  NotificationContent
 -  NotificationType (APPOINTMENT_REMINDER, PAYMENT_CONFIRMATION, etc.)
+  
    References:
 -  UserId
 -  RelatedEntityId (could be AppointmentId or PaymentId)
