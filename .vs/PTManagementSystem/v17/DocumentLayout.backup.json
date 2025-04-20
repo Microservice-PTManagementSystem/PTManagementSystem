@@ -1,0 +1,622 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\infrastructure\\externalservices\\rabbitmqservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\infrastructure\\externalservices\\rabbitmqservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\domain\\eventmodels\\trainerdeletedevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\domain\\eventmodels\\trainerdeletedevent.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\application\\usecases\\deleteuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\application\\usecases\\deleteuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\application\\interfaces\\imessagebroker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\application\\interfaces\\imessagebroker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\domain\\entities\\paymentinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\domain\\entities\\paymentinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\infrastructure\\externalservices\\keycloakservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\infrastructure\\externalservices\\keycloakservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\user.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\user.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\user.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\user.http||{5703B403-55E7-4C63-8C88-A8F52C7A45C5}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\application\\usecases\\registeruser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\application\\usecases\\registeruser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\application\\mappings\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\application\\mappings\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\application\\interfaces\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\application\\interfaces\\iuserrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\application\\interfaces\\iauthrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\application\\interfaces\\iauthrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\presentation\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\presentation\\dtos\\userprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\presentation\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\presentation\\dtos\\userdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\presentation\\dtos\\updateuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\presentation\\dtos\\updateuserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\presentation\\dtos\\trainerprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\presentation\\dtos\\trainerprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\presentation\\dtos\\resetpassword.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\presentation\\dtos\\resetpassword.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\presentation\\dtos\\registeruserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\presentation\\dtos\\registeruserdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\presentation\\dtos\\paymentinfodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\presentation\\dtos\\paymentinfodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\presentation\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\presentation\\dtos\\logindto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\presentation\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\presentation\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\infrastructure\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\infrastructure\\repositories\\userrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\infrastructure\\repositories\\authrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\infrastructure\\repositories\\authrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\infrastructure\\data\\userdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\infrastructure\\data\\userdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\infrastructure\\config\\keycloaksettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\infrastructure\\config\\keycloaksettings.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\domain\\entities\\userprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\domain\\entities\\userprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\domain\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\domain\\entities\\trainerprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\domain\\entities\\trainerprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\application\\validators\\uservalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\application\\validators\\uservalidator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|c:\\users\\sezen\\desktop\\ptmanagementsystem\\user\\application\\interfaces\\ikeycloakservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{645A2EB2-774C-3FB1-E638-6444A3939E2B}|user\\user.csproj|solutionrelative:user\\application\\interfaces\\ikeycloakservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 254,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 146,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:37:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:28:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:36:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Program.cs",
+              "RelativeDocumentMoniker": "user\\Program.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Program.cs*",
+              "RelativeToolTip": "user\\Program.cs*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:36:54.339Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:21:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "RabbitMQService.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\ExternalServices\\RabbitMQService.cs",
+              "RelativeDocumentMoniker": "user\\Infrastructure\\ExternalServices\\RabbitMQService.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\ExternalServices\\RabbitMQService.cs",
+              "RelativeToolTip": "user\\Infrastructure\\ExternalServices\\RabbitMQService.cs",
+              "ViewState": "AgIAAEoAAAAAAAAAAAAwwF4AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-20T11:56:04.218Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:10:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:23:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:25:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{5a4e9529-b6a0-46b5-be4f-0f0b239bc0eb}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:22:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TrainerDeletedEvent.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\EventModels\\TrainerDeletedEvent.cs",
+              "RelativeDocumentMoniker": "user\\Domain\\EventModels\\TrainerDeletedEvent.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\EventModels\\TrainerDeletedEvent.cs",
+              "RelativeToolTip": "user\\Domain\\EventModels\\TrainerDeletedEvent.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-20T12:21:29.793Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "IMessageBroker.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Interfaces\\IMessageBroker.cs",
+              "RelativeDocumentMoniker": "user\\Application\\Interfaces\\IMessageBroker.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Interfaces\\IMessageBroker.cs",
+              "RelativeToolTip": "user\\Application\\Interfaces\\IMessageBroker.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:50:04.07Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DeleteUser.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\UseCases\\DeleteUser.cs",
+              "RelativeDocumentMoniker": "user\\Application\\UseCases\\DeleteUser.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\UseCases\\DeleteUser.cs",
+              "RelativeToolTip": "user\\Application\\UseCases\\DeleteUser.cs",
+              "ViewState": "AgIAABIAAAAAAAAAAAAYwCoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-20T11:40:58.522Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\appsettings.json",
+              "RelativeDocumentMoniker": "user\\appsettings.json",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\appsettings.json",
+              "RelativeToolTip": "user\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-04-18T21:35:26.817Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "KeycloakService.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\ExternalServices\\KeycloakService.cs",
+              "RelativeDocumentMoniker": "user\\Infrastructure\\ExternalServices\\KeycloakService.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\ExternalServices\\KeycloakService.cs",
+              "RelativeToolTip": "user\\Infrastructure\\ExternalServices\\KeycloakService.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwCYAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:14:36.427Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "PaymentInfo.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\Entities\\PaymentInfo.cs",
+              "RelativeDocumentMoniker": "user\\Domain\\Entities\\PaymentInfo.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\Entities\\PaymentInfo.cs",
+              "RelativeToolTip": "user\\Domain\\Entities\\PaymentInfo.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T21:22:11.941Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "user.csproj",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\user.csproj",
+              "RelativeDocumentMoniker": "user\\user.csproj",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\user.csproj*",
+              "RelativeToolTip": "user\\user.csproj*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-04-19T22:06:34.132Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "user.http",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\user.http",
+              "RelativeDocumentMoniker": "user\\user.http",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\user.http",
+              "RelativeToolTip": "user\\user.http",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003502|",
+              "WhenOpened": "2025-04-19T22:06:30.549Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "RegisterUser.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\UseCases\\RegisterUser.cs",
+              "RelativeDocumentMoniker": "user\\Application\\UseCases\\RegisterUser.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\UseCases\\RegisterUser.cs",
+              "RelativeToolTip": "user\\Application\\UseCases\\RegisterUser.cs",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwBAAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:22:41.209Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "UserDto.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\UserDto.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\DTOs\\UserDto.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\UserDto.cs",
+              "RelativeToolTip": "user\\Presentation\\DTOs\\UserDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAkwAYAAAAkAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:14:10.605Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "UserProfileDto.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\UserProfileDto.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\DTOs\\UserProfileDto.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\UserProfileDto.cs",
+              "RelativeToolTip": "user\\Presentation\\DTOs\\UserProfileDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:14:21.862Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "IAuthRepository.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Interfaces\\IAuthRepository.cs",
+              "RelativeDocumentMoniker": "user\\Application\\Interfaces\\IAuthRepository.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Interfaces\\IAuthRepository.cs",
+              "RelativeToolTip": "user\\Application\\Interfaces\\IAuthRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:50:02.036Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "IUserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Interfaces\\IUserRepository.cs",
+              "RelativeDocumentMoniker": "user\\Application\\Interfaces\\IUserRepository.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Interfaces\\IUserRepository.cs",
+              "RelativeToolTip": "user\\Application\\Interfaces\\IUserRepository.cs",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAxwA8AAABdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:50:04.984Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "MappingProfile.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Mappings\\MappingProfile.cs",
+              "RelativeDocumentMoniker": "user\\Application\\Mappings\\MappingProfile.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Mappings\\MappingProfile.cs",
+              "RelativeToolTip": "user\\Application\\Mappings\\MappingProfile.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAUwBUAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:38:48.096Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "UpdateUserDto.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\UpdateUserDto.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\DTOs\\UpdateUserDto.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\UpdateUserDto.cs",
+              "RelativeToolTip": "user\\Presentation\\DTOs\\UpdateUserDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAuwAgAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:14:08.782Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "TrainerProfileDto.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\TrainerProfileDto.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\DTOs\\TrainerProfileDto.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\TrainerProfileDto.cs",
+              "RelativeToolTip": "user\\Presentation\\DTOs\\TrainerProfileDto.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAkwAIAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:14:05.483Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "ResetPassword.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\ResetPassword.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\DTOs\\ResetPassword.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\ResetPassword.cs",
+              "RelativeToolTip": "user\\Presentation\\DTOs\\ResetPassword.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:14:00.151Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "RegisterUserDto.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\RegisterUserDto.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\DTOs\\RegisterUserDto.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\RegisterUserDto.cs",
+              "RelativeToolTip": "user\\Presentation\\DTOs\\RegisterUserDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAswAcAAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:13:42.493Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "PaymentInfoDto.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\PaymentInfoDto.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\DTOs\\PaymentInfoDto.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\PaymentInfoDto.cs",
+              "RelativeToolTip": "user\\Presentation\\DTOs\\PaymentInfoDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:39:19.012Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 21,
+              "Title": "LoginDto.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\LoginDto.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\DTOs\\LoginDto.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\DTOs\\LoginDto.cs",
+              "RelativeToolTip": "user\\Presentation\\DTOs\\LoginDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAZAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:14:01.656Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 22,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "user\\Presentation\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAABMAAAAAAAAAAAAIwB0AAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:53:24.727Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 23,
+              "Title": "UserRepository.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\Repositories\\UserRepository.cs",
+              "RelativeDocumentMoniker": "user\\Infrastructure\\Repositories\\UserRepository.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\Repositories\\UserRepository.cs",
+              "RelativeToolTip": "user\\Infrastructure\\Repositories\\UserRepository.cs",
+              "ViewState": "AgIAACsAAAAAAAAAAAAowD8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T22:03:20.769Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 24,
+              "Title": "AuthRepository.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\Repositories\\AuthRepository.cs",
+              "RelativeDocumentMoniker": "user\\Infrastructure\\Repositories\\AuthRepository.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\Repositories\\AuthRepository.cs",
+              "RelativeToolTip": "user\\Infrastructure\\Repositories\\AuthRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T21:50:32.737Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 25,
+              "Title": "UserDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\Data\\UserDbContext.cs",
+              "RelativeDocumentMoniker": "user\\Infrastructure\\Data\\UserDbContext.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\Data\\UserDbContext.cs",
+              "RelativeToolTip": "user\\Infrastructure\\Data\\UserDbContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T21:41:56.826Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 26,
+              "Title": "KeycloakSettings.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\Config\\KeycloakSettings.cs",
+              "RelativeDocumentMoniker": "user\\Infrastructure\\Config\\KeycloakSettings.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Infrastructure\\Config\\KeycloakSettings.cs",
+              "RelativeToolTip": "user\\Infrastructure\\Config\\KeycloakSettings.cs",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAqwAkAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:34:27.049Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 27,
+              "Title": "UserProfile.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\Entities\\UserProfile.cs",
+              "RelativeDocumentMoniker": "user\\Domain\\Entities\\UserProfile.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\Entities\\UserProfile.cs",
+              "RelativeToolTip": "user\\Domain\\Entities\\UserProfile.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T21:24:19.352Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 28,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\Entities\\User.cs",
+              "RelativeDocumentMoniker": "user\\Domain\\Entities\\User.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\Entities\\User.cs",
+              "RelativeToolTip": "user\\Domain\\Entities\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T21:23:51.336Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 29,
+              "Title": "TrainerProfile.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\Entities\\TrainerProfile.cs",
+              "RelativeDocumentMoniker": "user\\Domain\\Entities\\TrainerProfile.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Domain\\Entities\\TrainerProfile.cs",
+              "RelativeToolTip": "user\\Domain\\Entities\\TrainerProfile.cs",
+              "ViewState": "AgIAAAUAAAAAAAAAAAAxwAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T21:24:18.32Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 30,
+              "Title": "UserValidator.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Validators\\UserValidator.cs",
+              "RelativeDocumentMoniker": "user\\Application\\Validators\\UserValidator.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Validators\\UserValidator.cs",
+              "RelativeToolTip": "user\\Application\\Validators\\UserValidator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAmAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-19T21:50:09.867Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 31,
+              "Title": "IKeycloakService.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Interfaces\\IKeycloakService.cs",
+              "RelativeDocumentMoniker": "user\\Application\\Interfaces\\IKeycloakService.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\Interfaces\\IKeycloakService.cs",
+              "RelativeToolTip": "user\\Application\\Interfaces\\IKeycloakService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAwAgAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:16:53.379Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

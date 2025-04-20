@@ -2,60 +2,51 @@ package com.example.paymentDemo.event;
 
 import java.io.Serializable;
 
-public class SlotReservedEvent implements Serializable {
-    private String id;
-    private String appointmentDate;
-    private String appointmentTime;
-    private String createdDate;
-    private String trainerId;
-    private String customerId;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class SlotReservedEvent {
+    @JsonProperty("slot_id")
+    private String slotId;
+
+    @JsonProperty("user_id")
+    private String userId;
+
+    @JsonProperty("timestamp")
+    private String timestamp;
+    
+
+    public SlotReservedEvent() {
+    }   
+
+    public SlotReservedEvent(String slotId,String userId,String timestamp ) {
+        this.userId =userId;
+        this.timestamp = timestamp;
+        this.slotId=slotId;
+
+
+    }
+
+    
 
     // Getters and Setters
-    public String getId() {
-        return id;
+    public String getSlotId() {
+        return slotId;
+    }   
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
+    }   
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }   
+
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getAppointmentDate() {
-        return appointmentDate;
-    }
-
-    public void setAppointmentDate(String appointmentDate) {
-        this.appointmentDate = appointmentDate;
-    }
-
-    public String getAppointmentTime() {
-        return appointmentTime;
-    }
-
-    public void setAppointmentTime(String appointmentTime) {
-        this.appointmentTime = appointmentTime;
-    }
-
-    public String getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(String createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    public String getTrainerId() {
-        return trainerId;
-    }
-
-    public void setTrainerId(String trainerId) {
-        this.trainerId = trainerId;
-    }
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }

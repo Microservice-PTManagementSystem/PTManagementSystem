@@ -2,17 +2,23 @@ package com.example.paymentDemo.event;
 
 import java.io.Serializable;
 
-public class PaymentSucceededEvent implements Serializable {
-    private String reservationId;
+public class PaymentSucceededEvent {
+    private String slotId;
     private String trainerId;
     private String customerId;
 
-    public String getReservationId() {
-        return reservationId;
+    public PaymentSucceededEvent(String slotId, String trainerId, String customerId) {
+        this.slotId = slotId;
+        this.trainerId = trainerId;
+        this.customerId = customerId;
     }
 
-    public void setReservationId(String reservationId) {
-        this.reservationId = reservationId;
+    public String getslotId() {
+        return slotId;
+    }
+
+    public void setslotId(String slotId) {
+        this.slotId = slotId;
     }
 
     public String getTrainerId() {
