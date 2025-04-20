@@ -54,5 +54,8 @@ public class RabbitMQConfig {
      public Binding reservationQueueBinding(Queue reservationQueue, TopicExchange exchange) {
          return BindingBuilder.bind(reservationQueue).to(exchange).with("reservation.created");
      }
-    
+    //  @Bean
+    //  public Binding paymentSucceededBinding(Queue paymentSucceededQueue, TopicExchange topicExchange) {
+    //      return BindingBuilder.bind(paymentSucceededQueue).to(topicExchange).with("PaymentSucceeded");
+    //  }
 }

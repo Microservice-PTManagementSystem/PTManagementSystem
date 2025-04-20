@@ -30,7 +30,7 @@ public class SlotConfirmedEventListener {
         );
 
         //paymentService.processPayment(event); 
-        rabbitTemplate.convertAndSend("pt.topic.exchange", "PaymentSucceeded", paymentSucceeded);
+        rabbitTemplate.convertAndSend("PaymentSucceededEvent", paymentSucceeded);
         System.out.println("PaymentSucceededEvent Published! "+ paymentSucceeded );
     }
 }
