@@ -1,0 +1,15 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\user\\Application",
+    "\\user\\Application\\Interfaces",
+    "\\user\\Application\\Mappings",
+    "\\user\\Infrastructure",
+    "\\user\\Infrastructure\\ExternalServices",
+    "\\user\\Presentation",
+    "\\user\\Presentation\\Controllers",
+    "\\user\\Properties"
+  ],
+  "SelectedNode": "\\PTManagementSystem.sln",
+  "PreviewInSolutionExplorer": false
+}
