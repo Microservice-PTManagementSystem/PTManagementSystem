@@ -9,5 +9,3 @@ COPY ./notification/app /app
 
 
 CMD ["python3", "main.py"]
-
-

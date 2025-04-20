@@ -1,17 +1,19 @@
 import json
-
-from services.publish_reservation_event import publish_reservation_event
+from services.slot_services.slot_reserved_event import slot_reserved_event
+from services.slot_services.slot_confirmed_event import slot_confirmed_event
+from services.slot_services.slot_released_event import slot_released_event
+from services.appointment_services.appointment_completed_event import appointment_completed_event
+from services.appointment_services.appointment_rescheduled_event import appointment_rescheduled_event
+from services.appointment_services.appointment_canceled_event import appointment_canceled_event
 
 def make_reservation(data):
-    
     print(f"DATA:  {data}")
-
-    print(f"DATA:  {type(data)}")
- 
-    publish_reservation_event(data)
- 
-    return data
+    print(f"DATA TYPE:  {type(data)}")
 
 
-"""def make_reservation(data):
-    return data"""
+    slot_reserved_event(data)
+
+    #slot_confirmed_event(data)
+
+
+    return {"status": "success", "data": data}
