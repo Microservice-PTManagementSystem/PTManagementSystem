@@ -2,7 +2,7 @@ namespace PTManagementSystem.Presentation.DTOs
 {
      public class TrainerProfileDto
     {
-        public List<string> Specializations { get;  set; }
+        public List<SpecializationDto> Specializations { get;  set; }
         public List<CertificationDto> Certifications { get;  set; }
         public List<TimeSlotDto> AvailableSlots { get;  set; }
         public int YearsOfExperience { get;  set; }
@@ -10,7 +10,10 @@ namespace PTManagementSystem.Presentation.DTOs
 
       
     }
-
+    public class SpecializationDto
+    {
+        public string Value { get; set; }
+    }
     public class CertificationDto
     {
         public string Name { get;  set; }

@@ -12,6 +12,9 @@ namespace PTManagementSystem.Application.Mappings
             CreateMap<RegisterUserDto, User>();
             CreateMap<UpdateUserDto, User>();
 
+            CreateMap<SpecializationDto, Specialization>();
+            CreateMap<Specialization, SpecializationDto>();
+
             CreateMap<UserProfile, UserProfileDto>();
             CreateMap<UserProfileDto, UserProfile>();
 
