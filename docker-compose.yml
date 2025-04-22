@@ -32,10 +32,12 @@ services:
    keycloak:
       image: quay.io/keycloak/keycloak:24.0.3
       container_name: keycloak
-      command: start-dev
+      command: start-dev --import-realm
       depends_on:
          mysql:
             condition: service_started
+      volumes:
+         - ./keycloak-realm:/opt/keycloak/data/import
       environment:
          KC_DB: mysql
          KC_DB_URL: jdbc:mysql://mysql:3306/keycloakdb
@@ -47,6 +49,7 @@ services:
          - "8080:8080"
       networks:
          - mynetwork
+
    notification:
       build:
          context: .
@@ -78,7 +81,7 @@ services:
          - KEYCLOAK_URL=http://keycloak:8080
          - KEYCLOAK_REALM=ptmanagement
          - KEYCLOAK_CLIENT_ID=ptmanagement_clientId
-         - KEYCLOAK_CLIENT_SECRET=H3jwUHKs35ukWJbAOekALONNqUflvl0l
+         - KEYCLOAK_CLIENT_SECRET=gJ3meMw0tG6ZuPqqxa6Qdocf8m6MdccM
          - ASPNETCORE_ENVIRONMENT=Development
          - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=keycloakdb;User=keycloakuser;Password=keycloakpass;
       ports:
