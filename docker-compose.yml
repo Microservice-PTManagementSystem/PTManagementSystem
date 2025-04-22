@@ -1,4 +1,3 @@
-version: "3.8"
 services:
    rabbitmq:
       image: "rabbitmq:3-management"
@@ -19,10 +18,10 @@ services:
       container_name: mysql
       restart: always
       environment:
-         MYSQL_ROOT_PASSWORD: superadmin
-         MYSQL_DATABASE: userdb
-         MYSQL_USER: appuser
-         MYSQL_PASSWORD: appsecret
+         MYSQL_DATABASE: keycloakdb
+         MYSQL_USER: keycloakuser
+         MYSQL_PASSWORD: keycloakpass
+         MYSQL_ROOT_PASSWORD: rootpass
       volumes:
          - mysql_data:/var/lib/mysql
       ports:
@@ -39,8 +38,8 @@ services:
             condition: service_started
       environment:
          KC_DB: mysql
-         KC_DB_URL: jdbc:mysql://mysql:3306/keycloak
-         KC_DB_USERNAME: keycloak
+         KC_DB_URL: jdbc:mysql://mysql:3306/keycloakdb
+         KC_DB_USERNAME: keycloakuser
          KC_DB_PASSWORD: keycloakpass
          KEYCLOAK_ADMIN: sezenhuddam@gmail.com
          KEYCLOAK_ADMIN_PASSWORD: admin
@@ -79,9 +78,9 @@ services:
          - KEYCLOAK_URL=http://keycloak:8080
          - KEYCLOAK_REALM=ptmanagement
          - KEYCLOAK_CLIENT_ID=ptmanagement_clientId
-         - KEYCLOAK_CLIENT_SECRET=O5c8PvhgFHTGCjfcMVRyecw63LuLxV02
+         - KEYCLOAK_CLIENT_SECRET=H3jwUHKs35ukWJbAOekALONNqUflvl0l
          - ASPNETCORE_ENVIRONMENT=Development
-         - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=userdb;User=appuser;Password=appsecret;
+         - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=keycloakdb;User=keycloakuser;Password=keycloakpass;
       ports:
          - "8008:8080"
       networks:

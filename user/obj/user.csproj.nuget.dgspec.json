@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sezen\\Downloads\\PTManagementSystem\\user\\user.csproj": {}
+    "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\user.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sezen\\Downloads\\PTManagementSystem\\user\\user.csproj": {
+    "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\user.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sezen\\Downloads\\PTManagementSystem\\user\\user.csproj",
+        "projectUniqueName": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\user.csproj",
         "projectName": "user",
-        "projectPath": "C:\\Users\\sezen\\Downloads\\PTManagementSystem\\user\\user.csproj",
+        "projectPath": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\user.csproj",
         "packagesPath": "C:\\Users\\sezen\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sezen\\Downloads\\PTManagementSystem\\user\\obj\\",
+        "outputPath": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\sezen\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -85,14 +85,6 @@
             "Newtonsoft.Json": {
               "target": "Package",
               "version": "[13.0.3, )"
-            },
-            "Pomelo.EntityFrameworkCore.MySql": {
-              "target": "Package",
-              "version": "[8.0.3, )"
-            },
-            "Pomelo.EntityFrameworkCore.MySql.Design": {
-              "target": "Package",
-              "version": "[1.1.2, )"
             },
             "RabbitMQ.Client": {
               "target": "Package",
