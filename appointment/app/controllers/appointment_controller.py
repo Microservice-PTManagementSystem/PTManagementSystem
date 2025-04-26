@@ -24,3 +24,10 @@ def create_slot(data):
     mongo_insert_data = data.copy()
     collection.insert_one(mongo_insert_data)
     return {"status": "success", "data": data}
+
+
+def cancel_appointment(data):
+    print(f"CANCELED RESERVATION:  {data}")
+    print(f"DATA TYPE:  {type(data)}")
+    appointment_canceled_event(data)
+    return {"status": "success", "data": data}

@@ -49,6 +49,7 @@ import threading
 import uvicorn
 from fastapi import FastAPI
 from services.db_services.mongodb_service import get_collection
+from services.appointment_services.appointment_completed_event import appointment_completed_event
 
 app = FastAPI()
 
@@ -63,6 +64,9 @@ def callback(ch, method, properties, body):
             {"$set": {"status": "active"}}
         )
         ch.basic_ack(delivery_tag=method.delivery_tag)
+
+        print("Published appointment_completed_event", flush=True)
+        appointment_completed_event(message)
     except Exception as e:
         print(f"Error processing message: {e}", flush=True)
 
@@ -84,5 +88,3 @@ if __name__ == "__main__":
     consumer_thread = threading.Thread(target=start_consumer)
     consumer_thread.daemon = True  # Ana uygulama kapanırken thread de kapansın
     consumer_thread.start()
-
-

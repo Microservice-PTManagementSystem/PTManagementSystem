@@ -3,7 +3,7 @@ import json
 
 def callback(ch, method, properties, body):
     try:
-        print(f"Received appointment event: ", flush=True)
+        print(f"Received cancel appointment event: ", flush=True)
         message = json.loads(body)
         print("Message content:", message, flush=True)
 
@@ -14,7 +14,7 @@ def callback(ch, method, properties, body):
         
         
     except Exception as e:
-        print(f"Error Notifiy service consumer appointmentCompleted message: {e}", flush=True)
+        print(f"Error Notifiy service consumer appointmentCanceled message: {e}", flush=True)
     
     
     
@@ -23,19 +23,19 @@ def callback(ch, method, properties, body):
 """def process_reservation_notification(reservation_data):
     print(f"Reservation date: {reservation_data['appointment_date']}", flush=True)"""
     
-def start_consumer():
+def start_cancel_consumer():
     try:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
         print("Connected to RabbitMQ", flush=True)  
         channel = connection.channel()
-        channel.queue_declare(queue='appointmentCompleted') 
+        channel.queue_declare(queue='cancellationQueue') 
 
-        channel.basic_consume(queue='appointmentCompleted', on_message_callback=callback)
+        channel.basic_consume(queue='cancellationQueue', on_message_callback=callback)
 
-        print("Waiting for appointment completed events...", flush=True)
+        print("Waiting for cancel appointment events...", flush=True)
         channel.start_consuming()
     except Exception as e:
         print(f"Error connecting to RabbitMQ: {e}", flush=True)
 
 if __name__ == "__main__":
-    start_consumer()
+    start_cancel_consumer()
