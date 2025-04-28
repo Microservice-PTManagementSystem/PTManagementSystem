@@ -49,14 +49,14 @@ builder.Services.Configure<KeycloakSettings>(
 builder.Services.AddHttpClient<IKeycloakService, KeycloakService>();
 
 builder.Configuration.AddEnvironmentVariables();
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-builder.Services.AddDbContext<UserDbContext>(options =>
-{
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(8, 0, 0))
-    );
-});
+// var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+// builder.Services.AddDbContext<UserDbContext>(options =>
+// {
+//     options.UseMySql(
+//         builder.Configuration.GetConnectionString("DefaultConnection"),
+//         new MySqlServerVersion(new Version(8, 0, 0))
+//     );
+// });
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -19,7 +19,7 @@ namespace PTManagementSystem.Application.UseCases
         {
             var userId = await _keycloakService.GetUserIdByEmailAsync(email);
             if (string.IsNullOrEmpty(userId))
-                throw new ArgumentException("Belirtilen email ile bir kullanıcı bulunamadı.");
+                throw new ArgumentException("A user with the specified email was not found.");
 
             // Kullanıcının rollerini alma
             var roles = await _keycloakService.GetUserRolesAsync(userId);

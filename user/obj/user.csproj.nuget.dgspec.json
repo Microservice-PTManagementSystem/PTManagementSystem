@@ -86,14 +86,6 @@
               "target": "Package",
               "version": "[13.0.3, )"
             },
-            "Pomelo.EntityFrameworkCore.MySql": {
-              "target": "Package",
-              "version": "[8.0.3, )"
-            },
-            "Pomelo.EntityFrameworkCore.MySql.Design": {
-              "target": "Package",
-              "version": "[1.1.2, )"
-            },
             "RabbitMQ.Client": {
               "target": "Package",
               "version": "[6.4.0, )"
