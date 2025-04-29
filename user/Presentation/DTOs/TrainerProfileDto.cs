@@ -4,7 +4,7 @@ namespace PTManagementSystem.Presentation.DTOs
     {
         public List<SpecializationDto> Specializations { get;  set; }
         public List<CertificationDto> Certifications { get;  set; }
-        public List<TimeSlotDto> AvailableSlots { get;  set; }
+        //public List<TimeSlotDto> AvailableSlots { get;  set; }
         public int YearsOfExperience { get;  set; }
         public decimal HourlyRate { get;  set; }
 
@@ -23,12 +23,12 @@ namespace PTManagementSystem.Presentation.DTOs
 
     }
 
-    public class TimeSlotDto
-    {
-        public DayOfWeek DayOfWeek { get;  set; }
-        public TimeSpan StartTime { get;  set; }
-        public TimeSpan EndTime { get;  set; }
+    //public class TimeSlotDto
+    //{
+    //    public DayOfWeek DayOfWeek { get;  set; }
+    //    public TimeSpan StartTime { get;  set; }
+    //    public TimeSpan EndTime { get;  set; }
 
       
-    }
+    //}
 }

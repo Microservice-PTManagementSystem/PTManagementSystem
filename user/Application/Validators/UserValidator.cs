@@ -9,7 +9,6 @@ public class UserValidator : AbstractValidator<User>
     {
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Email).NotEmpty().EmailAddress();
-        RuleFor(x => x.PasswordHash).NotEmpty();
 
         RuleFor(x => x.Profile).SetValidator(new UserProfileValidator());
 

@@ -1,3 +1,4 @@
+using PTManagementSystem.Domain.Entities;
 using PTManagementSystem.Presentation.DTOs;
 
 namespace PTManagementSystem.Application.Interfaces
@@ -6,14 +7,15 @@ namespace PTManagementSystem.Application.Interfaces
     {
         Task<UserDto> GetUserByIdAsync(string userId);
         Task<IEnumerable<UserDto>> GetAllUsersAsync();
-        Task<UserDto> UpdateUserAsync(string userId, UpdateUserDto updateDto);
+        Task<UserDto> UpdateUserAsync(string userId, UserDto updateDto);
         Task<bool> DeleteUserAsync(string userId);
         Task<UserProfileDto> GetUserProfileAsync(string userId);
-        Task<UserProfileDto> UpdateUserProfileAsync(string userId, UserProfileDto profileDto);
+        Task UpdateUserProfileAsync(string userId, UserProfile profileDto);
         Task<PaymentInfoDto> GetPaymentInfoAsync(string userId);
-        Task<PaymentInfoDto> UpdatePaymentInfoAsync(string userId, PaymentInfoDto paymentDto);
+        Task UpdatePaymentInfoAsync(string userId, PaymentInfo paymentDto);
         Task<TrainerProfileDto> GetTrainerProfileAsync(string trainerId);
-        Task<TrainerProfileDto> UpdateTrainerProfileAsync(string trainerId, TrainerProfileDto trainerDto);
-        Task<bool> DeleteTrainerProfileAsync(string trainerId);
+        Task UpdateTrainerProfileAsync(string trainerId, TrainerProfile trainerDto);
+        Task<bool> AddUserAsync(RegisterUserDto registerDto);
+        Task<IEnumerable<UserDto>> GetAllTrainersAsync();
     }
 }

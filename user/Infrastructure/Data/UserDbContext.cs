@@ -1,51 +1,26 @@
-﻿// using Microsoft.EntityFrameworkCore;
-// using PTManagementSystem.Domain.Entities;
+﻿using Microsoft.Extensions.Options;
+using MongoDB.Driver;
+using PTManagementSystem.Domain.Entities;
 
 namespace PTManagementSystem.Infrastructure.Data
 {
-    public class UserDbContext /*: DbContext*/
+    public class UserDbContext
     {
-//         public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
+        private readonly IMongoDatabase _database;
 
-//         public DbSet<User> Users { get; set; }
-//         public DbSet<TrainerProfile> TrainerProfiles { get; set; }
+        public UserDbContext(IOptions<DatabaseSettings> databaseSettings)
+        {
+            var client = new MongoClient(databaseSettings.Value.ConnectionString);
+            _database = client.GetDatabase(databaseSettings.Value.DatabaseName);
+        }
 
-//         protected override void OnModelCreating(ModelBuilder modelBuilder)
-//         {
-//             base.OnModelCreating(modelBuilder);
+        public IMongoCollection<User> Users => _database.GetCollection<User>("Users");
 
-//             modelBuilder.Entity<User>().OwnsOne(u => u.Profile, profile =>
-//             {
-//                 profile.OwnsOne(p => p.PersonalInfo);
-//                 profile.OwnsOne(p => p.ContactInfo);
-//                 profile.OwnsOne(p => p.Address);
-//             });
-
-//             modelBuilder.Entity<User>().OwnsOne(u => u.PaymentInfo);
-
-//             modelBuilder.Entity<User>()
-//                 .HasOne(u => u.TrainerProfile)
-//                 .WithOne()
-//                 .HasForeignKey<TrainerProfile>("UserId");
-
-//             modelBuilder.Entity<TrainerProfile>().OwnsMany(tp => tp.Specializations, a =>
-// {
-//     a.Property(s => s.Value).HasColumnName("Value");
-//     a.WithOwner().HasForeignKey("TrainerProfileId");
-//     a.ToTable("TrainerSpecializations");
-// });
-
-
-//             modelBuilder.Entity<TrainerProfile>().OwnsMany(tp => tp.Certifications, a =>
-//             {
-//                 a.WithOwner().HasForeignKey("TrainerProfileId");
-//             });
-
-//             modelBuilder.Entity<TrainerProfile>().OwnsMany(tp => tp.AvailableSlots, a =>
-//             {
-//                 a.WithOwner().HasForeignKey("TrainerProfileId");
-//             });
-//         }
+       
     }
-
+    public class DatabaseSettings
+    {
+        public string ConnectionString { get; set; } = string.Empty;
+        public string DatabaseName { get; set; } = string.Empty;
+    }
 }

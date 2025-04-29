@@ -1,6 +1,5 @@
 using FluentValidation;
 using PTManagementSystem.Application.Interfaces;
-using PTManagementSystem.Application.UseCases;
 using PTManagementSystem.Application.Mappings;
 using PTManagementSystem.Application.Services;
 using PTManagementSystem.Application.Validators;
@@ -11,6 +10,9 @@ using Microsoft.EntityFrameworkCore;
 using PTManagementSystem.Infrastructure.Data;
 using user.Infrastructure.ExternalServices;
 using DotNetEnv;
+using user.Application.UseCases.Commands;
+using PTManagementSystem.Application.UseCases.Commands;
+using user.Application.UseCases.Queries;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -28,12 +30,32 @@ builder.Services.AddValidatorsFromAssemblyContaining<UserProfileValidator>();
 builder.Services.AddScoped<RegisterUser>();
 builder.Services.AddScoped<LoginUser>();
 builder.Services.AddScoped<DeleteUser>();
+builder.Services.AddScoped<UpdatePaymentInfo>();
+builder.Services.AddScoped<UpdateTrainerProfile>();
+builder.Services.AddScoped<UpdateUserProfile>();
+
+builder.Services.AddScoped<GetPaymentInfo>();
+builder.Services.AddScoped<GetTrainerProfile>();
+builder.Services.AddScoped<GetUserProfile>();
+builder.Services.AddScoped<GetUser>();
+
+
 builder.Services.AddScoped<IKeycloakService, KeycloakService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IMessageBroker, RabbitMQService>();
 builder.Services.AddScoped<UserValidationService>();
 builder.Services.Configure<KeycloakSettings>(
     builder.Configuration.GetSection("Keycloak"));
+
+builder.Services.AddSingleton<UserDbContext>();
+builder.Services.Configure<DatabaseSettings>(
+    builder.Configuration.GetSection("DatabaseSettings"));
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
 
 // Env.Load();
 

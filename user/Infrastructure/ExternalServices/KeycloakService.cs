@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Options;
 using PTManagementSystem.Application.Interfaces;
+using user.Presentation.DTOs;
 
 namespace PTManagementSystem.Infrastructure.ExternalServices
 {
@@ -180,6 +181,58 @@ public async Task<string> GetAccessTokenAsync(string username, string password)
             var roles = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(json);
             return roles.Select(r => r["name"].ToString());
         }
+     public async Task<IEnumerable<string>> GetUserRolesIncludingGroupsAsync(string userId)
+{
+    var adminToken = await GetAdminTokenAsync();
+    _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
+
+    var userRoles = new List<string>();
+
+    // Kullanıcının direkt atanmış realm rollerini alma
+    var userRolesResponse = await _httpClient.GetAsync($"{_settings.BaseUrl}/admin/realms/{_settings.Realm}/users/{userId}/role-mappings/realm");
+    if (userRolesResponse.IsSuccessStatusCode)
+    {
+        var userRolesJson = await userRolesResponse.Content.ReadAsStringAsync();
+        var userRolesList = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(userRolesJson);
+        if (userRolesList != null)
+        {
+            userRoles.AddRange(userRolesList.Select(r => r["name"].ToString()));
+        }
+    }
+
+    //  Kullanıcının gruplarını alma
+    var groupsResponse = await _httpClient.GetAsync($"{_settings.BaseUrl}/admin/realms/{_settings.Realm}/users/{userId}/groups");
+    if (groupsResponse.IsSuccessStatusCode)
+    {
+        var groupsJson = await groupsResponse.Content.ReadAsStringAsync();
+        var groups = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(groupsJson);
+
+        if (groups != null)
+        {
+            foreach (var group in groups)
+            {
+                if (group.TryGetValue("id", out var groupIdObj))
+                {
+                    var groupId = groupIdObj.ToString();
+
+                    //  Grup rollerini alma
+                    var groupRolesResponse = await _httpClient.GetAsync($"{_settings.BaseUrl}/admin/realms/{_settings.Realm}/groups/{groupId}/role-mappings/realm");
+                    if (groupRolesResponse.IsSuccessStatusCode)
+                    {
+                        var groupRolesJson = await groupRolesResponse.Content.ReadAsStringAsync();
+                        var groupRolesList = JsonSerializer.Deserialize<List<Dictionary<string, object>>>(groupRolesJson);
+                        if (groupRolesList != null)
+                        {
+                            userRoles.AddRange(groupRolesList.Select(r => r["name"].ToString()));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return userRoles.Distinct();
+}
 
         public async Task<bool> ValidateTokenAsync(string token)
         {
@@ -226,5 +279,28 @@ public async Task<string> GetAccessTokenAsync(string username, string password)
             var role = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
             return role["id"].ToString();
         }
+
+        public async Task<KeycloakUserDto> GetUserInfoAsync(string userId)
+        {
+            var adminToken = await GetAdminTokenAsync();
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", adminToken);
+
+            var response = await _httpClient.GetAsync($"{_settings.BaseUrl}/admin/realms/{_settings.Realm}/users/{userId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null; 
+            }
+
+            var json = await response.Content.ReadAsStringAsync();
+            var user = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
+
+            return new KeycloakUserDto
+            {
+                Email = user.ContainsKey("email") ? user["email"]?.ToString() : null,
+                EmailVerified = user.ContainsKey("emailVerified") && bool.TryParse(user["emailVerified"]?.ToString(), out var verified) && verified
+            };
+        }
+
     }
 }

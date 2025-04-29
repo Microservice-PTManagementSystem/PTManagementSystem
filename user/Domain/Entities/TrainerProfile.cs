@@ -7,7 +7,7 @@ namespace PTManagementSystem.Domain.Entities
     {
         public List<Specialization> Specializations { get;  set; }
         public List<Certification> Certifications { get;  set; }
-        public List<TimeSlot> AvailableSlots { get;  set; }
+        //public List<TimeSlot> AvailableSlots { get;  set; }
         public int YearsOfExperience { get;  set; }
         public decimal HourlyRate { get;  set; }
 
@@ -26,12 +26,12 @@ namespace PTManagementSystem.Domain.Entities
 
     }
 
-    public class TimeSlot
-    {
-        public DayOfWeek DayOfWeek { get;  set; }
-        public TimeSpan StartTime { get;  set; }
-        public TimeSpan EndTime { get;  set; }
+    //public class TimeSlot
+    //{
+    //    public DayOfWeek DayOfWeek { get;  set; }
+    //    public TimeSpan StartTime { get;  set; }
+    //    public TimeSpan EndTime { get;  set; }
 
       
-    }
+    //}
 }

@@ -36,8 +36,8 @@ namespace PTManagementSystem.Application.Mappings
             CreateMap<Certification, CertificationDto>();
             CreateMap<CertificationDto, Certification>();
 
-            CreateMap<TimeSlot, TimeSlotDto>();
-            CreateMap<TimeSlotDto, TimeSlot>();
+            //CreateMap<TimeSlot, TimeSlotDto>();
+            //CreateMap<TimeSlotDto, TimeSlot>();
         }
     }
 }

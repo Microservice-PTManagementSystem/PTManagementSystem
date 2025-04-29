@@ -1,8 +1,9 @@
 using PTManagementSystem.Application.Interfaces;
 using PTManagementSystem.Domain.Enums;
 using PTManagementSystem.Domain.EventModels;
+using user.Presentation.DTOs;
 
-namespace PTManagementSystem.Application.UseCases
+namespace user.Application.UseCases.Commands
 {
     public class DeleteUser
     {
@@ -17,9 +18,10 @@ namespace PTManagementSystem.Application.UseCases
 
         public async Task<bool> ExecuteAsync(string email)
         {
+           
             var userId = await _keycloakService.GetUserIdByEmailAsync(email);
             if (string.IsNullOrEmpty(userId))
-                throw new ArgumentException("A user with the specified email was not found.");
+               throw new ArgumentException("A user with the specified email was not found.");
 
             // Kullanıcının rollerini alma
             var roles = await _keycloakService.GetUserRolesAsync(userId);

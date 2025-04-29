@@ -1,6 +1,3 @@
-
-using System;
-
 namespace PTManagementSystem.Domain.Entities
 {
 	public class PaymentInfo
