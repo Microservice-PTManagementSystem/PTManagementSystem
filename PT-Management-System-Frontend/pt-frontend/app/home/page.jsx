@@ -249,7 +249,7 @@ export default function Home() {
             <div className="bg-gray-800">
               <div className="h-80 relative">
                 <Image
-                  src="/raphael.jpg"
+                  src="/raphael.jpeg"
                   alt="Trainer Raphael"
                   fill
                   className="object-cover"
@@ -292,9 +292,9 @@ export default function Home() {
               className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
             >
               <option value="">-- Choose a Trainer --</option>
-              <option value="Alex">Alex</option>
-              <option value="Taylor">Taylor</option>
-              <option value="Jordan">Jordan</option>
+              <option value="Jamie">Jamie</option>
+              <option value="Mark">Mark</option>
+              <option value="Raphael">Raphael</option>
             </select>
           </div>
 
