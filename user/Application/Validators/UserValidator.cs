@@ -10,9 +10,9 @@ public class UserValidator : AbstractValidator<User>
         RuleFor(x => x.Id).NotEmpty();
         RuleFor(x => x.Email).NotEmpty().EmailAddress();
 
-        RuleFor(x => x.Profile).SetValidator(new UserProfileValidator());
+        RuleFor(x => x.UserProfile).SetValidator(new UserProfileValidator());
 
-        When(x => x.PaymentInfo is not null, () =>
+       /* When(x => x.PaymentInfo is not null, () =>
         {
             RuleFor(x => x.PaymentInfo).SetValidator(new PaymentInfoValidator());
         });
@@ -20,7 +20,7 @@ public class UserValidator : AbstractValidator<User>
         When(x => x.TrainerProfile is not null, () =>
         {
             RuleFor(x => x.TrainerProfile).SetValidator(new TrainerProfileValidator());
-        });
+        });*/
     }
 }
 }

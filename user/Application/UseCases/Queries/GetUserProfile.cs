@@ -1,7 +1,7 @@
 ﻿using PTManagementSystem.Application.Interfaces;
 using PTManagementSystem.Presentation.DTOs;
 
-namespace user.Application.UseCases.Queries
+namespace PTManagementSystem.Application.UseCases.Queries
 {
     public class GetUserProfile
     {
@@ -14,13 +14,16 @@ namespace user.Application.UseCases.Queries
 
         }
 
-        public async Task<UserProfileDto> ExecuteAsync(string userId)
+        public async Task<UserProfileDto?> ExecuteAsync(string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));
 
+            var profile = await _userRepository.GetUserProfileAsync(userId);
+            if (profile == null)
+                throw new KeyNotFoundException($"User profile not found for user ID: {userId}");
 
-            return await _userRepository.GetUserProfileAsync(userId);
+            return profile;
         }
     }
 }

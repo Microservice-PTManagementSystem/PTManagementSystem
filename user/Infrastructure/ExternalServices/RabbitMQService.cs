@@ -5,7 +5,7 @@ using RabbitMQ.Client.Events;
 using System.Text;
 using System.Text.Json;
 
-namespace user.Infrastructure.ExternalServices
+namespace PTManagementSystem.Infrastructure.ExternalServices
 
 {
     public class RabbitMQService: IMessageBroker

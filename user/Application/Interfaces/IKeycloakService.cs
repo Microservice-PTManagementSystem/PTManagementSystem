@@ -1,4 +1,4 @@
-using user.Presentation.DTOs;
+using PTManagementSystem.Presentation.DTOs;
 
 namespace PTManagementSystem.Application.Interfaces
 {
@@ -13,9 +13,7 @@ namespace PTManagementSystem.Application.Interfaces
         Task<IEnumerable<string>> GetUserRolesAsync(string userId);
         Task<IEnumerable<string>> GetUserRolesIncludingGroupsAsync(string userId);
         Task<bool> ValidateTokenAsync(string token);
-        Task<string> GetUserIdByEmailAsync(string email);
-        Task<KeycloakUserDto> GetUserInfoAsync(string keycloakUserId);
-        
-
+        Task<string?> GetUserIdByEmailAsync(string email);
+        Task<KeycloakUserDto?> GetUserInfoAsync(string keycloakUserId);
     }
 }

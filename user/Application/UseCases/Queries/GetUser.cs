@@ -1,7 +1,7 @@
 using PTManagementSystem.Application.Interfaces;
 using PTManagementSystem.Presentation.DTOs;
 
-namespace user.Application.UseCases.Queries
+namespace PTManagementSystem.Application.UseCases.Queries
 {
     public class GetUser
     {
@@ -14,7 +14,7 @@ namespace user.Application.UseCases.Queries
 
         }
 
-        public async Task<UserDto> ExecuteAsync(string userId)
+        public async Task<UserDto?> ExecuteAsync(string userId)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 throw new ArgumentException("User ID cannot be null or empty.", nameof(userId));

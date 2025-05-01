@@ -1,9 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PTManagementSystem.Application.UseCases.Commands;
 using PTManagementSystem.Presentation.DTOs;
-using user.Application.UseCases.Commands;
-using user.Application.UseCases.Queries;
-using user.Presentation.DTOs;
+using PTManagementSystem.Application.UseCases.Queries;
 
 namespace PTManagementSystem.Presentation.Controllers
 {

@@ -1,7 +1,7 @@
 using PTManagementSystem.Application.Interfaces;
 using PTManagementSystem.Presentation.DTOs;
 
-namespace user.Application.UseCases.Commands
+namespace PTManagementSystem.Application.UseCases.Commands
 {
     public class LoginUser
     {

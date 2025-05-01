@@ -9138,24 +9138,27 @@
     ]
   },
   "packageFolders": {
-    "/Users/intikal/.nuget/packages/": {}
+    "C:\\Users\\sezen\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/intikal/PTManagementSystem-3/user/user.csproj",
-      "projectName": "user",
-      "projectPath": "/Users/intikal/PTManagementSystem-3/user/user.csproj",
-      "packagesPath": "/Users/intikal/.nuget/packages/",
-      "outputPath": "/Users/intikal/PTManagementSystem-3/user/obj/",
+      "projectUniqueName": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\PTManagementSystem.csproj",
+      "projectName": "PTManagementSystem",
+      "projectPath": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\PTManagementSystem.csproj",
+      "packagesPath": "C:\\Users\\sezen\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/intikal/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\sezen\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -9251,7 +9254,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/8.0.407/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

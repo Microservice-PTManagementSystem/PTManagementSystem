@@ -206,22 +206,9 @@
               "RelativeDocumentMoniker": "user\\Application\\UseCases\\Commands\\DeleteUser.cs",
               "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Application\\UseCases\\Commands\\DeleteUser.cs",
               "RelativeToolTip": "user\\Application\\UseCases\\Commands\\DeleteUser.cs",
-              "ViewState": "AgIAAAsAAAAAAAAAAAAAwCQAAAA5AAAAAAAAAA==",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAAwCQAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-20T11:40:58.522Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "AuthController.cs",
-              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\Controllers\\AuthController.cs",
-              "RelativeDocumentMoniker": "user\\Presentation\\Controllers\\AuthController.cs",
-              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\Controllers\\AuthController.cs",
-              "RelativeToolTip": "user\\Presentation\\Controllers\\AuthController.cs",
-              "ViewState": "AgIAAEcAAAAAAAAAAADwv10AAAAQAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:53:24.727Z",
               "EditorCaption": ""
             },
             {
@@ -234,8 +221,7 @@
               "RelativeToolTip": "user\\Application\\UseCases\\Queries\\GetPaymentInfo.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T05:50:03.066Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-29T05:50:03.066Z"
             },
             {
               "$type": "Document",
@@ -247,8 +233,7 @@
               "RelativeToolTip": "user\\Presentation\\Controllers\\UserController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-27T17:16:33.546Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-27T17:16:33.546Z"
             },
             {
               "$type": "Document",
@@ -260,8 +245,7 @@
               "RelativeToolTip": "user\\Infrastructure\\ExternalServices\\KeycloakService.cs",
               "ViewState": "AgIAACwAAAAAAAAAAAAgwPsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:14:36.427Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:14:36.427Z"
             },
             {
               "$type": "Document",
@@ -273,12 +257,7 @@
               "RelativeToolTip": "user\\Application\\Interfaces\\IKeycloakService.cs",
               "ViewState": "AgIAAAEAAAAAAAAAAAAAABMAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:16:53.379Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+              "WhenOpened": "2025-04-18T21:16:53.379Z"
             },
             {
               "$type": "Document",
@@ -290,8 +269,7 @@
               "RelativeToolTip": "user\\Application\\UseCases\\Commands\\UpdatePaymentInfo.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAmwCUAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-28T12:02:08.428Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-28T12:02:08.428Z"
             },
             {
               "$type": "Document",
@@ -303,8 +281,23 @@
               "RelativeToolTip": "user\\Presentation\\DTOs\\UserProfileDto.cs",
               "ViewState": "AgIAAA0AAAAAAAAAAAAkwAIAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:14:21.862Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:14:21.862Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AuthController.cs",
+              "DocumentMoniker": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\Controllers\\AuthController.cs",
+              "RelativeDocumentMoniker": "user\\Presentation\\Controllers\\AuthController.cs",
+              "ToolTip": "C:\\Users\\sezen\\Desktop\\PTManagementSystem\\user\\Presentation\\Controllers\\AuthController.cs",
+              "RelativeToolTip": "user\\Presentation\\Controllers\\AuthController.cs",
+              "ViewState": "AgIAAEcAAAAAAAAAAADwv10AAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-04-18T21:53:24.727Z"
             },
             {
               "$type": "Document",
@@ -316,8 +309,7 @@
               "RelativeToolTip": "user\\Application\\UseCases\\Commands\\UpdateUserProfile.cs",
               "ViewState": "AgIAAAUAAAAAAAAAAAAUwBsAAABaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T05:23:09.624Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-29T05:23:09.624Z"
             },
             {
               "$type": "Document",
@@ -329,8 +321,7 @@
               "RelativeToolTip": "user\\Program.cs",
               "ViewState": "AgIAABMAAAAAAAAAAAAswB4AAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:36:54.339Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:36:54.339Z"
             },
             {
               "$type": "Document",
@@ -342,8 +333,7 @@
               "RelativeToolTip": "user\\Application\\Mappings\\MappingProfile.cs",
               "ViewState": "AgIAAAgAAAAAAAAAAAAxwBIAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:38:48.096Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:38:48.096Z"
             },
             {
               "$type": "Document",
@@ -355,8 +345,7 @@
               "RelativeToolTip": "user\\Presentation\\DTOs\\PaymentInfoDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:39:19.012Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:39:19.012Z"
             },
             {
               "$type": "Document",
@@ -368,8 +357,7 @@
               "RelativeToolTip": "user\\Application\\UseCases\\Queries\\GetUser.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-28T12:01:42.066Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-28T12:01:42.066Z"
             },
             {
               "$type": "Document",
@@ -381,8 +369,7 @@
               "RelativeToolTip": "user\\Application\\Interfaces\\IMessageBroker.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:50:04.07Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:50:04.07Z"
             },
             {
               "$type": "Document",
@@ -394,8 +381,7 @@
               "RelativeToolTip": "user\\Application\\UseCases\\Queries\\GetUserProfile.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABgAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T05:50:56.436Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-29T05:50:56.436Z"
             },
             {
               "$type": "Document",
@@ -407,8 +393,7 @@
               "RelativeToolTip": "user\\Application\\UseCases\\Queries\\GetTrainerProfile.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T05:50:33.039Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-29T05:50:33.039Z"
             },
             {
               "$type": "Document",
@@ -420,8 +405,7 @@
               "RelativeToolTip": "user\\Application\\Interfaces\\IUserRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:50:04.984Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:50:04.984Z"
             },
             {
               "$type": "Document",
@@ -433,8 +417,7 @@
               "RelativeToolTip": "user\\Application\\UseCases\\Commands\\UpdateTrainerProfile.cs",
               "ViewState": "AgIAAAIAAAAAAAAAAAAUwAUAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T05:23:21.457Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-29T05:23:21.457Z"
             },
             {
               "$type": "Document",
@@ -446,8 +429,7 @@
               "RelativeToolTip": "user\\Application\\Validators\\UserValidator.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAAoAAAA4AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-19T21:50:09.867Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-19T21:50:09.867Z"
             },
             {
               "$type": "Document",
@@ -459,8 +441,7 @@
               "RelativeToolTip": "user\\Infrastructure\\Repositories\\UserRepository.cs",
               "ViewState": "AgIAALAAAAAAAAAAAAAUwLQAAABUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T22:03:20.769Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T22:03:20.769Z"
             },
             {
               "$type": "Document",
@@ -472,8 +453,7 @@
               "RelativeToolTip": "user\\Application\\UseCases\\Commands\\RegisterUser.cs",
               "ViewState": "AgIAABsAAAAAAAAAAAAqwBIAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:22:41.209Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:22:41.209Z"
             },
             {
               "$type": "Document",
@@ -485,8 +465,7 @@
               "RelativeToolTip": "user\\Application\\Validators\\TrainerProfileValidator.cs",
               "ViewState": "AgIAABgAAAAAAAAAAAAwwCUAAAADAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-29T05:24:00.687Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-29T05:24:00.687Z"
             },
             {
               "$type": "Document",
@@ -498,8 +477,7 @@
               "RelativeToolTip": "user\\Presentation\\DTOs\\UpdateUserDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAuwAgAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:14:08.782Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:14:08.782Z"
             },
             {
               "$type": "Document",
@@ -511,8 +489,7 @@
               "RelativeToolTip": "user\\Presentation\\DTOs\\TrainerProfileDto.cs",
               "ViewState": "AgIAAAIAAAAAAAAAAAA9wAYAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:14:05.483Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-18T21:14:05.483Z"
             },
             {
               "$type": "Document",
@@ -524,24 +501,7 @@
               "RelativeToolTip": "user\\Presentation\\DTOs\\UserDto.cs",
               "ViewState": "AgIAAAMAAAAAAAAAAAAkwAcAAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-18T21:14:10.605Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:25:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:23:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:10:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:28:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+              "WhenOpened": "2025-04-18T21:14:10.605Z"
             },
             {
               "$type": "Document",
@@ -553,32 +513,7 @@
               "RelativeToolTip": "user\\Domain\\Entities\\TrainerProfile.cs",
               "ViewState": "AgIAABgAAAAAAAAAAAA4wCMAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-19T21:24:18.32Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:37:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{5a4e9529-b6a0-46b5-be4f-0f0b239bc0eb}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:21:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:36:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
-            },
-            {
-              "$type": "Bookmark",
-              "Name": "ST:22:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+              "WhenOpened": "2025-04-19T21:24:18.32Z"
             },
             {
               "$type": "Document",
@@ -590,8 +525,7 @@
               "RelativeToolTip": "user\\Application\\UseCases\\Commands\\LoginUser.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-04-28T12:01:42.964Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-04-28T12:01:42.964Z"
             },
             {
               "$type": "Document",
@@ -796,6 +730,46 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
               "WhenOpened": "2025-04-19T22:06:34.132Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:25:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:23:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:10:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:28:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:37:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{5a4e9529-b6a0-46b5-be4f-0f0b239bc0eb}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:21:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:36:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:22:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             }
           ]
         },

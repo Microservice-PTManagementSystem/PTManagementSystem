@@ -2,6 +2,8 @@
 using PTManagementSystem.Application.Interfaces;
 using PTManagementSystem.Domain.Entities;
 using PTManagementSystem.Presentation.DTOs;
+using PTManagementSystem.Application.Services;
+using FluentValidation.Results;
 
 namespace PTManagementSystem.Application.UseCases.Commands
 {
@@ -9,15 +11,17 @@ namespace PTManagementSystem.Application.UseCases.Commands
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly IUserValidationService _validationService;
 
         public UpdateTrainerProfile(
             IUserRepository userRepository,
-            IMapper mapper)
+            IMapper mapper,
+            IUserValidationService validationService)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _validationService = validationService;
         }
-
 
         public async Task ExecuteAsync(string userId, TrainerProfileDto trainerProfileDto)
         {
@@ -29,8 +33,15 @@ namespace PTManagementSystem.Application.UseCases.Commands
 
             var trainerProfileEntity = _mapper.Map<TrainerProfile>(trainerProfileDto);
 
-            await _userRepository.UpdateTrainerProfileAsync(userId, trainerProfileEntity);
+            // Validate the trainer profile
+            var validationResult = await _validationService.ValidateTrainerProfileAsync(trainerProfileEntity);
+            if (!validationResult.IsValid)
+            {
+                var errorMessages = string.Join(", ", validationResult.Errors.Select(e => e.ErrorMessage));
+                throw new ArgumentException($"Invalid trainer profile: {errorMessages}");
+            }
 
+            await _userRepository.UpdateTrainerProfileAsync(userId, trainerProfileEntity);
         }
     }
 }

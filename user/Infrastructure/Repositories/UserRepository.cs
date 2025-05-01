@@ -3,6 +3,7 @@ using PTManagementSystem.Application.Interfaces;
 using PTManagementSystem.Domain.Entities;
 using PTManagementSystem.Infrastructure.Data;
 using PTManagementSystem.Presentation.DTOs;
+using PTManagementSystem.Domain.Enums;
 
 namespace PTManagementSystem.Infrastructure.Repositories
 {
@@ -15,7 +16,7 @@ namespace PTManagementSystem.Infrastructure.Repositories
             _users = dbContext.Users;
         }
 
-        public async Task<bool> AddUserAsync( RegisterUserDto registerDto)
+        public async Task<bool> AddUserAsync(RegisterUserDto registerDto)
         {
             var user = new User
             {
@@ -24,9 +25,9 @@ namespace PTManagementSystem.Infrastructure.Repositories
                 Email = registerDto.Email,
                 IsEmailConfirmed = registerDto.IsEmailConfirmed,
                 UserType = registerDto.UserType,
-                Profile = new UserProfile(),
+                UserProfile = new UserProfile(),
                 PaymentInfo = new PaymentInfo(),
-                TrainerProfile = new TrainerProfile()
+                TrainerProfile = registerDto.UserType == UserType.TRAINER ? new TrainerProfile() : null
             };
 
             await _users.InsertOneAsync(user);
@@ -46,7 +47,7 @@ namespace PTManagementSystem.Infrastructure.Repositories
             });
         }
 
-        public async Task<UserDto> GetUserByIdAsync(string userId)
+        public async Task<UserDto?> GetUserByIdAsync(string userId)
         {
             var user = await _users.Find(u => u.KeycloakId == userId).FirstOrDefaultAsync();
             if (user == null) return null;
@@ -61,7 +62,7 @@ namespace PTManagementSystem.Infrastructure.Repositories
             };
         }
 
-        public async Task<UserDto> UpdateUserAsync(string userId, UserDto updateDto)
+        public async Task<UserDto?> UpdateUserAsync(string userId, UserDto updateDto)
         {
             var filter = Builders<User>.Filter.Eq(u => u.KeycloakId, userId);
             var update = Builders<User>.Update
@@ -89,129 +90,102 @@ namespace PTManagementSystem.Infrastructure.Repositories
             return result.DeletedCount > 0;
         }
 
-        public async Task<UserProfileDto> GetUserProfileAsync(string userId)
+        public async Task<UserProfileDto?> GetUserProfileAsync(string userId)
         {
             var user = await _users.Find(u => u.KeycloakId == userId).FirstOrDefaultAsync();
-            if (user == null || user.Profile == null) return null;
+            if (user == null || user.UserProfile == null) return null;
 
             return new UserProfileDto
             {
-           
+                FirstName = user.UserProfile.FirstName,
+                LastName = user.UserProfile.LastName,
+                PhoneNumber = user.UserProfile.PhoneNumber,
+                DateOfBirth = user.UserProfile.DateOfBirth,
+                Gender = user.UserProfile.Gender,
+                Height = user.UserProfile.Height,
+                Weight = user.UserProfile.Weight,
+                FitnessGoals = user.UserProfile.FitnessGoals,
+                MedicalConditions = user.UserProfile.MedicalConditions,
+                Allergies = user.UserProfile.Allergies,
+                Address = new AddressDto
+                {
+                    Street = user.UserProfile.Address.Street,
+                    City = user.UserProfile.Address.City,
+                    State = user.UserProfile.Address.State,
+                    Country = user.UserProfile.Address.Country,
+                    PostalCode = user.UserProfile.Address.PostalCode
+                }
             };
         }
 
-        public async Task UpdateUserProfileAsync(string userId, UserProfile profileDto)
+        public async Task UpdateUserProfileAsync(string userId, UserProfile profile)
         {
             var filter = Builders<User>.Filter.Eq(u => u.KeycloakId, userId);
             var update = Builders<User>.Update
-                .Set(u => u.Profile, new UserProfile
-                {
-                    PersonalInfo = new PersonalInfo
-                    {
-                        FirstName = profileDto.PersonalInfo.FirstName,
-                        LastName = profileDto.PersonalInfo.LastName,
-                        DateOfBirth = profileDto.PersonalInfo.DateOfBirth,
-                        Gender = profileDto.PersonalInfo.Gender
-                    },
-                    ContactInfo = new ContactInfo
-                    {
-                        Email = profileDto.ContactInfo.Email,
-                        Phone = profileDto.ContactInfo.Phone
-                    },
-                    Address = new Address
-                    {
-                        Street = profileDto.Address.Street,
-                        City = profileDto.Address.City,
-                        State = profileDto.Address.State,
-                        Country = profileDto.Address.Country,
-                        PostalCode = profileDto.Address.PostalCode
-                    }
-                });
+                .Set(u => u.UserProfile, profile);
 
-            var result = await _users.FindOneAndUpdateAsync(filter, update, new FindOneAndUpdateOptions<User> { ReturnDocument = ReturnDocument.After });
-
-            //if (result == null) return null;
-
-            //return profileDto;
+            await _users.FindOneAndUpdateAsync(filter, update);
         }
 
-        public async Task<PaymentInfoDto> GetPaymentInfoAsync(string userId)
+        public async Task<PaymentInfoDto?> GetPaymentInfoAsync(string userId)
         {
             var user = await _users.Find(u => u.KeycloakId == userId).FirstOrDefaultAsync();
             if (user == null || user.PaymentInfo == null) return null;
 
             return new PaymentInfoDto
             {
-                // Burayı da UseCase'de maplemek istiyorsan boş dönebiliriz
+                CardHolderName = user.PaymentInfo.CardHolderName,
+                CardNumber = user.PaymentInfo.CardNumber,
+                ExpiryDate = user.PaymentInfo.ExpiryDate,
+                CVV = user.PaymentInfo.CVV,
+                BillingAddress = user.PaymentInfo.BillingAddress
             };
         }
 
-        public async Task UpdatePaymentInfoAsync(string userId, PaymentInfo paymentDto)
+        public async Task UpdatePaymentInfoAsync(string userId, PaymentInfo paymentInfo)
         {
             var filter = Builders<User>.Filter.Eq(u => u.KeycloakId, userId);
             var update = Builders<User>.Update
-                .Set(u => u.PaymentInfo, new PaymentInfo
-                {
-                    CardHolderName = paymentDto.CardHolderName,
-                    CardNumber = paymentDto.CardNumber,
-                    ExpirationMonth = paymentDto.ExpirationMonth,
-                    ExpirationYear = paymentDto.ExpirationYear,
-                    Cvv = paymentDto.Cvv,
-                    BillingAddress = paymentDto.BillingAddress
-                });
+                .Set(u => u.PaymentInfo, paymentInfo);
 
-            var result = await _users.FindOneAndUpdateAsync(filter, update, new FindOneAndUpdateOptions<User> { ReturnDocument = ReturnDocument.After });
-
-            //if (result == null) return null;
-
-            //return paymentDto;
+            await _users.FindOneAndUpdateAsync(filter, update);
         }
 
-        public async Task<TrainerProfileDto> GetTrainerProfileAsync(string trainerId)
+        public async Task<TrainerProfileDto?> GetTrainerProfileAsync(string trainerId)
         {
             var user = await _users.Find(u => u.KeycloakId == trainerId).FirstOrDefaultAsync();
             if (user == null || user.TrainerProfile == null) return null;
 
             return new TrainerProfileDto
             {
-                // Mapping yine UseCase'de
+                Specialization = user.TrainerProfile.Specialization,
+                ExperienceYears = user.TrainerProfile.ExperienceYears,
+                Certifications = user.TrainerProfile.Certifications.Select(c => new CertificationDto
+                {
+                    Name = c.Name,
+                    IssuingAuthority = c.IssuingAuthority,
+                    IssueDate = c.IssueDate,
+                    ExpiryDate = c.ExpiryDate
+                }).ToList(),
+                Bio = user.TrainerProfile.Bio,
+                HourlyRate = user.TrainerProfile.HourlyRate,
+                AvailableDays = user.TrainerProfile.AvailableDays,
+                AvailableHours = user.TrainerProfile.AvailableHours
             };
         }
 
-        public async Task UpdateTrainerProfileAsync(string trainerId, TrainerProfile trainerDto)
+        public async Task UpdateTrainerProfileAsync(string trainerId, TrainerProfile trainerProfile)
         {
             var filter = Builders<User>.Filter.Eq(u => u.KeycloakId, trainerId);
             var update = Builders<User>.Update
-                .Set(u => u.TrainerProfile, new TrainerProfile
-                {
-                    Specializations = trainerDto.Specializations.Select(s => new Specialization { Value = s.Value }).ToList(),
-                    Certifications = trainerDto.Certifications.Select(c => new Certification
-                    {
-                        Name = c.Name,
-                        IssuingAuthority = c.IssuingAuthority,
-                        IssueDate = c.IssueDate,
-                        ExpiryDate = c.ExpiryDate
-                    }).ToList(),
-                    //AvailableSlots = trainerDto.AvailableSlots.Select(a => new TimeSlot
-                    //{
-                    //    DayOfWeek = a.DayOfWeek,
-                    //    StartTime = a.StartTime,
-                    //    EndTime = a.EndTime
-                    //}).ToList(),
-                    YearsOfExperience = trainerDto.YearsOfExperience,
-                    HourlyRate = trainerDto.HourlyRate
-                });
+                .Set(u => u.TrainerProfile, trainerProfile);
 
-            var result = await _users.FindOneAndUpdateAsync(filter, update, new FindOneAndUpdateOptions<User> { ReturnDocument = ReturnDocument.After });
-
-            //if (result == null) return null;
-
-            //return trainerDto;
+            await _users.FindOneAndUpdateAsync(filter, update);
         }
 
         public async Task<IEnumerable<UserDto>> GetAllTrainersAsync()
         {
-            var trainers = await _users.Find(u => u.UserType == Domain.Enums.UserType.TRAINER).ToListAsync();
+            var trainers = await _users.Find(u => u.UserType == UserType.TRAINER).ToListAsync();
             return trainers.Select(t => new UserDto
             {
                 Id = t.Id,

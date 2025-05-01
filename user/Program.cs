@@ -4,15 +4,14 @@ using PTManagementSystem.Application.Mappings;
 using PTManagementSystem.Application.Services;
 using PTManagementSystem.Application.Validators;
 using PTManagementSystem.Infrastructure.ExternalServices;
-
 using PTManagementSystem.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using PTManagementSystem.Infrastructure.Data;
-using user.Infrastructure.ExternalServices;
-using DotNetEnv;
-using user.Application.UseCases.Commands;
 using PTManagementSystem.Application.UseCases.Commands;
-using user.Application.UseCases.Queries;
+using PTManagementSystem.Application.UseCases.Queries;
+using PTManagementSystem.Infrastructure.Config;
+using DotNetEnv;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
