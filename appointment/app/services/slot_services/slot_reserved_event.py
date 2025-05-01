@@ -23,3 +23,4 @@ def slot_reserved_event(reservation_data):
     print(" [x] Sent 'reservationMade' event")
     connection.close()
 
+

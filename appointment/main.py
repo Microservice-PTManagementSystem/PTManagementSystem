@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from api.appointment import router as appointment_router
-from services.slot_services.slot_confirmed_event import start_consumer
+from app.api.appointment import router as appointment_router
+from app.services.slot_services.slot_confirmed_event import start_consumer
 app = FastAPI(title=" API", description="", version="1.0")
 
 app.include_router(appointment_router)
