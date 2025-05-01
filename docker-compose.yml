@@ -73,8 +73,8 @@ services:
          - mynetwork
    user:
       build:
-         context: .
-         dockerfile: user/Dockerfile
+         context: ./user
+         dockerfile: Dockerfile
       container_name: userservice
       depends_on:
          rabbitmq:
@@ -90,7 +90,7 @@ services:
          - KEYCLOAK_CLIENT_ID=ptmanagement_clientId
          - KEYCLOAK_CLIENT_SECRET=gJ3meMw0tG6ZuPqqxa6Qdocf8m6MdccM
          - ASPNETCORE_ENVIRONMENT=Development
-         - ConnectionStrings__DefaultConnection=Server=keycloakdb.cnm2memqkoty.us-east-2.rds.amazonaws.com;Port=3306;Database=keycloakdb;User=admin;Password=ptmanagementAws;
+         - ConnectionStrings__DefaultConnection=Server=keycloakdb.cnm2memqkoty.us-east-2.rds.amazonaws.com:Port=3306;Database=keycloakdb;User=admin;Password=ptmanagementAws;
       ports:
          - "8008:8080"
       networks:
@@ -113,7 +113,7 @@ services:
 
    payment:
       build:
-         context: ./payment/paymentDemo # <- pom.xml ve Dockerfile burada
+         context: ./payment/paymentDemo
          dockerfile: Dockerfile
       container_name: paymentservice
       depends_on:
@@ -121,7 +121,6 @@ services:
             condition: service_healthy
       environment:
          - RABBITMQ_HOST=rabbitmq
-
       ports:
          - "8006:8080"
       networks:

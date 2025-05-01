@@ -42,7 +42,7 @@ builder.Services.AddScoped<GetUser>();
 builder.Services.AddScoped<IKeycloakService, KeycloakService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IMessageBroker, RabbitMQService>();
-builder.Services.AddScoped<UserValidationService>();
+builder.Services.AddScoped<IUserValidationService, UserValidationService>();
 builder.Services.Configure<KeycloakSettings>(
     builder.Configuration.GetSection("Keycloak"));
 
