@@ -22,8 +22,3 @@ async def get_reservation(slot_data: Slot):
 async def cancel_reservation(cancellation_data: AppointmentCanceledEvent):
     response = cancel_appointment(cancellation_data.dict())  
     return response
-
-@router.post("/cancel_appointment")
-async def cancel_reservation(cancellation_data: AppointmentCanceledEvent):
-    response = cancel_appointment(cancellation_data.dict())  
-    return response
