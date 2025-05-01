@@ -58,13 +58,29 @@
               "target": "Package",
               "version": "[6.12.2, )"
             },
-            "FluentValidation": {
+            "Microsoft.Extensions.Configuration": {
               "target": "Package",
-              "version": "[11.11.0, )"
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Microsoft.Extensions.Options": {
+              "target": "Package",
+              "version": "[9.0.0, )"
             },
             "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[17.9.0, )"
+              "version": "[17.8.0, )"
+            },
+            "MongoDB.Driver": {
+              "target": "Package",
+              "version": "[3.3.0, )"
             },
             "Moq": {
               "target": "Package",
@@ -78,13 +94,13 @@
             },
             "xunit": {
               "target": "Package",
-              "version": "[2.7.0, )"
+              "version": "[2.6.2, )"
             },
             "xunit.runner.visualstudio": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[2.5.7, )"
+              "version": "[2.5.3, )"
             }
           },
           "imports": [

@@ -48,7 +48,7 @@ services:
          KEYCLOAK_ADMIN: sezenhuddam@gmail.com
          KEYCLOAK_ADMIN_PASSWORD: admin
          KEYCLOAK_HTTP_ENABLED: true
-         KEYCLOAK_DB_URL: jdbc:mysql://keycloakdb.cnm2memqkoty.us-east-2.rds.amazonaws.com:3306/keycloakdb7
+         KEYCLOAK_DB_URL: jdbc:mysql://keycloakdb.cnm2memqkoty.us-east-2.rds.amazonaws.com:3306/keycloakdb
          KC_SPI_EVENTS_LISTENER_PROVIDERS: +http
          KC_EVENTS_LISTENERS: http
 

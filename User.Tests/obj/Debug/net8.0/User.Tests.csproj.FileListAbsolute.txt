@@ -18,7 +18,6 @@ C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\appsetting
 C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\appsettings.json
 C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\PTManagementSystem.exe
 C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\testhost.exe
-C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\xunit.runner.visualstudio.testadapter.dll
 C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\xunit.runner.reporters.netcoreapp10.dll
 C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\xunit.runner.utility.netcoreapp10.dll
 C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\User.Tests.deps.json
@@ -239,3 +238,5 @@ C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\obj\Debug\net8.0\refint\Use
 C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\obj\Debug\net8.0\User.Tests.pdb
 C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\obj\Debug\net8.0\User.Tests.genruntimeconfig.cache
 C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\obj\Debug\net8.0\ref\User.Tests.dll
+C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll
+C:\Users\sezen\Desktop\PTManagementSystem\User.Tests\bin\Debug\net8.0\NuGet.Frameworks.dll

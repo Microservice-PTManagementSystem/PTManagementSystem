@@ -84,7 +84,7 @@ namespace User.Tests.Commands
             };
 
             _keycloakServiceMock.Setup(x => x.GetUserInfoAsync(It.IsAny<string>()))
-                .ReturnsAsync((KeycloakUserDto)null);
+                .ReturnsAsync((KeycloakUserDto?)null);
 
             
             var exception = await Assert.ThrowsAsync<Exception>(() => 
