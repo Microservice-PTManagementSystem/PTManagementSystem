@@ -434,6 +434,28 @@
   "webAuthnPolicyPasswordlessAcceptableAaguids" : [ ],
   "webAuthnPolicyPasswordlessExtraOrigins" : [ ],
   "users" : [ {
+    "id" : "7de5c8fa-5fd5-4b78-950f-de5d2545862e",
+    "username" : "deneme1@example.com",
+    "firstName" : "deneme",
+    "lastName" : "deneme",
+    "email" : "deneme1@example.com",
+    "emailVerified" : false,
+    "createdTimestamp" : 1746130633072,
+    "enabled" : true,
+    "totp" : false,
+    "credentials" : [ {
+      "id" : "c9f4361e-dfe8-4b42-bb05-1517cc0b31f1",
+      "type" : "password",
+      "createdDate" : 1746130633987,
+      "secretData" : "{\"value\":\"5vS9ZQyZo64hB5bgvP2fOaC0bW5pcCBtjAmW/7qb1HM3xj9b0Svenwv+34do3TvaalQbLgySwGSwDV2URNsfDQ==\",\"salt\":\"EqQsB9BRnSVEBRnpjGsfiQ==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":210000,\"algorithm\":\"pbkdf2-sha512\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-ptmanagement" ],
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
     "id" : "7934a064-44cc-4a5c-9a8a-88bdabcaf3cd",
     "username" : "deneme3@example.com",
     "email" : "deneme3@example.com",
