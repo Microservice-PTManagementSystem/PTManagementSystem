@@ -1,7 +1,7 @@
 from fastapi import FastAPI
-from api.notification import router as appointment_router
-from services.rabbitmq_consumer import start_consumer
-from services.cancel_appointment_consumer import start_cancel_consumer
+from app.api.notification import router as appointment_router
+from app.services.rabbitmq_consumer import start_consumer
+from app.services.cancel_appointment_consumer import start_cancel_consumer
 import threading
 
 app = FastAPI(title="API", description="", version="1.0")

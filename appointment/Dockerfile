@@ -5,6 +5,6 @@ WORKDIR /app
 COPY ./appointment/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY ./appointment/app /app
+COPY ./appointment /app
 
 CMD ["python3", "main.py"]
