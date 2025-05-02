@@ -28,3 +28,4 @@ def appointment_canceled_event(cancellation_data):
 
     print("[x] Sent 'appointmentCanceled' event")
     connection.close()
+    
