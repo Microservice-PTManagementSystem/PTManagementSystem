@@ -9,7 +9,11 @@
         "lint": "next lint"
     },
     "dependencies": {
+<<<<<<< HEAD
         "lucide-react": "^0.503.0",
+=======
+        "lucide-react": "^0.507.0",
+>>>>>>> f99a5c9 (Updates have been made to the appointment system. The settings page has been added.)
         "next": "15.3.1",
         "next-auth": "^4.24.11",
         "react": "^19.0.0",

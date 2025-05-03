@@ -7,18 +7,69 @@ import styles from "../styles/home.module.css";
 import { signOut,useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 
+
 export default function Home() {
 
   const [trainer, setTrainer] = useState("");
   const [frequency, setFrequency] = useState("");
-  const [date, setDate] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [slots, setSlots] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();  
 
+  const trainers = [
+    {
+      id: 1,
+      name: "JAMIE WARRING",
+      profession: "Fitness Trainer",
+      imageUrl: "/trainer_jamie.jpg",
+    },
+    {
+      id: 2,
+      name: "MARK",
+      profession: "Fitness Trainer",
+      imageUrl: "/mark.jpg",
+    },
+    {
+      id: 3,
+      name: "RAPHAEL",
+      profession: "Fitness Trainer",
+      imageUrl: "/raphael.jpeg",
+    },
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Trainer: ${trainer}\nFrequency: ${frequency}\nDate: ${date}`);
+    const selectedTrainer = trainers.find((t) => t.name === trainer);
+
+    if (!selectedTrainer) {
+      alert("Trainer not found.");
+      return;
+    }
+
+    try {
+      const response = fetch("http://localhost:3004/make_reservation/available_slots", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trainerId: selectedTrainer.id,
+          startDate:startDate,
+          endDate:endDate,
+        }),
+      });
+
+      const data =response.json();
+      setSlots(data || []);
+      setShowModal(true);
+    } catch (error) {
+      console.error("Error fetching slots:", error);
+      setSlots([]);
+      setShowModal(true);
+    }
   };
 
   /*const handleSignOut = async () => {
@@ -71,52 +122,51 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <header className="bg-black text-white">
-  <div className="container mx-auto px-4 py-4">
-    <div className="flex items-center justify-between">
-      <div className="flex items-center">
-        <Link href="/" className="text-xl font-bold text-white">
-          <span className="text-orange-500">DALMS</span>FITNESS
-        </Link>
-      </div>
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <Link href="/" className="text-xl font-bold text-white">
+                <span className="text-orange-500">DALMS</span>FITNESS
+              </Link>
+            </div>
 
-      <nav className="hidden md:flex space-x-6">
-        <Link href="/" className="text-sm hover:text-orange-500">Home</Link>
-        <Link href="/our-trainers" className="text-sm hover:text-orange-500">Our Trainers</Link>
-        <Link href="/our-plans" className="text-sm hover:text-orange-500">Our Plans</Link>
-        <Link href="/contact-us" className="text-sm hover:text-orange-500">Contact Us</Link>
-      </nav>
+            <nav className="hidden md:flex space-x-6">
+              <Link href="/" className="text-sm hover:text-orange-500">Home</Link>
+              <Link href="/our-trainers" className="text-sm hover:text-orange-500">Our Trainers</Link>
+              <Link href="/settings">
+                <span className="text-sm hover:text-orange-500">Settings</span>
+              </Link>
+              <Link href="/contact-us" className="text-sm hover:text-orange-500">Contact Us</Link>
+            </nav>
 
-      <div className="flex items-center space-x-6">
-        
-        <div className="flex items-center space-x-3">
-          <Link href="#" className="text-white hover:text-orange-500">
-            <Facebook size={16} />
-          </Link>
-          <Link href="#" className="text-white hover:text-orange-500">
-            <Twitter size={16} />
-          </Link>
-          <Link href="#" className="text-white hover:text-orange-500">
-            <Instagram size={16} />
-          </Link>
+            <div className="flex items-center space-x-6">
+              
+              <div className="flex items-center space-x-3">
+                <Link href="#" className="text-white hover:text-orange-500">
+                  <Twitter size={16} />
+                </Link>
+                <Link href="#" className="text-white hover:text-orange-500">
+                  <Instagram size={16} />
+                </Link>
+              </div>
+
+              
+              <div className="flex items-center space-x-4">
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="bg-red-600 p-2 rounded hover:bg-red-800"
+                >
+                  <LogOut size={20} className="text-white" />
+                </button>
+                <button className="p-2 hover:text-orange-500">
+                  <CircleUser size={20} />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-
-        
-        <div className="flex items-center space-x-4">
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="bg-red-600 p-2 rounded hover:bg-red-800"
-          >
-            <LogOut size={20} className="text-white" />
-          </button>
-          <button className="p-2 hover:text-orange-500">
-            <CircleUser size={20} />
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</header>
+      </header>
 
 
 
@@ -196,82 +246,33 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">OUR TRAINERS</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-gray-800">
-            <div className="h-80 relative">
-                <Image
-                  src="/trainer_jamie.jpg"
-                  alt="Trainer Jamie"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-4 text-center">
-                <h3 className="text-xl font-bold mb-1">JAMIE WARRING</h3>
-                <p className="text-sm text-gray-400 mb-3">Fitness Trainer</p>
-                <div className="flex justify-center space-x-2">
-                  <Link href="#" className="text-white hover:text-orange-500">
-                    <Facebook size={16} />
-                  </Link>
-                  <Link href="#" className="text-white hover:text-orange-500">
-                    <Twitter size={16} />
-                  </Link>
-                  <Link href="#" className="text-white hover:text-orange-500">
-                    <Instagram size={16} />
-                  </Link>
+            {trainers.map((trainer) => (
+              <div key={trainer.id} className="bg-gray-800">
+                <div className="h-80 relative">
+                  <Image
+                    src={trainer.imageUrl}
+                    alt={`Trainer ${trainer.name}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-4 text-center">
+                  <h3 className="text-xl font-bold mb-1">{trainer.name}</h3>
+                  <p className="text-sm text-gray-400 mb-3">{trainer.profession}</p>
+                  <div className="flex justify-center space-x-2">
+    
+                    <Link href="#" className="text-white hover:text-orange-500">
+                      <Twitter size={16} />
+                    </Link>
+                    <Link href="#" className="text-white hover:text-orange-500">
+                      <Instagram size={16} />
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="bg-gray-800">
-              <div className="h-80 relative">
-                <Image 
-                src="/mark.jpg
-                " 
-                alt="Trainer Mark" 
-                fill 
-                className="object-cover" />
-              </div>
-              <div className="p-4 text-center">
-                <h3 className="text-xl font-bold mb-1">MARK</h3>
-                <p className="text-sm text-gray-400 mb-3">Fitness Trainer</p>
-                <div className="flex justify-center space-x-2">
-                  <Link href="#" className="text-white hover:text-orange-500">
-                    <Facebook size={16} />
-                  </Link>
-                  <Link href="#" className="text-white hover:text-orange-500">
-                    <Twitter size={16} />
-                  </Link>
-                  <Link href="#" className="text-white hover:text-orange-500">
-                    <Instagram size={16} />
-                  </Link>
-                </div>
-              </div>
-            </div>
-            <div className="bg-gray-800">
-              <div className="h-80 relative">
-                <Image
-                  src="/raphael.jpeg"
-                  alt="Trainer Raphael"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-4 text-center">
-                <h3 className="text-xl font-bold mb-1">RAPHAEL</h3>
-                <p className="text-sm text-gray-400 mb-3">Fitness Trainer</p>
-                <div className="flex justify-center space-x-2">
-                  <Link href="#" className="text-white hover:text-orange-500">
-                    <Facebook size={16} />
-                  </Link>
-                  <Link href="#" className="text-white hover:text-orange-500">
-                    <Twitter size={16} />
-                  </Link>
-                  <Link href="#" className="text-white hover:text-orange-500">
-                    <Instagram size={16} />
-                  </Link>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
+
         </div>
       </section>
 
@@ -286,16 +287,16 @@ export default function Home() {
           <div>
             <label className="block text-sm font-medium mb-2">Select Trainer</label>
             <select
-              value={trainer}
-              onChange={(e) => setTrainer(e.target.value)}
-              required
-              className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              <option value="">-- Choose a Trainer --</option>
-              <option value="Jamie">Jamie</option>
-              <option value="Mark">Mark</option>
-              <option value="Raphael">Raphael</option>
-            </select>
+                value={trainer}
+                onChange={(e) => setTrainer(e.target.value)}
+                required
+                className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                <option value="">-- Choose a Trainer --</option>
+                {trainers.map((t) => (
+                  <option key={t.id} value={t.name}>{t.name}</option>
+                ))}
+              </select>
           </div>
 
           <div>
@@ -315,13 +316,24 @@ export default function Home() {
 
           <div>
             <label className="block text-sm font-medium mb-2">Select Date</label>
-            <input
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-              className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            />
+            <div className="flex gap-x-4">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+                className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                required
+                className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+              />
+
+            </div>
+            
           </div>
 
           <button
@@ -333,6 +345,32 @@ export default function Home() {
         </form>
       </div>
     </section>
+    {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-gray-900 text-white p-6 rounded-lg w-full max-w-md mx-4">
+            <h3 className="text-xl font-semibold mb-4 text-orange-400">Available Slots</h3>
+            {slots.length > 0 ? (
+              <ul className="space-y-2 max-h-[300px] overflow-y-auto">
+                {slots.map((slot, idx) => (
+                  <li key={idx} className="bg-gray-800 p-3 rounded">
+                    {slot}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-center text-sm text-red-400">Aradığınız tarihlerde boş randevu bulunamadı.</p>
+            )}
+            <div className="mt-6 text-right">
+              <button
+                onClick={() => setShowModal(false)}
+                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full"
+              >
+                Kapat
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <section className="bg-orange-500 text-white py-8">
         <div className="container mx-auto px-4">
