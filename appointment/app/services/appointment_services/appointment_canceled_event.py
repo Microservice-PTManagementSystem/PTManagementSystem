@@ -7,20 +7,13 @@ def appointment_canceled_event(cancellation_data):
     channel = connection.channel()
     channel.queue_declare(queue='cancellationQueue')
 
-    # MongoDB'den silme işlemi
-    collection = get_collection("AppointmentDB")
 
-    slot_id = cancellation_data["slot_id"]
+    appointment_collection = get_collection("AppointmentDB")
+    appointment_collection.update_one({"slot_id": cancellation_data["slot_id"]}, {"$set": {"status": "cancelled"}})
+    appointment_collection.update_one({"slot_id": cancellation_data["slot_id"]}, {"$set": {"reason": cancellation_data["reason"]}})
 
-    delete_query = {"slot_id": slot_id}
-
-    result = collection.delete_one(delete_query)
-
-    if result.deleted_count > 0:
-        print("[x] Appointment successfully deleted from MongoDB.")
-    else:
-        print("[!] No matching appointment found to delete.")
-
+    slot_collection = get_collection("SlotDB")
+    slot_collection.update_one({"slot_id": cancellation_data["slot_id"]}, {"$set": {"status": "released"}})
     # RabbitMQ'ya mesaj gönderme
     message = json.dumps(cancellation_data, default=str)
 
