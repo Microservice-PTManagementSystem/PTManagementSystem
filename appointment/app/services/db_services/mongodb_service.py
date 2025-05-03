@@ -1,8 +1,9 @@
 from pymongo import MongoClient
 
 def get_mongo_client():
-    return MongoClient("mongodb+srv://eryilmazmuhammet07:0irCC60yUYilGmzC@appointmentdb.wqol0nu.mongodb.net/")
-
+    return MongoClient("mongodb+srv://dorukyelken:XBBoy9I7ZoWnp887@cluster0.hupvg8a.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+#mongodb+srv://dorukyelken:XBBoy9I7ZoWnp887@cluster0.hupvg8a.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+#mongodb+srv://eryilmazmuhammet07:0irCC60yUYilGmzC@appointmentdb.wqol0nu.mongodb.net/
 def get_appointment_db_collection():
     client = get_mongo_client()
     db = client["AppointmentDB"]

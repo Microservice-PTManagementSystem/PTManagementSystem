@@ -1,4 +1,7 @@
 import json
+import uuid
+from  datetime import datetime , timedelta
+
 from services.slot_services.slot_reserved_event import slot_reserved_event
 
 from services.slot_services.slot_released_event import slot_released_event
@@ -13,21 +16,77 @@ def make_reservation(data):
     collection.insert_one(data)"""
 
     slot_reserved_event(data)
-
-
-
-
-    return {"status": "success", "data": data}
+    return {"data": data}
 
 def create_slot(data):
     collection = get_collection("SlotDB")
-    mongo_insert_data = data.copy()
-    collection.insert_one(mongo_insert_data)
-    return {"status": "success", "data": data}
+    current_day = data["start_date"]
+    slots = []
 
+    # Convert time strings to datetime.time objects
+    start_hour = datetime.strptime(data["daily_working_start_hour"], "%H:%M").time()
+    end_hour = datetime.strptime(data["daily_working_end_hour"], "%H:%M").time()
+
+    while current_day <= data["end_date"]:
+        current_time = datetime.combine(current_day, start_hour)
+        end_time = datetime.combine(current_day, end_hour)
+
+        while current_time < end_time:
+            next_hour = current_time + timedelta(hours=1)
+
+            # Store slot data with datetime for start and end times
+            slot_data = {
+                "trainer_id": data["trainer_id"],
+                "slot_id": str(uuid.uuid4()),
+                "slot_status": "released",
+                "start_time": current_time,  # Save datetime object
+                "end_time": next_hour  # Save datetime object
+            }
+
+            # Insert slot into database
+            collection.insert_one(slot_data)
+
+            # Add created slots to the list
+            slots.append(slot_data)
+
+            # Move to the next hour
+            current_time = next_hour
+
+        # Move to the next day
+        current_day += timedelta(days=1)
+
+    return {"response": 200}
+
+
+# Get Available Slots Function
+def get_available_slots(data):
+    collection = get_collection("SlotDB")
+
+    # Convert start and end date to datetime at the start of the day (00:00:00)
+    start_datetime = datetime.combine(data["start_date"], datetime.min.time())
+    end_datetime = datetime.combine(data["end_date"], datetime.min.time())
+
+    filter_criteria = {
+        "trainer_id": data["trainer_id"],
+        "slot_status": "released",
+        "start_time": {"$gte": start_datetime},  # Compare with datetime objects
+        "end_time": {"$lte": end_datetime}  # Compare with datetime objects
+    }
+
+    # Fetch available slots from the database
+    slots = list(collection.find(filter_criteria))
+
+    # Remove the _id field from each slot
+    for slot in slots:
+        if "_id" in slot:
+            del slot["_id"]
+
+    return slots
 
 def cancel_appointment(data):
     print(f"CANCELED RESERVATION:  {data}")
     print(f"DATA TYPE:  {type(data)}")
     appointment_canceled_event(data)
-    return {"status": "success", "data": data}
+    return {"data": data}
+
+
