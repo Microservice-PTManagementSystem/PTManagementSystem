@@ -202,7 +202,7 @@ export default function SettingsPage() {
             {activeTab === "paymentInfo" && (
               <>
                 <h1 className="text-2xl font-bold mb-6 text-gray-600">Payment Informations</h1>
-                <TextButton className="text-gray-600 mb-4">Kart eklemek için tıkla</TextButton>
+                <TextButton className="text-gray-600 mb-4">Click to add card</TextButton>
 
                 <div className="space-y-4 text-gray-600">
                   
