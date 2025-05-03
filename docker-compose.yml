@@ -14,6 +14,40 @@ services:
       networks:
          - mynetwork
 
+   mysql:
+      image: mysql:8.0
+      container_name: mysql
+      restart: always
+      environment:
+         MYSQL_ROOT_PASSWORD: superadmin
+         MYSQL_DATABASE: userdb
+         MYSQL_USER: appuser
+         MYSQL_PASSWORD: appsecret
+      volumes:
+         - mysql_data:/var/lib/mysql
+      ports:
+         - "3306:3306"
+      networks:
+         - mynetwork
+
+   keycloak:
+      image: quay.io/keycloak/keycloak:24.0.3
+      container_name: keycloak
+      command: start-dev
+      depends_on:
+         mysql:
+            condition: service_started
+      environment:
+         KC_DB: mysql
+         KC_DB_URL: jdbc:mysql://mysql:3306/keycloak
+         KC_DB_USERNAME: keycloak
+         KC_DB_PASSWORD: keycloakpass
+         KEYCLOAK_ADMIN: sezenhuddam@gmail.com
+         KEYCLOAK_ADMIN_PASSWORD: admin
+      ports:
+         - "8080:8080"
+      networks:
+         - mynetwork
    notification:
       build:
          context: .
@@ -28,7 +62,30 @@ services:
          - "8002:8000"
       networks:
          - mynetwork
-
+   user:
+      build:
+         context: .
+         dockerfile: user/Dockerfile
+      container_name: userservice
+      depends_on:
+         mysql:
+            condition: service_started
+         rabbitmq:
+            condition: service_healthy
+         keycloak:
+            condition: service_started
+      environment:
+         - RABBITMQ_HOST=rabbitmq
+         - KEYCLOAK_URL=http://keycloak:8080
+         - KEYCLOAK_REALM=ptmanagement
+         - KEYCLOAK_CLIENT_ID=ptmanagement_clientId
+         - KEYCLOAK_CLIENT_SECRET=O5c8PvhgFHTGCjfcMVRyecw63LuLxV02
+         - ASPNETCORE_ENVIRONMENT=Development
+         - ConnectionStrings__DefaultConnection=Server=mysql;Port=3306;Database=userdb;User=appuser;Password=appsecret;
+      ports:
+         - "8008:8080"
+      networks:
+         - mynetwork
    appointment:
       build:
          context: .
@@ -46,7 +103,7 @@ services:
 
    payment:
       build:
-         context: ./payment/paymentDemo      # <- pom.xml ve Dockerfile burada
+         context: ./payment/paymentDemo # <- pom.xml ve Dockerfile burada
          dockerfile: Dockerfile
       container_name: paymentservice
       depends_on:
@@ -54,11 +111,13 @@ services:
             condition: service_healthy
       environment:
          - RABBITMQ_HOST=rabbitmq
-      
+
       ports:
          - "8006:8080"
       networks:
-         - mynetwork      
+         - mynetwork
 networks:
    mynetwork:
       driver: bridge
+volumes:
+   mysql_data:

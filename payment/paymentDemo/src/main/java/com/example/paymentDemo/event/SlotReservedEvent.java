@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class SlotReservedEvent implements Serializable {
+public class SlotReservedEvent {
     @JsonProperty("slot_id")
     private String slotId;
 
@@ -13,11 +13,7 @@ public class SlotReservedEvent implements Serializable {
 
     @JsonProperty("timestamp")
     private String timestamp;
-    //private String appointment_time;
-    //private String appointment_date;
-    //private String created_date;
-    //private String trainer_id;
-    //private String customer_id; bi de id için var eklenmiş
+    
 
     public SlotReservedEvent() {
     }   
