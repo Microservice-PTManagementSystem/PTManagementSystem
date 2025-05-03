@@ -87,4 +87,11 @@ def cancel_appointment(data):
     print(f"CANCELED RESERVATION:  {data}")
     print(f"DATA TYPE:  {type(data)}")
     appointment_canceled_event(data)
-    return {"status": "success", "data": data}
+    return {"data": data}
+
+def get_appointments_with_user_id(data , usecase):
+    collection = get_collection("AppointmentDB")
+    results = collection.find({"user_id": data["user_id"], "status": usecase}, {"_id": 0})  # _id'yi gösterme
+    slots = list(results)   
+    return slots
+
