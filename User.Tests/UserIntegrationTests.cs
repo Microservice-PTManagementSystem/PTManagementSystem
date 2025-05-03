@@ -26,6 +26,8 @@ using PTManagementSystem.Presentation.DTOs;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Moq;
+using System.Collections.Generic;
+using User.Tests.Infrastructure.ExternalServices;
 
 namespace PTManagementSystem.Tests
 {
@@ -34,6 +36,7 @@ namespace PTManagementSystem.Tests
         private readonly ServiceProvider _serviceProvider;
         private readonly UserDbContext _dbContext;
         private readonly Mock<IKeycloakService> _mockKeycloakService;
+        private readonly MockRabbitMQService _mockRabbitMQService;
 
         static UserIntegrationTests()
         {
@@ -51,7 +54,6 @@ namespace PTManagementSystem.Tests
         public UserIntegrationTests()
         {
             var services = new ServiceCollection();
-            
             
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
@@ -98,7 +100,8 @@ namespace PTManagementSystem.Tests
 
             //  Services
             services.AddScoped<IUserRepository, UserRepository>();
-            services.AddSingleton<IMessageBroker, RabbitMQService>();
+            _mockRabbitMQService = new MockRabbitMQService();
+            services.AddSingleton<IMessageBroker>(_mockRabbitMQService);
             services.AddScoped<IUserValidationService, UserValidationService>();
 
             //  DbContext
@@ -115,7 +118,7 @@ namespace PTManagementSystem.Tests
             var registerUser = _serviceProvider.GetRequiredService<RegisterUser>();
             var command = new KeycloakRegisterDto
             {
-                KeycloakUserId = "test-user-id"
+                KeycloakUserId = "11111111-1111-1111-1111-111111111111"
             };
 
             
@@ -137,7 +140,7 @@ namespace PTManagementSystem.Tests
 
             var registerCommand = new KeycloakRegisterDto
             {
-                KeycloakUserId = "login-test-user-id"
+                KeycloakUserId = "22222222-2222-2222-2222-222222222222"
             };
 
             await registerUser.RegisterAsync(registerCommand);
@@ -165,7 +168,7 @@ namespace PTManagementSystem.Tests
 
             var registerCommand = new KeycloakRegisterDto
             {
-                KeycloakUserId = "update-test-user-id"
+                KeycloakUserId = "33333333-3333-3333-3333-333333333333"
             };
 
             await registerUser.RegisterAsync(registerCommand);
@@ -216,7 +219,7 @@ namespace PTManagementSystem.Tests
 
             var registerCommand = new KeycloakRegisterDto
             {
-                KeycloakUserId = "getprofile-test-user-id"
+                KeycloakUserId = "44444444-4444-4444-4444-444444444444"
             };
 
             await registerUser.RegisterAsync(registerCommand);
@@ -224,7 +227,7 @@ namespace PTManagementSystem.Tests
             var user = await _dbContext.Users.Find(u => u.KeycloakId == registerCommand.KeycloakUserId).FirstOrDefaultAsync();
             user.Should().NotBeNull();
 
-            // Create initial user profile
+            // initial user profile
             var userProfileDto = new UserProfileDto
             {
                 FirstName = "Test",
@@ -256,15 +259,102 @@ namespace PTManagementSystem.Tests
 
             
             result.Should().NotBeNull();
-            result.FirstName.Should().Be(userProfileDto.FirstName);
+            result!.FirstName.Should().Be(userProfileDto.FirstName);
             result.LastName.Should().Be(userProfileDto.LastName);
         }
+
+        [Fact]
+        public async Task UpdatePaymentInfo_ShouldUpdateUserPaymentDetails()
+        {
+            
+            var registerUser = _serviceProvider.GetRequiredService<RegisterUser>();
+            var updatePaymentInfo = _serviceProvider.GetRequiredService<UpdatePaymentInfo>();
+
+            var registerCommand = new KeycloakRegisterDto
+            {
+                KeycloakUserId = "55555555-5555-5555-5555-555555555555"
+            };
+
+            await registerUser.RegisterAsync(registerCommand);
+
+            var user = await _dbContext.Users.Find(u => u.KeycloakId == registerCommand.KeycloakUserId).FirstOrDefaultAsync();
+            user.Should().NotBeNull();
+
+            var paymentInfoDto = new PaymentInfoDto
+            {
+                CardNumber = "4111111111111111",
+                CardHolderName = "Test User",
+                ExpiryDate = "12/25",
+                CVV = "123",
+                BillingAddress = "123 Payment Street, Payment City, Payment State, 54321"
+            };
+
+            
+            await updatePaymentInfo.ExecuteAsync(user.KeycloakId, paymentInfoDto);
+
+            
+            var updatedUser = await _dbContext.Users.Find(u => u.KeycloakId == user.KeycloakId).FirstOrDefaultAsync();
+            updatedUser.Should().NotBeNull();
+            updatedUser.PaymentInfo.Should().NotBeNull();
+            updatedUser.PaymentInfo.CardNumber.Should().Be(paymentInfoDto.CardNumber);
+            updatedUser.PaymentInfo.CardHolderName.Should().Be(paymentInfoDto.CardHolderName);
+        }
+
+        [Fact]
+        public async Task UpdateTrainerProfile_ShouldUpdateTrainerDetails()
+        {
+           
+            var registerUser = _serviceProvider.GetRequiredService<RegisterUser>();
+            var updateTrainerProfile = _serviceProvider.GetRequiredService<UpdateTrainerProfile>();
+
+            var registerCommand = new KeycloakRegisterDto
+            {
+                KeycloakUserId = "66666666-6666-6666-6666-666666666666"
+            };
+
+            await registerUser.RegisterAsync(registerCommand);
+
+            var user = await _dbContext.Users.Find(u => u.KeycloakId == registerCommand.KeycloakUserId).FirstOrDefaultAsync();
+            user.Should().NotBeNull();
+
+            var trainerProfileDto = new TrainerProfileDto
+            {
+                Specialization = "Fitness Training",
+                ExperienceYears = 5,
+                Certifications = new List<CertificationDto>
+                {
+                    new CertificationDto
+                    {
+                        Name = "NASM",
+                        IssuingAuthority = "National Academy of Sports Medicine",
+                        IssueDate = DateTime.Now.AddYears(-1),
+                        ExpiryDate = DateTime.Now.AddYears(1)
+                    }
+                },
+                Bio = "Experienced fitness trainer",
+                HourlyRate = 50.0m,
+                AvailableDays = new List<string> { "Monday", "Wednesday", "Friday" },
+                AvailableHours = new List<TimeSpan> { new TimeSpan(9, 0, 0), new TimeSpan(17, 0, 0) }
+            };
+
+            
+            await updateTrainerProfile.ExecuteAsync(user.KeycloakId, trainerProfileDto);
+
+            
+            var updatedUser = await _dbContext.Users.Find(u => u.KeycloakId == user.KeycloakId).FirstOrDefaultAsync();
+            updatedUser.Should().NotBeNull();
+            updatedUser.TrainerProfile.Should().NotBeNull();
+            updatedUser.TrainerProfile!.Specialization.Should().Be(trainerProfileDto.Specialization);
+            updatedUser.TrainerProfile.ExperienceYears.Should().Be(trainerProfileDto.ExperienceYears);
+            updatedUser.TrainerProfile.Certifications.Should().HaveCount(trainerProfileDto.Certifications.Count);
+        }
+
+    
 
         public void Dispose()
         {
             // Clean up test database
-            var client = new MongoClient("mongodb://localhost:27017");
-            client.DropDatabase("TestDatabase");
+            _dbContext.Users.DeleteMany(Builders<Domain.Entities.User>.Filter.Empty);
             _serviceProvider.Dispose();
         }
     }
