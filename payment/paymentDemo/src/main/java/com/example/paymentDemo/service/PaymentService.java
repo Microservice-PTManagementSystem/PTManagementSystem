@@ -1,44 +1,17 @@
-// package com.example.paymentDemo.service;
+package com.example.paymentDemo.service;
 
-// import org.springframework.amqp.rabbit.core.RabbitTemplate;
-// import org.springframework.stereotype.Service;
+import com.example.paymentDemo.dto.PaymentRequest;
+import com.example.paymentDemo.dto.PaymentResult;
+import com.example.paymentDemo.model.Payment;
 
-// import com.example.paymentDemo.config.RabbitMQConfig;
-// import com.example.paymentDemo.event.PaymentFailedEvent;
-// import com.example.paymentDemo.event.PaymentSucceededEvent;
-// import com.example.paymentDemo.event.SlotReservedEvent;
+import java.util.*;
 
-// @Service
-// public class PaymentService {
+import com.example.paymentDemo.model.PaymentStatus;
 
-//     private final RabbitTemplate rabbitTemplate;
-
-//     public PaymentService(RabbitTemplate rabbitTemplate) {
-//         this.rabbitTemplate = rabbitTemplate;
-//     }
-
-//     public void processPayment(SlotReservedEvent event) {
-//         boolean paymentSuccess = fakePaymentGateway();
-
-//         if (paymentSuccess) {
-//             PaymentSucceededEvent successEvent = new PaymentSucceededEvent();
-//             successEvent.setReservationId(event.getSlotId());
-//             //successEvent.setTrainerId(event.getTrainerId());
-//            // successEvent.setCustomerId(event.getCustomerId());
-
-//             rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, "payment.success", successEvent);
-//         } else {
-//             PaymentFailedEvent failedEvent = new PaymentFailedEvent();
-//             failedEvent.setReservationId(event.getSlotId());
-//             //failedEvent.setCustomerId(event.getCustomerId());
-
-//             rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE, "payment.failed", failedEvent);
-//         }
-//     }
-
-//     private boolean fakePaymentGateway() {
-//         return Math.random() > 0.5;
-//     }
-// }
-
-
+public interface PaymentService {
+    Payment initiatePayment(PaymentRequest request);
+    Payment confirmPayment(PaymentResult result);
+    Payment retryPayment(Long paymentId);
+    Payment issueRefund(Long paymentId);
+    PaymentStatus getStatus(Long paymentId);
+}
