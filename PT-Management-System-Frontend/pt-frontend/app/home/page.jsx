@@ -2,13 +2,14 @@
 import Image from "next/image"
 import Link from "next/link"
 import React, { useState } from "react"
-import { Facebook, Instagram, Twitter ,LogOut,CircleUser} from "lucide-react"
+import { Facebook, Instagram, Twitter ,LogOut,CircleUser,CircleX} from "lucide-react"
 import styles from "../styles/home.module.css";
 import { signOut,useSession } from "next-auth/react";
 import { useRouter } from 'next/navigation';
 
 
 export default function Home() {
+  const [error, setError] = useState(null);
 
   const [trainer, setTrainer] = useState("");
   const [frequency, setFrequency] = useState("");
@@ -16,31 +17,71 @@ export default function Home() {
   const [endDate, setEndDate] = useState("");
   const [slots, setSlots] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [changeActive,setChangeActive]=useState(false);
   const router = useRouter();
   const { data: session } = useSession();  
 
   const trainers = [
     {
-      id: 1,
+      id: "1",
       name: "JAMIE WARRING",
       profession: "Fitness Trainer",
       imageUrl: "/trainer_jamie.jpg",
     },
     {
-      id: 2,
+      id: "2",
       name: "MARK",
       profession: "Fitness Trainer",
       imageUrl: "/mark.jpg",
     },
     {
-      id: 3,
+      id: "3",
       name: "RAPHAEL",
       profession: "Fitness Trainer",
       imageUrl: "/raphael.jpeg",
     },
   ];
 
-  const handleSubmit = (e) => {
+  const makeReservation =async (e) => {
+    e.preventDefault();
+    console.log("slot",slots)
+    console.log("slot id",selectedSlot.slot_id)
+    if (!selectedSlot.slot_id) {
+      alert("slot id not found.");
+      return;
+    }
+    console.log("slot",slots)
+    console.log("slot id",slots.slot_id)
+    try {
+      const response = await fetch("http://localhost:8004/make_reservation/make_reservation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          slot_id: selectedSlot.slot_id,
+          user_id: session?.user?.id,
+          timestamp:" ",
+        }),
+      });
+
+      const data = await response.json();
+      alert("Randevu oluşturuldu.");
+
+      // buton içindeki diğer işlemler:
+      setShowModal(false);
+      setChangeActive(false);
+      setSelectedSlot(null);
+    } catch (error) {
+      console.error("Error fetching slots:", error);
+      alert("Rezervasyon sırasında hata oluştu.");
+      
+    }
+  };
+
+  
+  const handleSubmit =async (e) => {
     e.preventDefault();
     const selectedTrainer = trainers.find((t) => t.name === trainer);
 
@@ -48,23 +89,24 @@ export default function Home() {
       alert("Trainer not found.");
       return;
     }
-
+    
     try {
-      const response = fetch("http://localhost:3004/make_reservation/available_slots", {
+      const response = await fetch("http://localhost:8004/make_reservation/available_slots", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          trainerId: selectedTrainer.id,
-          startDate:startDate,
-          endDate:endDate,
+          trainer_id: selectedTrainer.id,
+          start_date: startDate,
+          end_date:endDate,
         }),
       });
 
-      const data =response.json();
+      const data =await response.json();
       setSlots(data || []);
       setShowModal(true);
+      console.log(slots)
     } catch (error) {
       console.error("Error fetching slots:", error);
       setSlots([]);
@@ -72,37 +114,7 @@ export default function Home() {
     }
   };
 
-  /*const handleSignOut = async () => {
-    await signOut({
-      redirect: true,
-      callbackUrl:
-        "http://localhost:8080/realms/ptmanagement/protocol/openid-connect/logout" +
-        "?post_logout_redirect_uri=http://localhost:3000" +
-        "&client_id=nextjs-app",
-    }); // Çıkış yapma işlemi
-    router.push('/');
-    console.log("--------------ÇIKIŞ YAPILDI---------------");
-  };*/
-  /*const handleSignOut = () => {
-    
-    signOut({ redirect: false }).then(() => {
-      
-      const base   = "http://localhost:8080";
-      const realm  = "ptmanagement";
-      const client = "nextjs-app";
-  
-      const redirect = encodeURIComponent("http://localhost:3000");
-      const idToken  = encodeURIComponent(session.idToken);   
-  
-      const kcLogout =
-        `${base}/realms/${realm}/protocol/openid-connect/logout` +
-        `?id_token_hint=${idToken}` +
-        `&post_logout_redirect_uri=${redirect}` +
-        `&client_id=${client}`;
-  
-      window.location.href = kcLogout;
-    });
-  };*/
+
 
   const handleSignOut = () => {
     
@@ -346,31 +358,85 @@ export default function Home() {
       </div>
     </section>
     {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-gray-900 text-white p-6 rounded-lg w-full max-w-md mx-4">
-            <h3 className="text-xl font-semibold mb-4 text-orange-400">Available Slots</h3>
-            {slots.length > 0 ? (
-              <ul className="space-y-2 max-h-[300px] overflow-y-auto">
-                {slots.map((slot, idx) => (
-                  <li key={idx} className="bg-gray-800 p-3 rounded">
-                    {slot}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-center text-sm text-red-400">Aradığınız tarihlerde boş randevu bulunamadı.</p>
-            )}
-            <div className="mt-6 text-right">
+  <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div className="bg-gray-900 text-white p-6 rounded-lg w-full max-w-md mx-4">
+      {!changeActive ? (
+        <>
+          <h3 className="text-xl font-semibold mb-4 text-orange-400">Available appointment dates</h3>
+          {slots.length > 0 ? (
+            <ul className="space-y-2 max-h-[300px] overflow-y-auto">
+              {slots.map((slot, idx) => (
+                <li key={idx} className="bg-gray-800 p-3 rounded">
+                  <p><span className="font-semibold">Start:</span> {new Date(slot.start_time).toLocaleString()}</p>
+                  <p><span className="font-semibold">End:</span> {new Date(slot.end_time).toLocaleString()}</p>
+                  <p><span className="font-semibold">Status:</span> {slot.slot_status}</p>
+                  <button
+                    onClick={() => {
+                      setSelectedSlot(slot);
+                      setChangeActive(true);
+                    }}
+                    className="bg-orange-400 hover:bg-orange-500 text-white text-sm px-2 py-2 mt-5 rounded-full"
+                  >
+                    Make an appointment
+                  </button>
+                </li>
+              ))}
+                <div className="mt-6 text-right">
+                  <button
+                    onClick={() => {
+                      setShowModal(false);
+                      setChangeActive(false);
+                      setSelectedSlot(null);
+                    }}
+                    className="bg-red-400 hover:bg-orange-600 text-white px-2 py-2 rounded-full"
+                  >
+                    <CircleX />
+                  </button>
+                </div>
+              
+            </ul>
+            
+
+          ) : (
+            <p className="text-center text-sm text-red-400">No available appointments were found on the dates you were looking for.</p>
+          )}
+        </>
+      ) : (
+        <>
+          <h3 className="text-xl font-semibold mb-4 text-orange-400">Appointment Confirmation</h3>
+          <div className="space-y-3 text-sm">
+            <p><span className="font-semibold">User:</span> {session?.user?.name}</p>
+            <p><span className="font-semibold">Id:</span> {session?.user?.id}</p>
+            <p><span className="font-semibold">Slot:</span> {selectedSlot?.slot_id}</p>
+            <p><span className="font-semibold">Start:</span> {new Date(selectedSlot?.start_time).toLocaleString()}</p>
+            <p><span className="font-semibold">End:</span> {new Date(selectedSlot?.end_time).toLocaleString()}</p>
+            <p className="mt-4">Do you confirm your appointment?</p>
+            <div className="flex justify-end gap-4 mt-4">
               <button
-                onClick={() => setShowModal(false)}
-                className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full"
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full"
+                onClick={makeReservation}
               >
-                Kapat
+                Confirm
+              </button>
+              <button
+                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-full"
+                onClick={() => {
+                  setChangeActive(false);
+                  setSelectedSlot(null);
+                }}
+              >
+                Back
               </button>
             </div>
           </div>
-        </div>
+        </>
       )}
+
+      
+    </div>
+  </div>
+)}
+
 
       <section className="bg-orange-500 text-white py-8">
         <div className="container mx-auto px-4">

@@ -1,12 +1,42 @@
 "use client"
 
-import { useState } from "react"
+import { useState} from "react"
 import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { Facebook, Instagram, Twitter ,LogOut,CircleUser} from "lucide-react"
+import { signOut,useSession } from "next-auth/react";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("account")
+  const { data: session } = useSession();  
+  const [reservations, setReservations] = useState([]);
+
+  const checkReservations =async (e) => {
+    e.preventDefault();
+
+    if (!selectedTrainer) {
+      alert("Trainer not found.");
+      return;
+    }
+    
+    try {
+      const response = await fetch("http://localhost:8004/make_reservation/get_active_reservations_by_user_id", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            user_id: session?.user?.id,
+        }),
+      });
+
+      const data =await response.json();
+      setReservations(data || []);
+    } catch (error) {
+      console.error("Error fetching slots:", error);
+      setReservations([]);
+    }
+  };
 
   const handleSignOut = () => {
     
@@ -184,7 +214,7 @@ export default function SettingsPage() {
                 <p className="text-gray-600 mb-4">Here you can see your upcoming and past appointments.</p>
 
                 <div className="space-y-4 text-gray-600">
-                  <AppointmentCard title="Trainer" date="May 10, 2025 - 10:00 AM" />
+                  <AppointmentCard title="Trainer" date={reservations.slot_id} />
                   <AppointmentCard title="Trainer" date="May 12, 2025 - 3:00 PM" />
                 </div>
               </>
