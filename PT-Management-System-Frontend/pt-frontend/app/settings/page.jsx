@@ -15,7 +15,7 @@ export default function SettingsPage() {
   const [trainerMap, setTrainerMap] = useState({});
 
     /*useEffect(() => {
-    // Bunu gerçek bir endpoint'e bağlaman gerekebilir
+    
     const fetchTrainerMap = async () => {
         try {
         const response = await fetch("http://localhost:8004/trainers/get_all_trainers");
@@ -294,7 +294,6 @@ export default function SettingsPage() {
   )
 }
 
-/** Inline Components */
 
 function Avatar({ size }) {
   const dimension = size === "lg" ? "h-12 w-12" : "h-10 w-10"

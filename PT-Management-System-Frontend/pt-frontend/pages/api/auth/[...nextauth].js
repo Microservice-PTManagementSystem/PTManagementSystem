@@ -8,7 +8,7 @@ export default NextAuth({
       clientSecret: process.env.KEYCLOAK_CLIENT_SECRET,
       issuer: process.env.KEYCLOAK_ISSUER, 
       profile(profile, tokens) {
-        console.log("PROFILE CALLBACK:", profile); // Bu server log'unda çıkar
+        console.log("PROFILE CALLBACK:", profile); 
         return {
           id: profile.sub,
           name: profile.preferred_username,
