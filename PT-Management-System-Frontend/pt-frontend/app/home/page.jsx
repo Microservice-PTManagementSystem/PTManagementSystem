@@ -22,6 +22,7 @@ export default function Home() {
   const router = useRouter();
   const { data: session } = useSession();  
 
+  console.log("Session:", session);
   const trainers = [
     {
       id: "1",
@@ -51,8 +52,7 @@ export default function Home() {
       alert("slot id not found.");
       return;
     }
-    console.log("slot",slots)
-    console.log("slot id",slots.slot_id)
+    console.log(" id",session?.user?.id)
     try {
       const response = await fetch("http://localhost:8004/make_reservation/make_reservation", {
         method: "POST",
@@ -62,12 +62,12 @@ export default function Home() {
         body: JSON.stringify({
           slot_id: selectedSlot.slot_id,
           user_id: session?.user?.id,
-          timestamp:" ",
+          timestamp:new Date().toISOString(),
         }),
       });
 
       const data = await response.json();
-      alert("Randevu oluşturuldu.");
+      alert("An appointment has been made.");
 
       // buton içindeki diğer işlemler:
       setShowModal(false);
@@ -311,20 +311,7 @@ export default function Home() {
               </select>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-2">Session Frequency</label>
-            <select
-              value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
-              required
-              className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              <option value="">-- Choose Frequency --</option>
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-            </select>
-          </div>
+          
 
           <div>
             <label className="block text-sm font-medium mb-2">Select Date</label>
@@ -352,24 +339,49 @@ export default function Home() {
             type="submit"
             className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full transition duration-300"
           >
-            Book Now
+            Control
           </button>
         </form>
       </div>
     </section>
     {showModal && (
   <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-    <div className="bg-gray-900 text-white p-6 rounded-lg w-full max-w-md mx-4">
+    <div className="bg-gray-900 text-white p-6 rounded-lg max-h-[95vh] w-full max-w-2xl max-h-[90vh] mx-4">
       {!changeActive ? (
         <>
-          <h3 className="text-xl font-semibold mb-4 text-orange-400">Available appointment dates</h3>
+        <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-semibold mb-4 text-orange-400">Available appointment dates</h3>
+          <div>
+            <button
+              onClick={() => {
+                setShowModal(false);
+                setChangeActive(false);
+                setSelectedSlot(null);
+              }}
+              className="bg-red-400 hover:bg-orange-600 text-white px-2 py-2 rounded-full"
+            >
+              <CircleX />
+            </button>
+          </div>
+        </div>
+          
           {slots.length > 0 ? (
             <ul className="space-y-2 max-h-[300px] overflow-y-auto">
-              {slots.map((slot, idx) => (
+              {slots.map((slot, idx) => {
+              const start = new Date(slot.start_time);
+              const end = new Date(slot.end_time);
+              const status=slot.slot_status;
+
+              return (
                 <li key={idx} className="bg-gray-800 p-3 rounded">
-                  <p><span className="font-semibold">Start:</span> {new Date(slot.start_time).toLocaleString()}</p>
-                  <p><span className="font-semibold">End:</span> {new Date(slot.end_time).toLocaleString()}</p>
-                  <p><span className="font-semibold">Status:</span> {slot.slot_status}</p>
+                  <p>
+                    <span className="font-semibold">Date and time:</span>{" "}
+                    {start.toLocaleDateString()} -{" "}
+                    {start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} to{" "}
+                    {end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                  </p>
+          
+                  <p><span className="font-semibold">Status:</span> {status}</p>
                   <button
                     onClick={() => {
                       setSelectedSlot(slot);
@@ -380,19 +392,10 @@ export default function Home() {
                     Make an appointment
                   </button>
                 </li>
-              ))}
-                <div className="mt-6 text-right">
-                  <button
-                    onClick={() => {
-                      setShowModal(false);
-                      setChangeActive(false);
-                      setSelectedSlot(null);
-                    }}
-                    className="bg-red-400 hover:bg-orange-600 text-white px-2 py-2 rounded-full"
-                  >
-                    <CircleX />
-                  </button>
-                </div>
+              );
+            })}
+
+                
               
             </ul>
             
@@ -406,8 +409,6 @@ export default function Home() {
           <h3 className="text-xl font-semibold mb-4 text-orange-400">Appointment Confirmation</h3>
           <div className="space-y-3 text-sm">
             <p><span className="font-semibold">User:</span> {session?.user?.name}</p>
-            <p><span className="font-semibold">Id:</span> {session?.user?.id}</p>
-            <p><span className="font-semibold">Slot:</span> {selectedSlot?.slot_id}</p>
             <p><span className="font-semibold">Start:</span> {new Date(selectedSlot?.start_time).toLocaleString()}</p>
             <p><span className="font-semibold">End:</span> {new Date(selectedSlot?.end_time).toLocaleString()}</p>
             <p className="mt-4">Do you confirm your appointment?</p>
@@ -446,7 +447,25 @@ export default function Home() {
     </div>
   );
 }
-
+/*
+<div>
+            <label className="block text-sm font-medium mb-2">Session Frequency</label>
+            <select
+              value={frequency}
+              onChange={(e) => setFrequency(e.target.value)}
+              required
+              className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              <option value="">-- Choose Frequency --</option>
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+          </div>
+*/ 
+/* <p><span className="font-semibold">Date and time:</span> ${new Date(slot.start_time).toLocaleDateString()} - ${start_time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${slot.end_time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+ <p><span className="font-semibold">Start:</span> {new Date(slot.start_time).toLocaleString()}</p>
+                  <p><span className="font-semibold">End:</span> {new Date(slot.end_time).toLocaleString()}</p>*/
 /* <a 
                   onClick={() => signOut({ callbackUrl: "/auth/signin" })}
                   className="cursor-pointer text-sm hover:text-orange-500"

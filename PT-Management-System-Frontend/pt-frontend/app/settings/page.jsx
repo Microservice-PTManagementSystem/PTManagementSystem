@@ -5,19 +5,44 @@ import Link from "next/link"
 import { ChevronRight } from "lucide-react"
 import { Facebook, Instagram, Twitter ,LogOut,CircleUser} from "lucide-react"
 import { signOut,useSession } from "next-auth/react";
+import { trainers } from "../lib/trainers"; 
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("account")
   const { data: session } = useSession();  
-  const [reservations, setReservations] = useState([]);
+  const [appointments, setAppointments] = useState([]);
 
-  const checkReservations =async (e) => {
-    e.preventDefault();
+  const [trainerMap, setTrainerMap] = useState({});
 
-    if (!selectedTrainer) {
+    /*useEffect(() => {
+    // Bunu gerçek bir endpoint'e bağlaman gerekebilir
+    const fetchTrainerMap = async () => {
+        try {
+        const response = await fetch("http://localhost:8004/trainers/get_all_trainers");
+        const data = await response.json();
+
+        const map = {};
+        data.forEach(trainer => {
+            map[trainer.id] = trainer.name; // id'ye göre isim eşleşmesi
+        });
+
+        setTrainerMap(map);
+        } catch (error) {
+        console.error("Error fetching trainers:", error);
+        }
+    };
+
+    fetchTrainerMap();
+    }, []);*/
+
+
+  const checkAppointments =async (e) => {
+    
+
+    /*if (!session?.user?.id) {
       alert("Trainer not found.");
       return;
-    }
+    }*/
     
     try {
       const response = await fetch("http://localhost:8004/make_reservation/get_active_reservations_by_user_id", {
@@ -31,10 +56,13 @@ export default function SettingsPage() {
       });
 
       const data =await response.json();
-      setReservations(data || []);
+      console.log(data)
+      //setAppointments(data || []);
+      setAppointments(data );
+      console.log("appointments",appointments)
     } catch (error) {
       console.error("Error fetching slots:", error);
-      setReservations([]);
+      setAppointments([]);
     }
   };
 
@@ -139,7 +167,10 @@ export default function SettingsPage() {
                 Account
               </button>
               <button
-                onClick={() => setActiveTab("appointments")}
+                onClick={() => {
+                    setActiveTab("appointments");
+                    checkAppointments();
+                  }}
                 className={`block w-full text-left py-2 px-4 rounded-lg font-medium ${
                   activeTab === "appointments"
                     ? "bg-orange-400 text-white"
@@ -193,17 +224,19 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="text-gray-600">
-                    <Item label="Name" value=" " />
+                    <Item label="Name" value= ""/>
                     <Item label="Date of birth" value=" " />
                     <Item label="Gender" value=" " />
-                    <Item label="Email" value="" />
+                    <Item label="Email" value={session?.user?.name} />
                   </div>
                 </div>
 
                 <div className="text-gray-600">
                   <h2 className="text-lg font-semibold mb-4 text-gray-600">Account info</h2>
-                  <Item label="Username" value=" " />
+                  <Item label="User id" value={session?.user?.id}/>
+                  <Item label="Username" value="" />
                   <Item label="Password" value="" />
+                  
                 </div>
               </>
             )}
@@ -214,9 +247,23 @@ export default function SettingsPage() {
                 <p className="text-gray-600 mb-4">Here you can see your upcoming and past appointments.</p>
 
                 <div className="space-y-4 text-gray-600">
-                  <AppointmentCard title="Trainer" date={reservations.slot_id} />
-                  <AppointmentCard title="Trainer" date="May 12, 2025 - 3:00 PM" />
+                {appointments.map((appointment) => {
+                    const start = new Date(appointment.slot_detail.start_time);
+                    const end = new Date(appointment.slot_detail.end_time);
+                    const trainer = trainers.find(t => t.id === appointment.slot_detail.trainer_id);
+                    const trainerName = trainer ? trainer.name : "Unknown Trainer";
+                    const status = new Date(appointment.status);
+                    const formattedDate = `${start.toLocaleDateString()} - ${start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${end.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+                    return (
+                    <AppointmentCard
+                        key={appointment.slot_id}
+                        title={`Trainer : ${trainerName}`}
+                        date={formattedDate}
+                    />
+                    );
+                })}
                 </div>
+
               </>
             )}
             {activeTab === "notifications" && (
