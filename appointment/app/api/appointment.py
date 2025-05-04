@@ -14,7 +14,8 @@ async def get_reservation(reservation_data: slot_reserved_event_model):
 
 @router.post("/add_slot")
 async def get_reservation(slot_data: Slot):
-    response = create_slot(Slot.dict())  
+    response = create_slot(slot_data.dict())
+ 
     return response
 
 @router.post("/cancel_appointment")
