@@ -90,8 +90,20 @@ def cancel_appointment(data):
     return {"data": data}
 
 def get_appointments_with_user_id(data , usecase):
-    collection = get_collection("AppointmentDB")
-    results = collection.find({"user_id": data["user_id"], "status": usecase}, {"_id": 0})  # _id'yi gösterme
-    slots = list(results)   
+    appointment_collection = get_collection("AppointmentDB")
+    results = appointment_collection.find({"user_id": data["user_id"], "status": usecase}, {"_id": 0})
+    slots = list(results)  
+
+    slot_collection = get_collection("SlotDB")
+
+    for item in slots:
+        slot_id = item["slot_id"]
+        slot_detail = slot_collection.find_one({"slot_id": slot_id}, {"_id": 0})
+        
+        item["slot_detail"] = slot_detail
+        
     return slots
+
+
+
 
