@@ -11,7 +11,7 @@ import java.util.*;
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
     // Payment'i userId ve appointmentId ile sorgulama
-    Optional<Payment> findByUserIdAndAppointmentId(Long userId, Long appointmentId);
+    Optional<Payment> findByUserIdAndAppointmentId(String userId, Long appointmentId);
     
     // Ödeme durumu ile ödeme sorgulama
     List<Payment> findByStatus(PaymentStatus status);

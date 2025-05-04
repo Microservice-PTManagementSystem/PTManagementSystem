@@ -27,55 +27,6 @@ public class PaymentSucceededEvent {
         this.customerId = customerId;
     }
 
-    public String getslotId() {
-        return slotId;
-    }
-
-    public void setslotId(String slotId) {
-        this.slotId = slotId;
-    }
-
-    public String getTrainerId() {
-        return trainerId;
-    }
-
-    public void setTrainerId(String trainerId) {
-        this.trainerId = trainerId;
-    }
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
-
-    public Long getPaymentId() {
-        return paymentId;
-    }
-    public void setPaymentId(Long paymentId) {
-        this.paymentId = paymentId;
-    }
-    public Double getAmount() {
-        return amount;
-    }
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-    public String getMethod() {
-        return method;
-    }
-    public void setMethod(String method) {
-        this.method = method;
-    }
-    public LocalDateTime getTimestamp() {
-        return timestamp;
-    }
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.timestamp = timestamp;
-    }
-    
     public PaymentSucceededEvent(Payment payment) {
         this.paymentId = payment.getId();
         this.amount = payment.getAmount();

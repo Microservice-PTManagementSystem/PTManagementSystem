@@ -19,7 +19,7 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String userId;  // userId türü Long olmalı
+    private String userId;  // userId türü Long idi değiştirdim
     private Long appointmentId;
     private Double amount;
     private String method;
