@@ -69,7 +69,6 @@ export default function Home() {
       const data = await response.json();
       alert("An appointment has been made.");
 
-      // buton içindeki diğer işlemler:
       setShowModal(false);
       setChangeActive(false);
       setSelectedSlot(null);
