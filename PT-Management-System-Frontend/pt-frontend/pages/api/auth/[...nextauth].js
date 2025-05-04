@@ -21,7 +21,7 @@ export default NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async jwt({ token, account,profile }) {
-      if (account & profile) {
+      if (account && profile) {
         token.accessToken = account.access_token;
         token.idToken = account.id_token;
         token.id = profile?.sub; 
