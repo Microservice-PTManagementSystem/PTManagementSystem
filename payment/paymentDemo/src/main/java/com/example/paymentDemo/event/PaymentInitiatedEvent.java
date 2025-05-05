@@ -14,7 +14,7 @@ public class PaymentInitiatedEvent {
         this.userId = String.valueOf(saved.getUserId());
         this.amount = saved.getAmount();
         this.appointmentId = String.valueOf(saved.getAppointmentId());
-    }
+    } 
     
     public String getAppointmentId() {
         return appointmentId;

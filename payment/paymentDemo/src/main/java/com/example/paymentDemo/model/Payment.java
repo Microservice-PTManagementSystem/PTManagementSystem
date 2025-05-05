@@ -30,7 +30,7 @@ public class Payment {
 
 
     @Enumerated(EnumType.STRING)
-    private PaymentStatus status; // PaymentStatus kullanılmalı
+    private PaymentStatus status; // PaymentStatus kullanılmalı 
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

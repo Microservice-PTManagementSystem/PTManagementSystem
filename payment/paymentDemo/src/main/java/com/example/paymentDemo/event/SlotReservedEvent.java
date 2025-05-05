@@ -13,7 +13,7 @@ public class SlotReservedEvent {
 
     @JsonProperty("timestamp")
     private String timestamp;
-    
+     
 
     public SlotReservedEvent() {
     }   

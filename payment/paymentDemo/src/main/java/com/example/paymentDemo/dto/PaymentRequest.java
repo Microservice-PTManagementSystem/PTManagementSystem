@@ -10,7 +10,7 @@ public class PaymentRequest {
     private double amount;
     private String method;
     private String billingDetails;
-    private Long appointmentId;
+    private Long appointmentId; 
 
     public PaymentRequest(String userId, double amount, String method, String billingDetails, Long appointmentId) {
         this.userId = userId;

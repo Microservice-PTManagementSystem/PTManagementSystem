@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PaymentResult {
-
+ 
     private Long paymentId;
     private boolean success;
     private String transactionReference; // e.g., credit card transaction ID

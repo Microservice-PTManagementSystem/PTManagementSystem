@@ -20,7 +20,7 @@ public class PaymentFailedEvent implements Serializable {
         this.failureReason = payment.getFailureReason(); // örnek alan
         this.timestamp = LocalDateTime.now();
         this.status = payment.getStatus();
-    }
+    } 
 
     public Long getPaymentId() {
         return paymentId;

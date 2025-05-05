@@ -20,7 +20,7 @@ public class PaymentSucceededEvent {
     private Double amount;
     private String method;
     private LocalDateTime timestamp;
-
+ 
     public PaymentSucceededEvent(String slotId, String trainerId, String customerId) {
         this.slotId = slotId;
         this.trainerId = trainerId;

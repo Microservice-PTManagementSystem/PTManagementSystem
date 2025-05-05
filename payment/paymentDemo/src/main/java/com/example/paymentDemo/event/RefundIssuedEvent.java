@@ -15,7 +15,7 @@ public class RefundIssuedEvent {
     private String userId;
     private PaymentStatus status;
     private String method;
-
+ 
     public RefundIssuedEvent(Payment payment) {
         this.paymentId = payment.getId();
         this.userId = payment.getUserId();
