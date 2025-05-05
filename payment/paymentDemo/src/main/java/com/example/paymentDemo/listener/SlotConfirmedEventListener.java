@@ -18,7 +18,7 @@ public class SlotConfirmedEventListener {
        // this.paymentService = paymentService;
         System.out.println("Slot Confirmed Initiated");
     }
-
+ 
     @RabbitListener(queues = "reservationQueue")
     public void handleSlotConfirmed(SlotReservedEvent event) {
         System.out.println("[PAYMENT] Message received: " + event);
