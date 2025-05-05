@@ -73,7 +73,6 @@ public class PaymentControllerIntegrationTest {
             .extracting("status", "userId", "appointmentId")
             .containsExactly(PaymentStatus.PENDING, "123", 9999L);
 
-        // RabbitMQ event yayınlandı mı?
         verify(rabbitTemplate).convertAndSend(
             eq("payment.exchange"), eq("payment.initiated"), 
             any(PaymentInitiatedEvent.class));
