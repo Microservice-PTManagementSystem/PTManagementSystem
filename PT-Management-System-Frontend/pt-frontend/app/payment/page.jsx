@@ -72,6 +72,64 @@ export default function CheckoutPage() {
   const deliveryCost = 5.5
   const total = price + deliveryCost
 
+  const handleConfirmAppointment = async () => {
+    if (!selectedSlot?.slot_id || !session?.user?.id) {
+      alert("Appointment or user information missing.");
+      return;
+    }
+  
+    try {
+      
+      const paymentResponse = await fetch("http://localhost:8006/payment/confirm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          user_id: session.user.id,
+          slot_id: selectedSlot.slot_id,
+          paymentMethod: selectedPayment,
+          cardNumber,
+          cardHolder,
+          expiryMonth,
+          expiryYear,
+          cvc,
+          saveCard,
+          totalAmount: total,
+        }),
+      });
+  
+      const paymentData = await paymentResponse.json();
+  
+      if (paymentData.success) {
+        
+        const reservationResponse = await fetch("http://localhost:8004/make_reservation/make_reservation", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            slot_id: selectedSlot.slot_id,
+            user_id: session.user.id,
+            timestamp: new Date().toISOString(),
+          }),
+        });
+  
+        const reservationData = await reservationResponse.json();
+        alert("Your appointment has been confirmed.");
+        setShowModal(false);
+        setChangeActive(false);
+        setSelectedSlot(null);
+  
+      } else {
+        alert("Payment failed: " + (paymentData.message || "Please try again."));
+      }
+    } catch (error) {
+      console.error("Error during confirmation:", error);
+      alert("An error occurred while confirming your appointment.");
+    }
+  };
+  
   const handlePayment = async () => {
     if ((selectedPayment === "mastercard" || selectedPayment === "visa") &&
         (!cardNumber || !cardHolder || !expiryMonth || !expiryYear || !cvc)) {
