@@ -44,7 +44,7 @@ const Button = forwardRef(({ className, children, ...props }, ref) => {
 
 function LogInForm() {
   const { data: session } = useSession();
-  const router = useRouter(); // Yönlendirme için router kullanıyoruz
+  const router = useRouter(); 
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -88,7 +88,7 @@ function LogInForm() {
       
       <div className="relative hidden w-1/2 bg-black md:block">
         <Image
-          src="/login_photo.jpg"
+          src="/assets/login_photo.jpg"
           alt="login/register page"
           fill 
           style={{ objectFit: "cover" }} 
@@ -145,12 +145,12 @@ function LogInForm() {
             <span className="mr-2">🌐</span> Sign in with Google
           </Button>
 
-          <a
-            onClick={openKeycloakRegister}
+          <Link
+            href="/chooseRole"
             className="relative px-5 text-sm hover:text-orange-500 text-blue-600 text-center "
             >
             Don't have an account? Register now 
-          </a>
+          </Link>
 
           
           {session && (
@@ -176,6 +176,3 @@ export default function LoginPage() {
     </main>
   );
 }
-/*<Link href="/signup" className="relative px-5 text-sm hover:text-orange-500 text-blue-600 text-center ">
-            Don't have an account? Register now 
-          </Link> */

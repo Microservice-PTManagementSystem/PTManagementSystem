@@ -27,6 +27,7 @@ export default NextAuth({
         token.id = profile?.sub; 
       }
       console.log("JWT CALLBACK - PROFILE:", profile);
+      console.log("JWT CALLBACK -:", token.accessToken);
 
       return token;
     },
