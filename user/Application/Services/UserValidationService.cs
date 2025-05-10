@@ -4,7 +4,7 @@ using PTManagementSystem.Domain.Entities;
 
 namespace PTManagementSystem.Application.Services
 {
-    public class UserValidationService
+    public class UserValidationService : IUserValidationService
     {
         private readonly UserValidator _userValidator;
         private readonly UserProfileValidator _userProfileValidator;
@@ -19,105 +19,43 @@ namespace PTManagementSystem.Application.Services
             _trainerProfileValidator = new TrainerProfileValidator();
         }
 
-        // CREATE
-        public ValidationResult ValidateCreateUser(User user)
+        public virtual Task<ValidationResult> ValidateUserExistsAsync(string userId)
         {
-            if (user == null)
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                return new ValidationResult(new List<ValidationFailure>
+                return Task.FromResult(new ValidationResult(new List<ValidationFailure>
                 {
-                    new ValidationFailure("User", "User cannot be null.")
-                });
+                    new ValidationFailure("UserId", "User ID cannot be null or empty.")
+                }));
             }
-
-            return _userValidator.Validate(user);
+            return Task.FromResult(new ValidationResult());
         }
 
-        // DELETE
-        public ValidationResult ValidateDeleteUser(Guid userId)
+        public virtual Task<ValidationResult> ValidateUserTypeAsync(string userId, string expectedType)
         {
-            if (userId == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                return new ValidationResult(new List<ValidationFailure>
+                return Task.FromResult(new ValidationResult(new List<ValidationFailure>
                 {
-                    new ValidationFailure("UserId", "User Id cannot be empty.")
-                });
+                    new ValidationFailure("UserId", "User ID cannot be null or empty.")
+                }));
             }
-
-            return new ValidationResult();
+            return Task.FromResult(new ValidationResult());
         }
 
-        // UPDATE
-        public ValidationResult ValidateUpdateUser(User user)
+        public virtual async Task<ValidationResult> ValidateUserProfileAsync(UserProfile userProfile)
         {
-            if (user == null)
-            {
-                return new ValidationResult(new List<ValidationFailure>
-                {
-                    new ValidationFailure("User", "User cannot be null.")
-                });
-            }
-
-            if (user.Id == Guid.Empty)
-            {
-                return new ValidationResult(new List<ValidationFailure>
-                {
-                    new ValidationFailure("User.Id", "User Id cannot be empty.")
-                });
-            }
-
-            return _userValidator.Validate(user);
-        }
-
-        // LOGIN
-        public ValidationResult ValidateLoginUser(string email, string password)
-        {
-            var failures = new List<ValidationFailure>();
-
-            if (string.IsNullOrWhiteSpace(email))
-                failures.Add(new ValidationFailure("Email", "Email is required."));
-            else if (!email.Contains("@"))
-                failures.Add(new ValidationFailure("Email", "Invalid email format."));
-
-            if (string.IsNullOrWhiteSpace(password))
-                failures.Add(new ValidationFailure("Password", "Password is required."));
-
-            return new ValidationResult(failures);
-        }
-
-        // RESET PASSWORD
-        public ValidationResult ValidateResetPassword(string email, string newPassword)
-        {
-            var failures = new List<ValidationFailure>();
-
-            if (string.IsNullOrWhiteSpace(email))
-                failures.Add(new ValidationFailure("Email", "Email is required."));
-            else if (!email.Contains("@"))
-                failures.Add(new ValidationFailure("Email", "Invalid email format."));
-
-            if (string.IsNullOrWhiteSpace(newPassword))
-                failures.Add(new ValidationFailure("NewPassword", "New password is required."));
-            else if (newPassword.Length < 6)
-                failures.Add(new ValidationFailure("NewPassword", "Password must be at least 6 characters long."));
-
-            return new ValidationResult(failures);
-        }
-
-        
-        public ValidationResult ValidateUserProfile(UserProfile profile)
-        {
-            if (profile == null)
+            if (userProfile == null)
             {
                 return new ValidationResult(new List<ValidationFailure>
                 {
                     new ValidationFailure("UserProfile", "UserProfile cannot be null.")
                 });
             }
-
-            return _userProfileValidator.Validate(profile);
+            return await _userProfileValidator.ValidateAsync(userProfile);
         }
 
-        public ValidationResult ValidatePaymentInfo(PaymentInfo paymentInfo)
+        public virtual async Task<ValidationResult> ValidatePaymentInfoAsync(PaymentInfo paymentInfo)
         {
             if (paymentInfo == null)
             {
@@ -126,11 +64,10 @@ namespace PTManagementSystem.Application.Services
                     new ValidationFailure("PaymentInfo", "PaymentInfo cannot be null.")
                 });
             }
-
-            return _paymentInfoValidator.Validate(paymentInfo);
+            return await _paymentInfoValidator.ValidateAsync(paymentInfo);
         }
 
-        public ValidationResult ValidateTrainerProfile(TrainerProfile trainerProfile)
+        public virtual async Task<ValidationResult> ValidateTrainerProfileAsync(TrainerProfile trainerProfile)
         {
             if (trainerProfile == null)
             {
@@ -139,21 +76,19 @@ namespace PTManagementSystem.Application.Services
                     new ValidationFailure("TrainerProfile", "TrainerProfile cannot be null.")
                 });
             }
-
-            return _trainerProfileValidator.Validate(trainerProfile);
+            return await _trainerProfileValidator.ValidateAsync(trainerProfile);
         }
 
-        public ValidationResult ValidateUserId(Guid id)
+        public virtual Task<ValidationResult> ValidateDeleteUserAsync(string userId)
         {
-            if (id == Guid.Empty)
+            if (string.IsNullOrWhiteSpace(userId))
             {
-                return new ValidationResult(new List<ValidationFailure>
+                return Task.FromResult(new ValidationResult(new List<ValidationFailure>
                 {
-                    new ValidationFailure("Id", "User Id cannot be empty.")
-                });
+                    new ValidationFailure("UserId", "User ID cannot be null or empty.")
+                }));
             }
-
-            return new ValidationResult();
+            return Task.FromResult(new ValidationResult());
         }
     }
 }

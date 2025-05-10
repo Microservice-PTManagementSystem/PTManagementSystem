@@ -1,3 +1,5 @@
+using PTManagementSystem.Presentation.DTOs;
+
 namespace PTManagementSystem.Application.Interfaces
 {
     public interface IKeycloakService
@@ -9,8 +11,9 @@ namespace PTManagementSystem.Application.Interfaces
         Task<bool> AssignRoleAsync(string userId, string role);
         Task<bool> RemoveRoleAsync(string userId, string role);
         Task<IEnumerable<string>> GetUserRolesAsync(string userId);
+        Task<IEnumerable<string>> GetUserRolesIncludingGroupsAsync(string userId);
         Task<bool> ValidateTokenAsync(string token);
-        Task<string> GetUserIdByEmailAsync(string email);
-        // Task<bool> LogoutAsync(string refreshToken);
+        Task<string?> GetUserIdByEmailAsync(string email);
+        Task<KeycloakUserDto?> GetUserInfoAsync(string keycloakUserId);
     }
 }

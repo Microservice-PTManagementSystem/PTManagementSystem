@@ -70,6 +70,7 @@ export default function Home() {
       alert("An appointment has been made.");
 
       router.push("/payment")
+
       setShowModal(false);
       setChangeActive(false);
       setSelectedSlot(null);

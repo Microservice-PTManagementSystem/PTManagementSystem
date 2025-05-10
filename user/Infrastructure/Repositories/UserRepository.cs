@@ -1,63 +1,199 @@
-﻿using PTManagementSystem.Application.Interfaces;
+﻿using MongoDB.Driver;
+using PTManagementSystem.Application.Interfaces;
+using PTManagementSystem.Domain.Entities;
+using PTManagementSystem.Infrastructure.Data;
 using PTManagementSystem.Presentation.DTOs;
+using PTManagementSystem.Domain.Enums;
 
 namespace PTManagementSystem.Infrastructure.Repositories
 {
     public class UserRepository : IUserRepository
     {
-        public Task<bool> DeleteTrainerProfileAsync(string trainerId)
+        private readonly IMongoCollection<User> _users;
+
+        public UserRepository(UserDbContext dbContext)
         {
-            throw new NotImplementedException();
+            _users = dbContext.Users;
         }
 
-        public Task<bool> DeleteUserAsync(string userId)
+        public async Task<bool> AddUserAsync(RegisterUserDto registerDto)
         {
-            throw new NotImplementedException();
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                KeycloakId = registerDto.KeycloakUserId,
+                Email = registerDto.Email,
+                IsEmailConfirmed = registerDto.IsEmailConfirmed,
+                UserType = registerDto.UserType,
+                UserProfile = new UserProfile(),
+                PaymentInfo = new PaymentInfo(),
+                TrainerProfile = registerDto.UserType == UserType.TRAINER ? new TrainerProfile() : null
+            };
+
+            await _users.InsertOneAsync(user);
+            return true;
         }
 
-        public Task<IEnumerable<UserDto>> GetAllUsersAsync()
+        public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
         {
-            throw new NotImplementedException();
+            var users = await _users.Find(_ => true).ToListAsync();
+            return users.Select(u => new UserDto
+            {
+                Id = u.Id,
+                Email = u.Email,
+                KeycloakId = u.KeycloakId,
+                IsEmailConfirmed = u.IsEmailConfirmed,
+                UserType = u.UserType
+            });
         }
 
-        public Task<PaymentInfoDto> GetPaymentInfoAsync(string userId)
+        public async Task<UserDto?> GetUserByIdAsync(string userId)
         {
-            throw new NotImplementedException();
+            var user = await _users.Find(u => u.KeycloakId == userId).FirstOrDefaultAsync();
+            if (user == null) return null;
+
+            return new UserDto
+            {
+                Id = user.Id,
+                Email = user.Email,
+                KeycloakId = user.KeycloakId,
+                IsEmailConfirmed = user.IsEmailConfirmed,
+                UserType = user.UserType
+            };
         }
 
-        public Task<TrainerProfileDto> GetTrainerProfileAsync(string trainerId)
+        public async Task<UserDto?> UpdateUserAsync(string userId, UserDto updateDto)
         {
-            throw new NotImplementedException();
+            var filter = Builders<User>.Filter.Eq(u => u.KeycloakId, userId);
+            var update = Builders<User>.Update
+                .Set(u => u.Email, updateDto.Email)
+                .Set(u => u.IsEmailConfirmed, updateDto.IsEmailConfirmed)
+                .Set(u => u.UserType, updateDto.UserType);
+
+            var result = await _users.FindOneAndUpdateAsync(filter, update, new FindOneAndUpdateOptions<User> { ReturnDocument = ReturnDocument.After });
+
+            if (result == null) return null;
+
+            return new UserDto
+            {
+                Id = result.Id,
+                Email = result.Email,
+                KeycloakId = result.KeycloakId,
+                IsEmailConfirmed = result.IsEmailConfirmed,
+                UserType = result.UserType
+            };
         }
 
-        public Task<UserDto> GetUserByIdAsync(string userId)
+        public async Task<bool> DeleteUserAsync(string userId)
         {
-            throw new NotImplementedException();
+            var result = await _users.DeleteOneAsync(u => u.KeycloakId == userId);
+            return result.DeletedCount > 0;
         }
 
-        public Task<UserProfileDto> GetUserProfileAsync(string userId)
+        public async Task<UserProfileDto?> GetUserProfileAsync(string userId)
         {
-            throw new NotImplementedException();
+            var user = await _users.Find(u => u.KeycloakId == userId).FirstOrDefaultAsync();
+            if (user == null || user.UserProfile == null) return null;
+
+            return new UserProfileDto
+            {
+                FirstName = user.UserProfile.FirstName,
+                LastName = user.UserProfile.LastName,
+                PhoneNumber = user.UserProfile.PhoneNumber,
+                DateOfBirth = user.UserProfile.DateOfBirth,
+                Gender = user.UserProfile.Gender,
+                Height = user.UserProfile.Height,
+                Weight = user.UserProfile.Weight,
+                FitnessGoals = user.UserProfile.FitnessGoals,
+                MedicalConditions = user.UserProfile.MedicalConditions,
+                Allergies = user.UserProfile.Allergies,
+                Address = new AddressDto
+                {
+                    Street = user.UserProfile.Address.Street,
+                    City = user.UserProfile.Address.City,
+                    State = user.UserProfile.Address.State,
+                    Country = user.UserProfile.Address.Country,
+                    PostalCode = user.UserProfile.Address.PostalCode
+                }
+            };
         }
 
-        public Task<PaymentInfoDto> UpdatePaymentInfoAsync(string userId, PaymentInfoDto paymentDto)
+        public async Task UpdateUserProfileAsync(string userId, UserProfile profile)
         {
-            throw new NotImplementedException();
+            var filter = Builders<User>.Filter.Eq(u => u.KeycloakId, userId);
+            var update = Builders<User>.Update
+                .Set(u => u.UserProfile, profile);
+
+            await _users.FindOneAndUpdateAsync(filter, update);
         }
 
-        public Task<TrainerProfileDto> UpdateTrainerProfileAsync(string trainerId, TrainerProfileDto trainerDto)
+        public async Task<PaymentInfoDto?> GetPaymentInfoAsync(string userId)
         {
-            throw new NotImplementedException();
+            var user = await _users.Find(u => u.KeycloakId == userId).FirstOrDefaultAsync();
+            if (user == null || user.PaymentInfo == null) return null;
+
+            return new PaymentInfoDto
+            {
+                CardHolderName = user.PaymentInfo.CardHolderName,
+                CardNumber = user.PaymentInfo.CardNumber,
+                ExpiryDate = user.PaymentInfo.ExpiryDate,
+                CVV = user.PaymentInfo.CVV,
+                BillingAddress = user.PaymentInfo.BillingAddress
+            };
         }
 
-        public Task<UserDto> UpdateUserAsync(string userId, UpdateUserDto updateDto)
+        public async Task UpdatePaymentInfoAsync(string userId, PaymentInfo paymentInfo)
         {
-            throw new NotImplementedException();
+            var filter = Builders<User>.Filter.Eq(u => u.KeycloakId, userId);
+            var update = Builders<User>.Update
+                .Set(u => u.PaymentInfo, paymentInfo);
+
+            await _users.FindOneAndUpdateAsync(filter, update);
         }
 
-        public Task<UserProfileDto> UpdateUserProfileAsync(string userId, UserProfileDto profileDto)
+        public async Task<TrainerProfileDto?> GetTrainerProfileAsync(string trainerId)
         {
-            throw new NotImplementedException();
+            var user = await _users.Find(u => u.KeycloakId == trainerId).FirstOrDefaultAsync();
+            if (user == null || user.TrainerProfile == null) return null;
+
+            return new TrainerProfileDto
+            {
+                Specialization = user.TrainerProfile.Specialization,
+                ExperienceYears = user.TrainerProfile.ExperienceYears,
+                Certifications = user.TrainerProfile.Certifications.Select(c => new CertificationDto
+                {
+                    Name = c.Name,
+                    IssuingAuthority = c.IssuingAuthority,
+                    IssueDate = c.IssueDate,
+                    ExpiryDate = c.ExpiryDate
+                }).ToList(),
+                Bio = user.TrainerProfile.Bio,
+                HourlyRate = user.TrainerProfile.HourlyRate,
+                AvailableDays = user.TrainerProfile.AvailableDays,
+                AvailableHours = user.TrainerProfile.AvailableHours
+            };
+        }
+
+        public async Task UpdateTrainerProfileAsync(string trainerId, TrainerProfile trainerProfile)
+        {
+            var filter = Builders<User>.Filter.Eq(u => u.KeycloakId, trainerId);
+            var update = Builders<User>.Update
+                .Set(u => u.TrainerProfile, trainerProfile);
+
+            await _users.FindOneAndUpdateAsync(filter, update);
+        }
+
+        public async Task<IEnumerable<UserDto>> GetAllTrainersAsync()
+        {
+            var trainers = await _users.Find(u => u.UserType == UserType.TRAINER).ToListAsync();
+            return trainers.Select(t => new UserDto
+            {
+                Id = t.Id,
+                Email = t.Email,
+                KeycloakId = t.KeycloakId,
+                IsEmailConfirmed = t.IsEmailConfirmed,
+                UserType = t.UserType
+            });
         }
     }
 }

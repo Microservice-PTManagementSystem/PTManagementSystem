@@ -1,8 +1,8 @@
 {
   "Version": 1,
-  "Hash": "0gFZ/8pPJQ419KlNqJYSF0h4N42ZTMqckHWmIoBdYnI=",
-  "Source": "user",
-  "BasePath": "_content/user",
+  "Hash": "x0T3MO8+ta1w2atoQKYjgE/zhbt2MUwhgOhcfjOTTa0=",
+  "Source": "PTManagementSystem",
+  "BasePath": "_content/PTManagementSystem",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],

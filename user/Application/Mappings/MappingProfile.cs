@@ -9,20 +9,10 @@ namespace PTManagementSystem.Application.Mappings
         public MappingProfile()
         {
             CreateMap<User, UserDto>();
-            CreateMap<RegisterUserDto, User>();
-            CreateMap<UpdateUserDto, User>();
-
-            CreateMap<SpecializationDto, Specialization>();
-            CreateMap<Specialization, SpecializationDto>();
+            CreateMap<UserDto, User>();
 
             CreateMap<UserProfile, UserProfileDto>();
             CreateMap<UserProfileDto, UserProfile>();
-
-            CreateMap<PersonalInfo, PersonalInfoDto>();
-            CreateMap<PersonalInfoDto, PersonalInfo>();
-
-            CreateMap<ContactInfo, ContactInfoDto>();
-            CreateMap<ContactInfoDto, ContactInfo>();
 
             CreateMap<Address, AddressDto>();
             CreateMap<AddressDto, Address>();
@@ -35,9 +25,6 @@ namespace PTManagementSystem.Application.Mappings
 
             CreateMap<Certification, CertificationDto>();
             CreateMap<CertificationDto, Certification>();
-
-            CreateMap<TimeSlot, TimeSlotDto>();
-            CreateMap<TimeSlotDto, TimeSlot>();
         }
     }
 }
