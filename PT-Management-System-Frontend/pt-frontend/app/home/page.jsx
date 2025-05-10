@@ -69,9 +69,12 @@ export default function Home() {
       const data = await response.json();
       alert("An appointment has been made.");
 
+      router.push("/payment")
+
       setShowModal(false);
       setChangeActive(false);
       setSelectedSlot(null);
+      
     } catch (error) {
       console.error("Error fetching slots:", error);
       alert("Rezervasyon sırasında hata oluştu.");
