@@ -14,14 +14,15 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PaymentSucceededEvent {
     private String slotId;
+    private String userId;
 
-    private Long paymentId;
     private String totalAmount;
     private String paymentMethod;
     private LocalDateTime timestamp;
  
-    public PaymentSucceededEvent(String slotId) {
+    public PaymentSucceededEvent(String slotId, String userId) {
         this.slotId = slotId;
+        this.userId = userId;
     }
 
     public String getslotId() {
@@ -31,11 +32,11 @@ public class PaymentSucceededEvent {
     public void setslotId(String slotId) {
         this.slotId = slotId;
     }
-    public Long getPaymentId() {
-        return paymentId;
+    public String getUserId() {
+        return userId;
     }
-    public void setPaymentId(Long paymentId) {
-        this.paymentId = paymentId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
     public String getTotalAmount() {
         return totalAmount;
@@ -57,7 +58,7 @@ public class PaymentSucceededEvent {
     }
     
     public PaymentSucceededEvent(Payment payment) {
-        this.paymentId = payment.getId();
+        this.userId = payment.getUserId();
         this.totalAmount = payment.getTotalAmount();
         this.paymentMethod = payment.getPaymentMethod();
         this.timestamp = LocalDateTime.now();
