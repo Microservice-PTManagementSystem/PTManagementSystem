@@ -31,7 +31,8 @@ namespace PTManagementSystem.Application.UseCases.Commands
 
         
         {
-            Console.WriteLine("GELEN REGISTER TOKEN: " + dto.Token);
+            Console.WriteLine("GELEN REGISTER TOKEN: " + dto.token);
+            Console.WriteLine("GELEN REGISTER ROLE: " + dto.role);
 
             //Console.WriteLine("GELEN REGISTER KEYCLOAK EVENT: " + dto.KeycloakUserId);
 
