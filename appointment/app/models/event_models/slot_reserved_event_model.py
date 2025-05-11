@@ -3,8 +3,6 @@ from pydantic import BaseModel
 
 
 class slot_reserved_event_model(BaseModel):
-    cardNumber : str
-    message: str
     cardNumber: str
     cardHolder: str
     expiryMonth: str
