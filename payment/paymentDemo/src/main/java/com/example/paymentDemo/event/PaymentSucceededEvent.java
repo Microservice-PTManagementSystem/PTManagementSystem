@@ -14,18 +14,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PaymentSucceededEvent {
     private String slotId;
-    private String trainerId;
-    private String customerId;
 
     private Long paymentId;
-    private Double amount;
-    private String method;
+    private String totalAmount;
+    private String paymentMethod;
     private LocalDateTime timestamp;
  
-    public PaymentSucceededEvent(String slotId, String trainerId, String customerId) {
+    public PaymentSucceededEvent(String slotId) {
         this.slotId = slotId;
-        this.trainerId = trainerId;
-        this.customerId = customerId;
     }
 
     public String getslotId() {
@@ -35,39 +31,23 @@ public class PaymentSucceededEvent {
     public void setslotId(String slotId) {
         this.slotId = slotId;
     }
-
-    public String getTrainerId() {
-        return trainerId;
-    }
-
-    public void setTrainerId(String trainerId) {
-        this.trainerId = trainerId;
-    }
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
     public Long getPaymentId() {
         return paymentId;
     }
     public void setPaymentId(Long paymentId) {
         this.paymentId = paymentId;
     }
-    public Double getAmount() {
-        return amount;
+    public String getTotalAmount() {
+        return totalAmount;
     }
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
     }
-    public String getMethod() {
-        return method;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
-    public void setMethod(String method) {
-        this.method = method;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
     public LocalDateTime getTimestamp() {
         return timestamp;
@@ -78,8 +58,8 @@ public class PaymentSucceededEvent {
     
     public PaymentSucceededEvent(Payment payment) {
         this.paymentId = payment.getId();
-        this.amount = payment.getAmount();
-        this.method = payment.getMethod();
+        this.totalAmount = payment.getTotalAmount();
+        this.paymentMethod = payment.getPaymentMethod();
         this.timestamp = LocalDateTime.now();
     }
 }

@@ -14,5 +14,7 @@ public interface PaymentService {
     Payment retryPayment(Long paymentId);
     Payment issueRefund(Long paymentId);
     PaymentStatus getStatus(Long paymentId);
+   // List<Payment> getPaymentsByUserId(String userId);
+    PaymentResult processPayment(PaymentRequest request);
 }
  
