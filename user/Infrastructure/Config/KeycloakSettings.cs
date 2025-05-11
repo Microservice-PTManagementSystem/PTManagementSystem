@@ -1,9 +1,12 @@
-﻿public class KeycloakSettings
+﻿namespace PTManagementSystem.Infrastructure.Config
 {
-    public string BaseUrl { get; set; }
-    public string Realm { get; set; }
-    public string ClientId { get; set; }
-    public string ClientSecret { get; set; }
-    public string AdminUsername { get; set; }
-    public string AdminPassword { get; set; }
+    public class KeycloakSettings
+    {
+        public string BaseUrl { get; set; } = string.Empty;
+        public string Realm { get; set; } = string.Empty;
+        public string ClientId { get; set; } = string.Empty;
+        public string ClientSecret { get; set; } = string.Empty;
+        public string AdminUsername { get; set; } = string.Empty;
+        public string AdminPassword { get; set; } = string.Empty;
+    }
 }
