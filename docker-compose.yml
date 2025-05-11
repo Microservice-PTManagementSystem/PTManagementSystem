@@ -38,7 +38,7 @@ services:
       #       condition: service_started
       volumes:
          - ./keycloak-realm:/opt/keycloak/data/import
-         - ./keycloak-event-listener/event-listener-http-jar-with-dependencies.jar:/opt/keycloak/providers/event-listener-http.jar
+         # - ./keycloak-event-listener/event-listener-http-jar-with-dependencies.jar:/opt/keycloak/providers/event-listener-http.jar
 
       environment:
          KC_DB: mysql
