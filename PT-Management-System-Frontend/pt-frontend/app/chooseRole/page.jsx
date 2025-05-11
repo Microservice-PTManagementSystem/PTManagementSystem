@@ -6,7 +6,7 @@ import Link from "next/link"
 
 export default function ChooseRolePage() {
 
-    const checkAppointments =async (role) => {
+    const handleRoleSelect =async (role) => {
         localStorage.setItem("selectedRole", role);
         openKeycloakRegister(); 
 
@@ -55,7 +55,7 @@ export default function ChooseRolePage() {
 
             <div className="mt-10">
                 <Link
-                href="/auth/signin"
+                href="/"
                 className="relative px-10 text-sm hover:text-orange-500 text-blue-600 text-center"
                 >
                 Already have an account? Please sign in
