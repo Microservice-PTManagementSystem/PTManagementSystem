@@ -1,5 +1,23 @@
 package com.example.paymentDemo.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.example.paymentDemo.dto.PaymentRequest;
 import com.example.paymentDemo.dto.PaymentResult;
 import com.example.paymentDemo.event.PaymentFailedEvent;
@@ -10,24 +28,6 @@ import com.example.paymentDemo.model.Payment;
 import com.example.paymentDemo.model.PaymentStatus;
 import com.example.paymentDemo.repository.PaymentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
- 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -53,7 +53,8 @@ public class PaymentControllerIntegrationTest {
     @Test
     void shouldInitiatePaymentAndPublishEvent() throws Exception {
         // Arrange
-        PaymentRequest request = new PaymentRequest("123", 150.0, "credit_card", "Billing Info", 9999L);
+        PaymentRequest request = new PaymentRequest("credit card", "1234567890123456",
+            "John Doe", "12", "2025", "123", false, "100.00");
         String json = objectMapper.writeValueAsString(request);
 
         // Act & Assert
@@ -62,48 +63,54 @@ public class PaymentControllerIntegrationTest {
                 .content(json))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.status").value(PaymentStatus.PENDING.name()))
-            .andExpect(jsonPath("$.amount").value(150.0))
-            .andExpect(jsonPath("$.method").value("credit_card"))
-            .andExpect(jsonPath("$.appointmentId").value(9999));
+            .andExpect(jsonPath("$.paymentMethod").value("credit card"))
+            .andExpect(jsonPath("$.totalAmount").value("100.00"));
 
-        // DB’de bir kayıt oluştu mu?
+        // Verify DB record
         assertThat(paymentRepository.findAll())
             .hasSize(1)
             .first()
-            .extracting("status", "userId", "appointmentId")
-            .containsExactly(PaymentStatus.PENDING, "123", 9999L);
+            .extracting("status", "paymentMethod", "totalAmount")
+            .containsExactly(PaymentStatus.PENDING, "credit card", "100.00");
 
         verify(rabbitTemplate).convertAndSend(
-            eq("payment.exchange"), eq("payment.initiated"), 
-            any(PaymentInitiatedEvent.class));
+            eq("payment.exchange"), 
+            eq("payment.initiated"), 
+            any(PaymentInitiatedEvent.class)
+        );
     }
 
     @Test
     void shouldConfirmPaymentAndPublishSucceededEvent() throws Exception {
         // Prepare a PENDING payment in DB
-         Payment p = new Payment();
-        p.setUserId("999");
-        p.setAppointmentId(1111L);
-        p.setAmount(50.0);
-        p.setMethod("card");
-        p.setBillingDetails("x");
+        Payment p = new Payment();
+        p.setPaymentMethod("credit card");
+        p.setCardNumber("1234567890123456");
+        p.setCardHolder("John Doe");
+        p.setExpiryMonth("12");
+        p.setExpiryYear("2025");
+        p.setCvc("123");
+        p.setSaveCard(false);
+        p.setTotalAmount("100.00");
         p.setStatus(PaymentStatus.PENDING);
         p = paymentRepository.save(p);
 
-        // Send confirm request
-        String json = objectMapper.writeValueAsString(
-        new PaymentResult(p.getId(), true, "TXN-123", null)
-    );
+        // Create payment result with success
+        PaymentResult result = new PaymentResult();
+        result.setPaymentId(p.getId());
+        result.setSuccess(true);
+        result.setMessage("Payment processed successfully");
+        String json = objectMapper.writeValueAsString(result);
 
+        // Act & Assert
         mockMvc.perform(post("/payment/confirm")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.status").value(PaymentStatus.COMPLETED.name()))
-            .andExpect(jsonPath("$.id").value(p.getId().intValue()))
-            .andExpect(jsonPath("$.amount").value(p.getAmount()));
+            .andExpect(jsonPath("$.success").value(true))
+            .andExpect(jsonPath("$.message").value("Payment succeeded"));
 
-        // DB updated?
+        // Verify DB updated
         Payment updated = paymentRepository.findById(p.getId()).get();
         assertThat(updated.getStatus()).isEqualTo(PaymentStatus.COMPLETED);
 
@@ -116,131 +123,132 @@ public class PaymentControllerIntegrationTest {
 
     @Test
     void shouldConfirmPaymentAndPublishFailedEvent() throws Exception {
-    // Arrange: PENDING durumda bir ödeme oluştur
-    Payment p = new Payment();
-    p.setUserId("999");
-    p.setAppointmentId(1111L);
-    p.setAmount(50.0);
-    p.setMethod("card");
-    p.setBillingDetails("x");
-    p.setStatus(PaymentStatus.PENDING);
-    p = paymentRepository.save(p);
+        // Arrange: Create a PENDING payment
+        Payment p = new Payment();
+        p.setPaymentMethod("credit card");
+        p.setCardNumber("1234567890123456");
+        p.setCardHolder("John Doe");
+        p.setExpiryMonth("12");
+        p.setExpiryYear("2025");
+        p.setCvc("123");
+        p.setSaveCard(false);
+        p.setTotalAmount("100.00");
+        p.setStatus(PaymentStatus.PENDING);
+        p = paymentRepository.save(p);
 
-    // Confirm request (ödemenin başarısız olduğunu simüle et)
-    PaymentResult result = new PaymentResult(p.getId(), false, "TXN-123", "Insufficient Funds");
-    String json = objectMapper.writeValueAsString(result);
+        // Create payment result with failure
+        PaymentResult result = new PaymentResult();
+        result.setPaymentId(p.getId());
+        result.setSuccess(false);
+        result.setMessage("Payment failed");
+        String json = objectMapper.writeValueAsString(result);
 
-    // Act & Assert: Confirm ödeme isteği gönder
-    mockMvc.perform(post("/payment/confirm")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.status").value(PaymentStatus.FAILED.name()));
+        // Act & Assert
+        mockMvc.perform(post("/payment/confirm")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.success").value(false))
+            .andExpect(jsonPath("$.message").value("Payment failed"));
 
-    // DB güncellenmiş mi?
-    Payment updated = paymentRepository.findById(p.getId()).get();
-    assertThat(updated.getStatus()).isEqualTo(PaymentStatus.FAILED);
+        // Verify DB updated
+        Payment updated = paymentRepository.findById(p.getId()).get();
+        assertThat(updated.getStatus()).isEqualTo(PaymentStatus.FAILED);
 
-    // RabbitMQ event yayınlandı mı?
-    verify(rabbitTemplate).convertAndSend(
-        eq("payment.exchange"),
-        eq("payment.failed"),
-        any(PaymentFailedEvent.class)
-    );
-}
+        verify(rabbitTemplate).convertAndSend(
+            eq("payment.exchange"),
+            eq("payment.failed"),
+            any(PaymentFailedEvent.class)
+        );
+    }
 
     @Test
     void shouldRetryPaymentAndPublishInitiatedEvent() throws Exception {
-    // Arrange: FAILED durumda bir ödeme oluştur
-    Payment p = new Payment();
-    p.setUserId("999");
-    p.setAppointmentId(1111L);
-    p.setAmount(50.0);
-    p.setMethod("card");
-    p.setBillingDetails("x");
-    p.setStatus(PaymentStatus.FAILED);
-    p = paymentRepository.save(p);
+        // Arrange: Create a FAILED payment
+        Payment p = new Payment();
+        p.setPaymentMethod("credit card");
+        p.setCardNumber("1234567890123456");
+        p.setCardHolder("John Doe");
+        p.setExpiryMonth("12");
+        p.setExpiryYear("2025");
+        p.setCvc("123");
+        p.setSaveCard(false);
+        p.setTotalAmount("100.00");
+        p.setStatus(PaymentStatus.FAILED);
+        p = paymentRepository.save(p);
 
-    // Retry request gönder
-    String json = objectMapper.writeValueAsString(p);
+        // Act & Assert
+        mockMvc.perform(post("/payment/retry/" + p.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value(PaymentStatus.PENDING.name()));
 
-    // Act & Assert: Retry ödeme isteği gönder
-    mockMvc.perform(post("/payment/retry/" + p.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.status").value(PaymentStatus.PENDING.name()));
+        // Verify DB updated
+        Payment updated = paymentRepository.findById(p.getId()).get();
+        assertThat(updated.getStatus()).isEqualTo(PaymentStatus.PENDING);
 
-    // DB güncellenmiş mi?
-    Payment updated = paymentRepository.findById(p.getId()).get();
-    assertThat(updated.getStatus()).isEqualTo(PaymentStatus.PENDING);
-
-    // RabbitMQ event yayınlandı mı?
-    verify(rabbitTemplate).convertAndSend(
-        eq("payment.exchange"),
-        eq("payment.initiated"),
-        any(PaymentInitiatedEvent.class)
-    );
-}
+        verify(rabbitTemplate).convertAndSend(
+            eq("payment.exchange"),
+            eq("payment.initiated"),
+            any(PaymentInitiatedEvent.class)
+        );
+    }
 
     @Test
     void shouldIssueRefundAndPublishRefundEvent() throws Exception {
-    // Arrange: COMPLETED durumda bir ödeme oluştur
-    Payment p = new Payment();
-    p.setUserId("999");
-    p.setAppointmentId(1111L);
-    p.setAmount(50.0);
-    p.setMethod("card");
-    p.setBillingDetails("x");
-    p.setStatus(PaymentStatus.COMPLETED);
-    p = paymentRepository.save(p);
+        // Arrange: Create a COMPLETED payment
+        Payment p = new Payment();
+        p.setPaymentMethod("credit card");
+        p.setCardNumber("1234567890123456");
+        p.setCardHolder("John Doe");
+        p.setExpiryMonth("12");
+        p.setExpiryYear("2025");
+        p.setCvc("123");
+        p.setSaveCard(false);
+        p.setTotalAmount("100.00");
+        p.setStatus(PaymentStatus.COMPLETED);
+        p = paymentRepository.save(p);
 
-    // Refund request gönder
-    String json = objectMapper.writeValueAsString(p);
+        // Act & Assert
+        mockMvc.perform(post("/payment/refund/" + p.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value(PaymentStatus.REFUNDED.name()));
 
-    // Act & Assert: Refund ödeme isteği gönder
-    mockMvc.perform(post("/payment/refund/" + p.getId())
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(json))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.status").value(PaymentStatus.REFUNDED.name()));
+        // Verify DB updated
+        Payment updated = paymentRepository.findById(p.getId()).get();
+        assertThat(updated.getStatus()).isEqualTo(PaymentStatus.REFUNDED);
 
-    // DB güncellenmiş mi?
-    Payment updated = paymentRepository.findById(p.getId()).get();
-    assertThat(updated.getStatus()).isEqualTo(PaymentStatus.REFUNDED);
-
-    // RabbitMQ event yayınlandı mı?
-    verify(rabbitTemplate).convertAndSend(
-        eq("payment.exchange"),
-        eq("payment.refunded"),
-        any(RefundIssuedEvent.class)
-    );
-}
-
+        verify(rabbitTemplate).convertAndSend(
+            eq("payment.exchange"),
+            eq("payment.refunded"),
+            any(RefundIssuedEvent.class)
+        );
+    }
 
     @Test
     void shouldGetPaymentStatus() throws Exception {
-    // Arrange: COMPLETED durumda bir ödeme oluştur
-    Payment p = new Payment();
-    p.setUserId("999");
-    p.setAppointmentId(1111L);
-    p.setAmount(50.0);
-    p.setMethod("card");
-    p.setBillingDetails("cibili cibili şak şak");
-    p.setStatus(PaymentStatus.COMPLETED);
-    p = paymentRepository.save(p);
+        // Arrange: Create a COMPLETED payment
+        Payment p = new Payment();
+        p.setPaymentMethod("credit card");
+        p.setCardNumber("1234567890123456");
+        p.setCardHolder("John Doe");
+        p.setExpiryMonth("12");
+        p.setExpiryYear("2025");
+        p.setCvc("123");
+        p.setSaveCard(false);
+        p.setTotalAmount("100.00");
+        p.setStatus(PaymentStatus.COMPLETED);
+        p = paymentRepository.save(p);
 
-    // Act & Assert: Ödeme durumunu al
-    mockMvc.perform(get("/payment/status/" + p.getId())
-            .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$").value(PaymentStatus.COMPLETED.name()));
+        // Act & Assert
+        mockMvc.perform(get("/payment/status/" + p.getId())
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").value(PaymentStatus.COMPLETED.name()));
 
-    // DB'deki ödeme durumu kontrol edilsin mi?
-    Payment fetched = paymentRepository.findById(p.getId()).get();
-    assertThat(fetched.getStatus()).isEqualTo(PaymentStatus.COMPLETED);
-}
-
-
-    
+        // Verify DB record
+        Payment fetched = paymentRepository.findById(p.getId()).get();
+        assertThat(fetched.getStatus()).isEqualTo(PaymentStatus.COMPLETED);
+    }
 }
