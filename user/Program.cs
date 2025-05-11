@@ -79,6 +79,19 @@ builder.Configuration.AddEnvironmentVariables();
 //     );
 // });
 
+var corsPolicyName = "AllowFrontend";
+
+// CORS ayarları
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsPolicyName,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -94,7 +107,7 @@ if (app.Environment.IsDevelopment()|| true)
 }
 
 //app.UseHttpsRedirection();
-
+app.UseCors(corsPolicyName);
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,6 +1,6 @@
 "use client";
 
-import { openKeycloakRegister } from "../../utils/getKeycloakRegisterUrl"; // doğru yolu ayarla
+import { openKeycloakRegister } from "../../utils/getKeycloakRegisterUrl";
 import Image from "next/image";
 import Link from "next/link"
 
