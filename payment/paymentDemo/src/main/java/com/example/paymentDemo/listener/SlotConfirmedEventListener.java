@@ -31,7 +31,8 @@ public class SlotConfirmedEventListener {
         System.out.println("[PAYMENT] Message received: " + event);
 
         PaymentSucceededEvent paymentSucceeded = new PaymentSucceededEvent(
-            event.getSlotId()
+            event.getSlotId(),
+            event.getUserId()
         );
 
         //paymentService.processPayment(event); 
