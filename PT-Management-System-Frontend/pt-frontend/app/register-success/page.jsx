@@ -10,7 +10,7 @@ import { signOut} from "next-auth/react";
 export default function RegisterSuccess() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const hasSent = useRef(false); // Tekrarlı gönderimi engelle
+  const hasSent = useRef(false); 
 
   const handleSignOut = () => {
     
@@ -48,16 +48,14 @@ export default function RegisterSuccess() {
           });
           console.log("res",res)
 
-          if(res!="User successfully registered. Please confirm email.") throw new Error("Failed to send registration data");
           
-
-          //if (!res.ok) throw new Error("Failed to send registration data");
+          if (!res.ok) throw new Error("Failed to send registration data");
 
           console.log("✅ Registration data sent successfully");
 
           setTimeout(() => {
             router.push("/home");
-          }, 1000); // kısa gecikme
+          }, 500); 
         } catch (err) {
           console.error("❌ Registration data send failed:", err);
         }
