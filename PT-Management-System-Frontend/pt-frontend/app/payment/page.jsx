@@ -80,22 +80,25 @@ export default function CheckoutPage() {
   
     try {
       
-      const paymentResponse = await fetch("http://localhost:8006/payment/confirm", {
+      const paymentResponse = await fetch("http://localhost:8006/payment-controller/payment/confirm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          paymentId:0,
+          success:true,
+          message:"message",
+          cardNumber:cardNumber,
+          cardHolder:cardHolder,
+          expiryMonth:expiryMonth,
+          expiryYear:expiryYear,
+          cvc:cvc,
+          saveCard:saveCard,
+          totalAmount: total,
           user_id: session.user.id,
           slot_id: selectedSlot.slot_id,
           paymentMethod: selectedPayment,
-          cardNumber,
-          cardHolder,
-          expiryMonth,
-          expiryYear,
-          cvc,
-          saveCard,
-          totalAmount: total,
         }),
       });
   
