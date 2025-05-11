@@ -4,7 +4,7 @@ export function getKeycloakRegisterUrl() {
   const clientId = process.env.NEXT_PUBLIC_KEYCLOAK_CLIENT_ID ?? "nextjs-app";
 
   const redirect = encodeURIComponent(
-    `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}`
+    `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/register-success`
   );
 
  

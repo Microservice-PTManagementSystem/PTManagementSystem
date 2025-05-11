@@ -6,9 +6,10 @@ import Link from "next/link"
 
 export default function ChooseRolePage() {
 
-  const handleRoleSelect = (role)=> {
-    localStorage.setItem("selectedRole", role);
-    openKeycloakRegister(); 
+    const checkAppointments =async (role) => {
+        localStorage.setItem("selectedRole", role);
+        openKeycloakRegister(); 
+
   };
 
   return (
