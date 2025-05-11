@@ -51,7 +51,8 @@ function LogInForm() {
   })
   useEffect(() => {
     if (session) {
-      router.push("/home"); 
+      //router.push("/home"); 
+      router.push("/register-success"); 
     }
   }, [session]);
   console.log("--------USE EFFECT ÇALIŞTI------")
@@ -69,7 +70,7 @@ function LogInForm() {
   };
 
   const handleSignInWithKeycloak = async () => {
-    await signIn("keycloak",{callbackUrl:"/home"}); 
+    await signIn("keycloak",{callbackUrl:"/register-success"}); 
     console.log("-------------------GİRİŞ İŞLEMİ BAŞARILI---------------");
   };
 
