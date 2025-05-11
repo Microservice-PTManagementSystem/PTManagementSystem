@@ -30,30 +30,22 @@ public class PaymentController {
     @GetMapping("/payment/health")
     public String checkHealth() {
         return "Payment Service is running!";
-    }
+    } 
 
     @PostMapping("/initiate")
     public ResponseEntity<Payment> initiatePayment(@RequestBody PaymentRequest request) {
         Payment payment = paymentService.initiatePayment(request);
         return ResponseEntity.ok(payment);
-    }
+    } //bunu düzelt
 
     @PostMapping("/confirm")
-    public ResponseEntity<?> confirmPayment(@RequestBody PaymentResult result) {
-        try {
-            Payment payment = paymentService.confirmPayment(result);
-            Map<String, String> response = new HashMap<>();
-            response.put("status", payment.getStatus() == PaymentStatus.COMPLETED ? "success" : "failed");
-            response.put("message", payment.getStatus() == PaymentStatus.COMPLETED ? 
-                "Payment succeeded" : "Payment failed");
-            
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "failed");
-            response.put("message", "Payment failed");
-            return ResponseEntity.ok(response);
-        }
+    public ResponseEntity<PaymentResult> confirmPayment(@RequestBody PaymentResult result) {
+        Payment payment = paymentService.confirmPayment(result);
+        PaymentResult response = new PaymentResult();
+        response.setSuccess(payment.getStatus() == PaymentStatus.COMPLETED);
+        response.setMessage(payment.getStatus() == PaymentStatus.COMPLETED ? 
+            "Payment succeeded" : "Payment failed");
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/retry/{paymentId}")
