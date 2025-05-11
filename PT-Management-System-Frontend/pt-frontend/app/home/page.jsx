@@ -82,6 +82,10 @@ export default function Home() {
     }
   };
 
+  /*const checkAppointment =async (e) => {
+    router.push("/payment");
+  }*/
+
 
 
   

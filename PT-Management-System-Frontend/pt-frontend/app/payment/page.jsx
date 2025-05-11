@@ -72,7 +72,7 @@ export default function CheckoutPage() {
   const deliveryCost = 5.5
   const total = price + deliveryCost
 
-  const handleConfirmAppointment = async () => {
+  /*const handleConfirmAppointment = async () => {
     if (!selectedSlot?.slot_id || !session?.user?.id) {
       alert("Appointment or user information missing.");
       return;
@@ -119,6 +119,51 @@ export default function CheckoutPage() {
         });
   
         const reservationData = await reservationResponse.json();
+        alert("Your appointment has been confirmed.");
+        setShowModal(false);
+        setChangeActive(false);
+        setSelectedSlot(null);
+  
+      } else {
+        alert("Payment failed: " + (paymentData.message || "Please try again."));
+      }
+    } catch (error) {
+      console.error("Error during confirmation:", error);
+      alert("An error occurred while confirming your appointment.");
+    }
+  };*/
+  const handleConfirmAppointment = async () => {
+    if (!selectedSlot?.slot_id || !session?.user?.id) {
+      alert("Appointment or user information missing.");
+      return;
+    }
+  
+    try {
+      
+      const paymentResponse = await fetch("http://localhost:8004/make_reservation/make_reservation", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          cardNumber:cardNumber,
+          cardHolder:cardHolder,
+          expiryMonth:expiryMonth,
+          expiryYear:expiryYear,
+          cvc:cvc,
+          saveCard:saveCard,
+          totalAmount: total,
+          paymentMethod: selectedPayment,
+          slot_id: selectedSlot.slot_id,
+          user_id: session.user.id,
+         
+        }),
+      });
+  
+      const paymentData = await paymentResponse.json();
+  
+      if (paymentData.success) {
+        
         alert("Your appointment has been confirmed.");
         setShowModal(false);
         setChangeActive(false);
@@ -346,7 +391,7 @@ export default function CheckoutPage() {
 
         {/* Confirm Button */}
         <Button
-        onClick={handlePayment}
+        onClick={handleConfirmAppointment}
         className="w-full bg-[#e65c00] hover:bg-[#00c99f] text-white py-6"
         >
         Confirm Payment
