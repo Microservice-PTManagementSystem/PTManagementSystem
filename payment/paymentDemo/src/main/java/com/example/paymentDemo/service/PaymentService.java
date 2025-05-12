@@ -7,13 +7,14 @@ import com.example.paymentDemo.model.Payment;
 import java.util.*;
 
 import com.example.paymentDemo.model.PaymentStatus;
+import com.fasterxml.jackson.databind.ser.impl.StringArraySerializer;
 
 public interface PaymentService {
     Payment initiatePayment(PaymentRequest request);
     Payment confirmPayment(PaymentResult result);
-    Payment retryPayment(Long paymentId);
-    Payment issueRefund(Long paymentId);
-    PaymentStatus getStatus(Long paymentId);
+    Payment retryPayment(String slotId);
+    Payment issueRefund(String slotId);
+    PaymentStatus getStatus(String slotId);
    // List<Payment> getPaymentsByUserId(String userId);
     PaymentResult processPayment(PaymentRequest request);
 }

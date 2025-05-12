@@ -14,7 +14,7 @@ public class PaymentInitiatedEvent {
     private Payment saved;
     private String paymentId;
 
-    private Long slotId;
+    private String slotId;
     private String paymentMethod;
     private String cardNumber;
     private String cardHolder;
@@ -27,9 +27,9 @@ public class PaymentInitiatedEvent {
 
     public PaymentInitiatedEvent(Payment saved) {
         this.saved = saved;
-        this.userId = String.valueOf(saved.getUserId());
+        this.userId = userId;
         this.totalAmount = saved.getTotalAmount();
-        this.appointmentId = String.valueOf(saved.getAppointmentId());
+        this.appointmentId = appointmentId;
     } 
     
     public String getAppointmentId() {

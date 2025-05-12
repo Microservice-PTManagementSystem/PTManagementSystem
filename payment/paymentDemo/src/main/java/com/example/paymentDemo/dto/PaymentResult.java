@@ -11,7 +11,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class PaymentResult {
-    private Long paymentId;
+    private String paymentId;
     private boolean success;
     private String message;
     private String cardNumber;
@@ -21,7 +21,7 @@ public class PaymentResult {
     private String cvc;
     private boolean saveCard;
     private String totalAmount;
-    private Long slotId;
+    private String slotId;
     private String paymentMethod;
 
     public boolean success() {
@@ -37,14 +37,16 @@ public class PaymentResult {
         this.message = message;
     }
 
-    public Long getPaymentId() {
+    public String getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(Long paymentId) {
+    public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
     }
-
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
@@ -94,5 +96,12 @@ public class PaymentResult {
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
+    public String getSlotId() {
+        return slotId;
+    }
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
+    }
+    
     
 }

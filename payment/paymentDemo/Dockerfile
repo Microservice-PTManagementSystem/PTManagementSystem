@@ -17,4 +17,6 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:17-jdk AS final
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
-ENTRYPOINT ["java", "-jar", "app.jar"]
+COPY ../application.yml ./application.yml
+#bu copy de iyzicoyu dockera image olarak dahil etsin diye eklendi
+ENTRYPOINT ["java", "-jar", "app.jar", "--spring.config.location=classpath:/,file:./application.yml"]

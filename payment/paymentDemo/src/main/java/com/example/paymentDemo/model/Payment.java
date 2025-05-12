@@ -16,10 +16,10 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     private String userId;
-    private Long slotId;
+    private String slotId;
     private String paymentMethod;
     private String cardNumber;
     private String cardHolder;
@@ -28,17 +28,17 @@ public class Payment {
     private String cvc;
     private boolean saveCard;
     private String totalAmount;
-    private Long appointmentId;
+    private String appointmentId;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status; // PaymentStatus kullanılmalı 
 
 
     // Getter ve Setter'lar
-    public Long getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     public String getUserId() {
@@ -48,18 +48,18 @@ public class Payment {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    public Long getAppointmentId() {
+    public String getAppointmentId() {
         return appointmentId;
     }
-    public void setAppointmentId(Long appointmentId) {
+    public void setAppointmentId(String appointmentId) {
         this.appointmentId = appointmentId;
     }
 
-    public Long getSlotId() {
+    public String getSlotId() {
         return slotId;
     }
 
-    public void setSlotId(Long slotId) {
+    public void setSlotId(String slotId) {
         this.slotId = slotId;
     }
 

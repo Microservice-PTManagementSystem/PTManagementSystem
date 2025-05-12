@@ -46,7 +46,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment confirmPayment(PaymentResult result) {
-        Payment payment = paymentRepository.findById(result.getPaymentId())
+        Payment payment = paymentRepository.findBySlotId(result.getSlotId())
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
         if (result.success()) {
@@ -61,8 +61,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment retryPayment(Long paymentId) {
-        Payment payment = paymentRepository.findById(paymentId)
+    public Payment retryPayment(String slotId) {
+        Payment payment = paymentRepository.findBySlotId(slotId)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
         if (!PaymentStatus.FAILED.equals(payment.getStatus())) {
@@ -77,8 +77,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment issueRefund(Long paymentId) {
-        Payment payment = paymentRepository.findById(paymentId)
+    public Payment issueRefund(String slotId) {
+        Payment payment = paymentRepository.findBySlotId(slotId)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
         payment.setStatus(PaymentStatus.REFUNDED);
@@ -89,8 +89,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public PaymentStatus getStatus(Long paymentId) {
-        return paymentRepository.findById(paymentId)
+    public PaymentStatus getStatus(String slotId) {
+        return paymentRepository.findBySlotId(slotId)
                 .map(Payment::getStatus)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
     }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RefundIssuedEvent {
-    private Long paymentId;
+    private String paymentId;
     private String userId;
     private PaymentStatus status;
     private String paymentMethod;
@@ -22,11 +22,11 @@ public class RefundIssuedEvent {
         this.status = payment.getStatus();
         this.paymentMethod = payment.getPaymentMethod();
     }
-    public Long getPaymentId() {
+    public String getPaymentId() {
         return paymentId;
     }
 
-    public void setPaymentId(Long paymentId) {
+    public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
     }
 }

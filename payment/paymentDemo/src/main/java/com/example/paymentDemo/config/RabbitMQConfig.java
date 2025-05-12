@@ -111,9 +111,9 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding processBinding() {
+    public Binding processBinding(Queue processQueue, TopicExchange paymentExchange) {
         return BindingBuilder.bind(processQueue())
-            .to(paymentExchange())
+            .to(paymentExchange)
             .with("payment.process");
     }
 }

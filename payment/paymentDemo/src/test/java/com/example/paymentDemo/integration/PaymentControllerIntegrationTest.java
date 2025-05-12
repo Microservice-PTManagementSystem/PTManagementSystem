@@ -17,6 +17,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.paymentDemo.dto.PaymentRequest;
 import com.example.paymentDemo.dto.PaymentResult;
@@ -31,6 +32,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 public class PaymentControllerIntegrationTest {
 
     @Autowired
@@ -184,7 +186,7 @@ public class PaymentControllerIntegrationTest {
             .andExpect(jsonPath("$.status").value(PaymentStatus.PENDING.name()));
 
         // Verify DB updated
-        Payment updated = paymentRepository.findById(p.getId()).get();
+        Payment updated = paymentRepository.findBySlotId(p.getId()).get();
         assertThat(updated.getStatus()).isEqualTo(PaymentStatus.PENDING);
 
         verify(rabbitTemplate).convertAndSend(

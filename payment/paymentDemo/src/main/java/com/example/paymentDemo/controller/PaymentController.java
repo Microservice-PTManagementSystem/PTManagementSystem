@@ -49,18 +49,18 @@ public class PaymentController {
     }
 
     @PostMapping("/retry/{paymentId}")
-    public ResponseEntity<Payment> retryPayment(@PathVariable Long paymentId) {
-        Payment payment = paymentService.retryPayment(paymentId);
+    public ResponseEntity<Payment> retryPayment(@PathVariable String slotId) {
+        Payment payment = paymentService.retryPayment(slotId);
         return ResponseEntity.ok(payment);
     }
 
     @PostMapping("/refund/{paymentId}")
-    public ResponseEntity<Payment> issueRefund(@PathVariable Long paymentId) {
-        Payment payment = paymentService.issueRefund(paymentId);
+    public ResponseEntity<Payment> issueRefund(@PathVariable String slotId) {
+        Payment payment = paymentService.issueRefund(slotId);
         return ResponseEntity.ok(payment);
     }
     @GetMapping("/status/{id}")
-public ResponseEntity<PaymentStatus> getStatus(@PathVariable Long id) {
+public ResponseEntity<PaymentStatus> getStatus(@PathVariable String id) {
     try {
         PaymentStatus status = paymentService.getStatus(id);
         return ResponseEntity.ok(status);

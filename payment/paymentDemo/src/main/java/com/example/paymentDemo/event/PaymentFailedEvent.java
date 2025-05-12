@@ -7,20 +7,43 @@ import com.example.paymentDemo.model.Payment;
 import com.example.paymentDemo.model.PaymentStatus;
 
 public class PaymentFailedEvent implements Serializable {
-    private String reservationId;
-    private String customerId;
+    private String slotId;
+    private String userId;
+    //private String reason;
 
-    private Long paymentId;
     private LocalDateTime timestamp;
     private PaymentStatus status;
     private boolean isSuccess;
 
     public PaymentFailedEvent(Payment payment) {
-        this.paymentId = payment.getId();
         this.status = payment.getStatus();
         this.timestamp = LocalDateTime.now();
     } 
+    public PaymentFailedEvent(String userId, String slotId) {
+       this.userId = userId;
+       this.slotId = slotId;
+       //this.reason = reason;
+        
+    }
 
+    public String getSlotId() {
+        return slotId;
+    }
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
+    }
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }/*
+    public String getReason() {
+        return reason;
+    }
+    public void setReason(String reason) {
+        this.reason = reason;
+    }*/
     public boolean isSuccess() {
         return isSuccess;
     }
@@ -28,34 +51,12 @@ public class PaymentFailedEvent implements Serializable {
     public void setSuccess(boolean isSuccess) {
         this.isSuccess = isSuccess;
     }
-    public Long getPaymentId() {
-        return paymentId;
-    }
-    public void setPaymentId(Long paymentId) {
-        this.paymentId = paymentId;
-    }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
     }
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public String getReservationId() {
-        return reservationId;
-    }
-
-    public void setReservationId(String reservationId) {
-        this.reservationId = reservationId;
-    }
-
-    public String getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
     }
     public PaymentStatus getStatus() {
         return status;

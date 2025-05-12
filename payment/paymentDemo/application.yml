@@ -17,3 +17,8 @@ springdoc:
    swagger-ui:
       enabled: true
       path: /swagger-ui.html
+
+iyzico:
+  api-key: sandbox-bZDaE00vYDmsoPJtZxzFEebzKYwzuh6a
+  secret-key: sandbox-JNF4z2HOtHHGJR2Q0JVjThxZ9Sa5xB0f
+  base-url: https://sandbox-api.iyzipay.com
