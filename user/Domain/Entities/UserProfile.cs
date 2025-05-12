@@ -4,8 +4,8 @@ namespace PTManagementSystem.Domain.Entities
 {
     public class UserProfile
     {
-        public string FirstName { get; set; } = string.Empty;
-        public string LastName { get; set; } = string.Empty;
+        //public string FirstName { get; set; } = string.Empty;
+        //public string LastName { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public DateTime DateOfBirth { get; set; }
         public string Gender { get; set; } = string.Empty;
