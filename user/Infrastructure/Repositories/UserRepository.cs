@@ -23,11 +23,12 @@ namespace PTManagementSystem.Infrastructure.Repositories
                 Id = Guid.NewGuid(),
                 KeycloakId = registerDto.KeycloakUserId,
                 Email = registerDto.Email,
+                Name = registerDto.Name,
                 IsEmailConfirmed = registerDto.IsEmailConfirmed,
-                UserType = registerDto.UserType,
+                UserType = registerDto.Role,
                 UserProfile = new UserProfile(),
                 PaymentInfo = new PaymentInfo(),
-                TrainerProfile = registerDto.UserType == UserType.TRAINER ? new TrainerProfile() : null
+                TrainerProfile = registerDto.Role == UserType.TRAINER ? new TrainerProfile() : null
             };
 
             await _users.InsertOneAsync(user);
@@ -97,8 +98,8 @@ namespace PTManagementSystem.Infrastructure.Repositories
 
             return new UserProfileDto
             {
-                FirstName = user.UserProfile.FirstName,
-                LastName = user.UserProfile.LastName,
+                //FirstName = user.UserProfile.FirstName,
+                //LastName = user.UserProfile.LastName,
                 PhoneNumber = user.UserProfile.PhoneNumber,
                 DateOfBirth = user.UserProfile.DateOfBirth,
                 Gender = user.UserProfile.Gender,
