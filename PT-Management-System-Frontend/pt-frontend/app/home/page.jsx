@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image"
 import Link from "next/link"
-import React, { useState } from "react"
+import React, { useState,useEffect } from "react"
 import { Facebook, Instagram, Twitter ,LogOut,CircleUser,CircleX} from "lucide-react"
 import styles from "../styles/home.module.css";
 import { signOut,useSession } from "next-auth/react";
@@ -44,16 +44,27 @@ export default function Home() {
     },
   ];
 
+  useEffect(() => {
+    console.log( "use effect çalışıyor")
+    if (selectedSlot?.slot_id && session?.user?.id) {
+      localStorage.setItem("slotId", selectedSlot.slot_id);
+      localStorage.setItem("userId", session.user.id);
+      console.log("Slot ve User ID kaydedildi!");
+    }
+  }, [selectedSlot, session]);
+  
   const makeReservation =async (e) => {
     e.preventDefault();
     console.log("slot",slots)
+    console.log("selected slot ",selectedSlot)
     console.log("slot id",selectedSlot.slot_id)
+
     if (!selectedSlot.slot_id) {
       alert("slot id not found.");
       return;
     }
     console.log(" id",session?.user?.id)
-    try {
+    /*try {
       const response = await fetch("http://localhost:8004/make_reservation/make_reservation", {
         method: "POST",
         headers: {
@@ -64,22 +75,29 @@ export default function Home() {
           user_id: session?.user?.id,
           timestamp:new Date().toISOString(),
         }),
-      });
+      });*/
 
-      const data = await response.json();
+      //const data = await response.json();
       alert("An appointment has been made.");
+      if (selectedSlot?.slot_id && session?.user?.id) {
+        //localStorage.setItem("slotId", selectedSlot.slot_id);
+        //localStorage.setItem("userId", session.user.id);
+        router.push("/payment")
+      } else {
+        console.warn("slotId or userId missing. Not storing to localStorage.");
+}
 
-      router.push("/payment")
+      
 
       setShowModal(false);
       setChangeActive(false);
       setSelectedSlot(null);
       
-    } catch (error) {
+    /*} catch (error) {
       console.error("Error fetching slots:", error);
       alert("Rezervasyon sırasında hata oluştu.");
       
-    }
+    }*/
   };
 
   /*const checkAppointment =async (e) => {

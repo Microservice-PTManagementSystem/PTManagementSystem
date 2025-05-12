@@ -1,6 +1,6 @@
 "use client"
-import React, { useState } from "react"
-import { Check, HelpCircle } from "lucide-react"
+import React,{ useEffect, useState } from "react"
+import { Check, HelpCircle, ReceiptPoundSterling } from "lucide-react"
 
 // Button Component
 const Button = ({ className, children, ...props }) => (
@@ -61,6 +61,18 @@ export default function CheckoutPage() {
   const [saveCard, setSaveCard] = useState(false)
   //const [price,setPrice] = useState("")
 
+  const [storedSlotId, setStoredSlotId] = useState(null);
+  const [storedUserId, setStoredUserId] = useState(null);
+
+  useEffect(() => {
+    const slotId = localStorage.getItem("slotId");
+    const userId = localStorage.getItem("userId");
+    setStoredSlotId(slotId);
+    setStoredUserId(userId);
+    console.log("Retrieved slotId:", slotId);
+    console.log("Retrieved userId:", userId);
+  }, []);
+
   const paymentMethods = [
     { id: "mastercard", name: "Mastercard", logo: "/assets/mastercard.png" },
     { id: "visa", name: "Visa", logo: "/assets/visa.png" },
@@ -71,6 +83,7 @@ export default function CheckoutPage() {
   const price = 250
   const deliveryCost = 5.5
   const total = price + deliveryCost
+
 
   /*const handleConfirmAppointment = async () => {
     if (!selectedSlot?.slot_id || !session?.user?.id) {
@@ -133,50 +146,57 @@ export default function CheckoutPage() {
     }
   };*/
   const handleConfirmAppointment = async () => {
-    if (!selectedSlot?.slot_id || !session?.user?.id) {
+    //const storedSlotId = localStorage.getItem("slotId")
+    //const storedUserId = localStorage.getItem("userId")
+
+   
+    //if (storedSlotId) setSlotId(storedSlotId)
+    //if (storedUserId) setUserId(storedUserId)
+
+    console.log("slot id",storedSlotId)
+    console.log("user id",storedUserId)
+
+    if (!storedSlotId || !storedUserId) {
       alert("Appointment or user information missing.");
       return;
     }
   
     try {
-      
       const paymentResponse = await fetch("http://localhost:8004/make_reservation/make_reservation", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          cardNumber:cardNumber,
-          cardHolder:cardHolder,
-          expiryMonth:expiryMonth,
-          expiryYear:expiryYear,
-          cvc:cvc,
-          saveCard:saveCard,
-          totalAmount: total,
+          cardNumber,
+          cardHolder,
+          expiryMonth,
+          expiryYear,
+          cvc,
+          saveCard,
+          totalAmount: total.toString(),
           paymentMethod: selectedPayment,
-          slot_id: selectedSlot.slot_id,
-          user_id: session.user.id,
-         
+          slot_id: storedSlotId,
+          user_id: storedUserId,
+          timestamp: new Date().toISOString(),
         }),
-      });
+      })
   
-      const paymentData = await paymentResponse.json();
+      const paymentData = await paymentResponse.json()
   
-      if (paymentData.success) {
-        
-        alert("Your appointment has been confirmed.");
-        setShowModal(false);
-        setChangeActive(false);
-        setSelectedSlot(null);
-  
+      if (paymentData.successs) {
+        alert("Your appointment has been confirmed.")
+        router.push("/home")
+        // başka işlemler
       } else {
-        alert("Payment failed: " + (paymentData.message || "Please try again."));
+        alert("Payment failed: " + (paymentData.message || "Please try again."))
       }
     } catch (error) {
-      console.error("Error during confirmation:", error);
-      alert("An error occurred while confirming your appointment.");
+      console.error("Error during confirmation:", error)
+      alert("An error occurred while confirming your appointment.")
     }
-  };
+  }
+  
   
   const handlePayment = async () => {
     if ((selectedPayment === "mastercard" || selectedPayment === "visa") &&
