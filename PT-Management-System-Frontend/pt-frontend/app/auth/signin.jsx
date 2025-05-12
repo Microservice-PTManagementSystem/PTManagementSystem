@@ -70,7 +70,7 @@ function LogInForm() {
   };
 
   const handleSignInWithKeycloak = async () => {
-    await signIn("keycloak",{callbackUrl:"/register-success"}); 
+    await signIn("keycloak",{callbackUrl: "http://localhost:3000/register-success",}); 
     console.log("-------------------GİRİŞ İŞLEMİ BAŞARILI---------------");
   };
 
