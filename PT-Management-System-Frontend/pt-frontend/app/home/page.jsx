@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const [error, setError] = useState(null);
-
+  
   const [trainer, setTrainer] = useState("");
   const [frequency, setFrequency] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -19,6 +19,7 @@ export default function Home() {
   const [showModal, setShowModal] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [changeActive,setChangeActive]=useState(false);
+  const [paymentInfo,setPaymentInfo]=useState([]);
   const router = useRouter();
   const { data: session } = useSession();  
 
@@ -53,50 +54,91 @@ export default function Home() {
     }
   }, [selectedSlot, session]);
   
-  const makeReservation =async (e) => {
+  const makeReservation = async (e) => {
     e.preventDefault();
-    console.log("slot",slots)
-    console.log("selected slot ",selectedSlot)
-    console.log("slot id",selectedSlot.slot_id)
 
-    if (!selectedSlot.slot_id) {
-      alert("slot id not found.");
+    const price = 250
+    const deliveryCost = 5.5
+    const total = price + deliveryCost
+  
+    if (!selectedSlot?.slot_id || !session?.user?.id) {
+      alert("Slot ID or user ID not found.");
       return;
     }
-    console.log(" id",session?.user?.id)
-    
-     alert("An appointment has been made.");
-      if (selectedSlot?.slot_id && session?.user?.id) {
-        //localStorage.setItem("slotId", selectedSlot.slot_id);
-        //localStorage.setItem("userId", session.user.id);
-        const userId=session?.user?.id;
-        console.log( "user şd ",userId)
-        const response = await fetch(`http://localhost:8008/api/Auth/GetPaymentInfo/${userId}`, {
-          method: "GET",
+  
+    const userId = session.user.id.trim();
+    const slotId = selectedSlot.slot_id;
+  
+    try {
+      const paymentInfoResponse = await fetch(`http://localhost:8008/api/Auth/GetPaymentInfo/${userId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        }
+      });
+  
+      const paymentInfo = await paymentInfoResponse.json();
+      console.log("payment info response",paymentInfo)
+  
+      const {
+        CardHolderName,
+        CardNumber,
+        ExpiryDay,
+        ExpiryYear,
+        CVV,
+        BillingAddress,
+      } = paymentInfo;
+  
+      const isSavedInfoAvailable = CardHolderName && CardNumber && ExpiryDay && ExpiryYear && CVV;
+      console.log("saved info",isSavedInfoAvailable)
+
+      if (isSavedInfoAvailable) {
+        
+        const paymentResponse = await fetch("http://localhost:8004/make_reservation/make_reservation", {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
-          }
+          },
+          body: JSON.stringify({
+            cardNumber: CardNumber,
+            cardHolder: CardHolderName,
+            expiryMonth: ExpiryDay,
+            expiryYear: ExpiryYear,
+            cvc: CVV,
+            saveCard: true,
+            totalAmount: total.toString(), 
+            paymentMethod: "savedCard",
+            slot_id: slotId,
+            user_id: userId,
+            timestamp: new Date().toISOString(),
+          }),
         });
-        if(response.ok){
-          console.log( "payment info",response)
-          router.push("/payment")
+  
+        const paymentResult = await paymentResponse.json();
+  
+        if (paymentResult.successs) {
+          alert("Your appointment has been confirmed.");
+          router.push("/home");
+        } else {
+          alert("Payment failed: " + (paymentResult.message || "Please try again."));
         }
-      
-
-
-        
-        
       } else {
-        console.warn("slotId or userId missing. Not storing to localStorage.");
-}
-
-      
-
-      setShowModal(false);
-      setChangeActive(false);
-      setSelectedSlot(null);
-    
+        // Kayıtlı bilgi yoksa ödeme sayfasına yönlendir
+        localStorage.setItem("userId", userId);
+        localStorage.setItem("slotId", slotId);
+        router.push("/payment");
+      }
+    } catch (error) {
+      console.error("Error processing reservation:", error);
+      alert("An error occurred while processing your appointment.");
+    }
+  
+    setShowModal(false);
+    setChangeActive(false);
+    setSelectedSlot(null);
   };
+  
+  
 
  
 
@@ -366,12 +408,11 @@ export default function Home() {
     </section>
     {showModal && (
   <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-    <div className="bg-gray-900 text-white p-6 rounded-lg max-h-[95vh] w-full max-w-2xl max-h-[90vh] mx-4">
+    <div className="bg-gray-900 text-white p-6 rounded-lg max-h-[95vh] w-full max-w-2xl mx-4 overflow-y-auto">
       {!changeActive ? (
         <>
-        <div className="flex items-center justify-between mb-4">
-        <h3 className="text-xl font-semibold mb-4 text-orange-400">Available appointment dates</h3>
-          <div>
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-xl font-semibold h-20 mb-1 text-orange-400">Available appointment dates</h3>
             <button
               onClick={() => {
                 setShowModal(false);
@@ -383,45 +424,40 @@ export default function Home() {
               <CircleX />
             </button>
           </div>
-        </div>
-          
+
           {slots.length > 0 ? (
-            <ul className="space-y-2 max-h-[300px] overflow-y-auto">
+            <ul className="space-y-2 max-h-[450px] overflow-y-auto">
               {slots.map((slot, idx) => {
-              const start = new Date(slot.start_time);
-              const end = new Date(slot.end_time);
-              const status=slot.slot_status;
+                const start = new Date(slot.start_time);
+                const end = new Date(slot.end_time);
+                const status = slot.slot_status;
 
-              return (
-                <li key={idx} className="bg-gray-800 p-3 rounded">
-                  <p>
-                    <span className="font-semibold">Date and time:</span>{" "}
-                    {start.toLocaleDateString()} -{" "}
-                    {start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} to{" "}
-                    {end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                  </p>
-          
-                  <p><span className="font-semibold">Status:</span> {status}</p>
-                  <button
-                    onClick={() => {
-                      setSelectedSlot(slot);
-                      setChangeActive(true);
-                    }}
-                    className="bg-orange-400 hover:bg-orange-500 text-white text-sm px-2 py-2 mt-5 rounded-full"
-                  >
-                    Make an appointment
-                  </button>
-                </li>
-              );
-            })}
-
-                
-              
+                return (
+                  <li key={idx} className="bg-gray-800 p-3 rounded">
+                    <p>
+                      <span className="font-semibold">Date and time:</span>{" "}
+                      {start.toLocaleDateString()} -{" "}
+                      {start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} to{" "}
+                      {end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                    </p>
+                    <p><span className="font-semibold">Status:</span> {status}</p>
+                    <button
+                      onClick={() => {
+                        setSelectedSlot(slot);
+                        setChangeActive(true);
+                      }}
+                      className="bg-orange-400 hover:bg-orange-500 text-white text-sm px-2 py-2 mt-5 rounded-full"
+                    >
+                      Make an appointment
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
-            
-
           ) : (
-            <p className="text-center text-sm text-red-400">No available appointments were found on the dates you were looking for.</p>
+            <p className="text-center text-sm text-red-400">
+              No available appointments were found on the dates you were looking for.
+            </p>
           )}
         </>
       ) : (
@@ -452,11 +488,10 @@ export default function Home() {
           </div>
         </>
       )}
-
-      
     </div>
   </div>
 )}
+
 
 
       <section className="bg-orange-500 text-white py-8">
