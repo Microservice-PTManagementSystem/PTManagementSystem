@@ -1,6 +1,7 @@
 "use client"
-import React, { useState } from "react"
-import { Check, HelpCircle } from "lucide-react"
+import React,{ useEffect, useState } from "react"
+import { Check, HelpCircle, ReceiptPoundSterling } from "lucide-react"
+import { useRouter } from "next/navigation"
 
 // Button Component
 const Button = ({ className, children, ...props }) => (
@@ -61,18 +62,37 @@ export default function CheckoutPage() {
   const [saveCard, setSaveCard] = useState(false)
   //const [price,setPrice] = useState("")
 
+  const [storedSlotId, setStoredSlotId] = useState(null);
+  const [storedUserId, setStoredUserId] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(300); 
+  
+  const [errors, setErrors] = useState({});
+  const router=useRouter();
+
+
+  useEffect(() => {
+    const slotId = localStorage.getItem("slotId");
+    const userId = localStorage.getItem("userId");
+    setStoredSlotId(slotId);
+    setStoredUserId(userId);
+    console.log("Retrieved slotId:", slotId);
+    console.log("Retrieved userId:", userId);
+  }, []);
+
   const paymentMethods = [
     { id: "mastercard", name: "Mastercard", logo: "/assets/mastercard.png" },
     { id: "visa", name: "Visa", logo: "/assets/visa.png" },
     { id: "paypal", name: "PayPal", logo: "/assets/paypal.png" },
     { id: "cash", name: "Cash on Delivery", logo: "" },
+    { id: "savedCard", name: "With saved card", logo: "" },
   ]
 
   const price = 250
   const deliveryCost = 5.5
   const total = price + deliveryCost
 
-  const handleConfirmAppointment = async () => {
+
+  /*const handleConfirmAppointment = async () => {
     if (!selectedSlot?.slot_id || !session?.user?.id) {
       alert("Appointment or user information missing.");
       return;
@@ -131,46 +151,107 @@ export default function CheckoutPage() {
       console.error("Error during confirmation:", error);
       alert("An error occurred while confirming your appointment.");
     }
+  };*/
+  const validateField = (name, value) => {
+    let error = "";
+  
+    switch (name) {
+      case "cardHolder":
+        if (!value.trim()) error = "Card holder name is required.";
+        break;
+      case "cardNumber":
+        if (!/^\d{16}$/.test(value)) error = "Card number must be 16 digits.";
+        break;
+      case "expiryMonth":
+        if (!/^\d{1,2}$/.test(value) || value < 1 || value > 12) {
+          error = "Month must be between 1 and 12.";
+        }
+        break;
+      case "expiryYear":
+        const currentYear = new Date().getFullYear();
+        if (!/^\d{4}$/.test(value) || value < currentYear) {
+          error = "Year must be this year or later.";
+        }
+        break;
+      case "cvc":
+        if (!/^\d{3,4}$/.test(value)) error = "CVC must be 3 or 4 digits.";
+        break;
+      default:
+        break;
+    }
+  
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
+  
+  useEffect(() => {
+    if (timeLeft === 0) {
+      alert("Time expired. Redirecting...");
+      router.push("/home"); 
+      return;
+    }
+  
+    const timer = setTimeout(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000); // her saniye geri say
+  
+    return () => clearTimeout(timer);
+  }, [timeLeft]);
+
+  const formatTime = (seconds) => {
+    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${m}:${s}`;
   };
   
-  const handlePayment = async () => {
-    if ((selectedPayment === "mastercard" || selectedPayment === "visa") &&
-        (!cardNumber || !cardHolder || !expiryMonth || !expiryYear || !cvc)) {
-      alert("Please fill in all card details.")
-      return
-    }
+  const handleConfirmAppointment = async () => {
+  
 
-    const payload = {
-      paymentMethod: selectedPayment,
-      cardNumber,
-      cardHolder,
-      expiryMonth,
-      expiryYear,
-      cvc,
-      saveCard,
-      totalAmount: total,
-    }
+    console.log("slot id",storedSlotId)
+    console.log("user id",storedUserId)
 
+    if (!storedSlotId || !storedUserId) {
+      alert("Appointment or user information missing.");
+      return;
+    }
+  
     try {
-      const response = await fetch("/api/payment/confirm", {
+      const paymentResponse = await fetch("http://localhost:8004/make_reservation/make_reservation", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(payload)
+        body: JSON.stringify({
+          cardNumber,
+          cardHolder,
+          expiryMonth,
+          expiryYear,
+          cvc,
+          saveCard,
+          totalAmount: total.toString(),
+          paymentMethod: selectedPayment,
+          slot_id: storedSlotId,
+          user_id: storedUserId,
+          timestamp: new Date().toISOString(),
+        }),
       })
-
-      if (response.ok) {
-        alert("Payment successful")
+  
+      const paymentData = await paymentResponse.json()
+  
+      if (paymentData.successs) {
+        alert("Your appointment has been confirmed.")
+        router.push("/home")
+       
       } else {
-        console.error("Payment failed")
-        alert("Payment failed")
+        alert("Payment failed: " + (paymentData.message || "Please try again."))
       }
     } catch (error) {
-      console.error("Error submitting payment:", error)
-      alert("Something went wrong.")
+      console.error("Error during confirmation:", error)
+      alert("An error occurred while confirming your appointment.")
     }
   }
+  
+  
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#e8f2f0] p-4">
@@ -200,6 +281,18 @@ export default function CheckoutPage() {
             </div>
           </div>
         </div>
+        {/* Countdown Timer */}
+        <div className="mb-6">
+          <p className="text-sm text-gray-600">Complete your payment within:</p>
+          <div className="text-2xl font-semibold text-red-700">{formatTime(timeLeft)}</div>
+
+          <div className="w-full h-2 mt-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-red-700 transition-all duration-1000"
+              style={{ width: `${(timeLeft / 300) * 100}%` }}
+            ></div>
+          </div>
+        </div>
 
         {/* Payment Methods */}
         <div className="flex justify-center items-center gap-4 mb-8">
@@ -227,7 +320,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {method.id === "cash" ? (
+              {method.id === "cash"  ? (
                 <div className="text-center text-gray-600 text-xs ml-4">Cash on Delivery</div>
               ) : (
                 <div className="h-8 flex items-center justify-center ml-4">
@@ -248,14 +341,19 @@ export default function CheckoutPage() {
            <div className="grid grid-cols-1 gap-4">
              <div>
                 <Label htmlFor="cardNumber" className="text-sm text-gray-500">
-                Card number <span className="text-red-500">*</span>
+                Card number <span className="text-gray-500">*</span>
                 </Label>
                 <Input
                 id="cardNumber"
+                maxLength={16}
                 value={cardNumber}
-                onChange={(e) => setCardNumber(e.target.value)}
-                className="mt-1 border-gray-300"
+                onChange={(e) => {
+                  setCardNumber(e.target.value);
+                  validateField("cardNumber", e.target.value);
+                }}
+                className="mt-1 border-gray-300 text-gray-900"
                 />
+                {errors.cardNumber && <p className="text-red-500 text-sm">{errors.cardNumber}</p>}
             </div>
 
             <div>
@@ -265,9 +363,13 @@ export default function CheckoutPage() {
                 <Input
                 id="cardHolder"
                 value={cardHolder}
-                onChange={(e) => setCardHolder(e.target.value)}
-                className="mt-1 border-gray-300"
+                onChange={(e) => {
+                  setCardHolder(e.target.value);
+                  validateField("cardHolder", e.target.value);
+                }}
+                className="mt-1 border-gray-300 text-gray-900"
                 />
+                {errors.cardHolder && <p className="text-red-500 text-sm">{errors.cardHolder}</p>}
             </div>
 
             <div className="grid grid-cols-3 gap-4">
@@ -278,9 +380,13 @@ export default function CheckoutPage() {
                 <div className="flex gap-2 mt-1">
                     <select
                     value={expiryMonth}
-                    onChange={(e) => setExpiryMonth(e.target.value)}
-                    className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#00e5b3]"
+                    onChange={(e) => {
+                      setExpiryMonth(e.target.value);
+                      validateField("expiryMonth", e.target.value);
+                    }}
+                    className="border border-gray-300 rounded-md text-gray-900 px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#00e5b3]"
                     >
+                    {errors.expiryMonth && <p className="text-red-500 text-sm">{errors.expiryMonth}</p>}
                     <option value="">Month</option>
                     {Array.from({ length: 12 }, (_, i) => {
                         const value = (i + 1).toString().padStart(2, "0")
@@ -290,9 +396,13 @@ export default function CheckoutPage() {
 
                     <select
                     value={expiryYear}
-                    onChange={(e) => setExpiryYear(e.target.value)}
-                    className="border border-gray-300 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#00e5b3]"
+                    onChange={(e) => {
+                      setExpiryYear(e.target.value);
+                      validateField("expiryYear", e.target.value);
+                    }}
+                    className="border border-gray-300 text-gray-900 rounded-md px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#00e5b3]"
                     >
+                    {errors.expiryYear && <p className="text-red-500 text-sm">{errors.expiryYear}</p>}
                     <option value="">Year</option>
                     {Array.from({ length: 10 }, (_, i) => {
                         const year = new Date().getFullYear() + i
@@ -311,20 +421,30 @@ export default function CheckoutPage() {
                 </div>
                 <Input
                     id="cvc"
+                    maxLength={4}
                     value={cvc}
-                    onChange={(e) => setCvc(e.target.value)}
-                    className="mt-1 border-gray-300"
+                    onChange={(e) => {
+                      setCvc(e.target.value);
+                      validateField("cvc", e.target.value);
+                    }}
+                    className="mt-1 border-gray-300 text-gray-900"
                 />
+                {errors.cvc && <p className="text-red-500 text-sm">{errors.cvc}</p>}
                 </div>
             </div>
             </div>
 
             <div className="flex items-center space-x-2">
-            <Checkbox id="saveCard" />
-            <Label htmlFor="saveCard" className="text-sm text-gray-500">
+              <CustomCheckbox
+                id="saveCard"
+                checked={saveCard}
+                onChange={setSaveCard}
+              />
+              <Label htmlFor="saveCard" className="text-sm text-gray-500">
                 Save my details for future purchases
-            </Label>
+              </Label>
             </div>
+
         </div>
         )}
 
@@ -346,7 +466,7 @@ export default function CheckoutPage() {
 
         {/* Confirm Button */}
         <Button
-        onClick={handlePayment}
+        onClick={handleConfirmAppointment}
         className="w-full bg-[#e65c00] hover:bg-[#00c99f] text-white py-6"
         >
         Confirm Payment
@@ -356,3 +476,17 @@ export default function CheckoutPage() {
 
   )
 }
+const CustomCheckbox = ({ id, checked, onChange, label }) => {
+  return (
+    <label htmlFor={id} className="flex items-center space-x-2 cursor-pointer">
+      <input
+        id={id}
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="form-checkbox h-4 w-4 text-orange-500 transition duration-150 ease-in-out border-gray-300 rounded focus:ring-orange-500"
+      />
+      <span className="text-sm text-gray-500">{label}</span>
+    </label>
+  );
+};

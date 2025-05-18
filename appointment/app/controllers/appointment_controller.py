@@ -16,7 +16,8 @@ def make_reservation(data):
     collection.insert_one(data)"""
 
     slot_reserved_event(data)
-    return {"data": data}
+
+    return {"successs": True}
 
 def create_slot(data):
     collection = get_collection("SlotDB")

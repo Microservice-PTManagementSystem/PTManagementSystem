@@ -14,12 +14,19 @@ public class RefundIssuedEvent {
     private Long paymentId;
     private String userId;
     private PaymentStatus status;
-    private String method;
+    private String paymentMethod;
  
     public RefundIssuedEvent(Payment payment) {
         this.paymentId = payment.getId();
         this.userId = payment.getUserId();
         this.status = payment.getStatus();
-        this.method = payment.getMethod();
+        this.paymentMethod = payment.getPaymentMethod();
+    }
+    public Long getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
     }
 }

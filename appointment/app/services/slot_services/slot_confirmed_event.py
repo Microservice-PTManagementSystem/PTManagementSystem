@@ -60,7 +60,7 @@ def callback(ch, method, properties, body):
         message = json.loads(body)
         print("Message content:", message, flush=True)
         appointment_collection.update_one(
-            {"slot_id": message["SlotId"]},
+            {"slot_id": message["slotId"]},
             {"$set": {"status": "active"}}
         )
         ch.basic_ack(delivery_tag=method.delivery_tag)

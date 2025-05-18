@@ -37,7 +37,8 @@ public class PaymentServiceTest {
 
     @Test
     void shouldInitiatePaymentAndPublishEvent() {
-        PaymentRequest request = new PaymentRequest("2451",100.0,"credit card","billing1",105486972L);
+        PaymentRequest request = new PaymentRequest("credit card","1234567890123456",
+        "John Doe","12","2025","123",false,"100.00");
 
         Payment savedPayment = new Payment();
         savedPayment.setId(1L);
@@ -60,7 +61,10 @@ public class PaymentServiceTest {
         when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
-        PaymentResult result = new PaymentResult(1L, true, "TXN-002",null);
+        PaymentResult result = new PaymentResult();
+        result.setPaymentId(1L);
+        result.setSuccess(true);
+        result.setMessage("Payment processed successfully");
 
         Payment confirmed = paymentService.confirmPayment(result);
 
@@ -77,7 +81,10 @@ public class PaymentServiceTest {
         when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
-        PaymentResult result = new PaymentResult(1L, false,"TXN-001", "Declined");
+        PaymentResult result = new PaymentResult();
+        result.setPaymentId(1L);
+        result.setSuccess(false);
+        result.setMessage("Payment failed");
 
         Payment failed = paymentService.confirmPayment(result);
 
@@ -90,9 +97,8 @@ public class PaymentServiceTest {
         Payment failedPayment = new Payment();
         failedPayment.setId(1L);
         failedPayment.setStatus(PaymentStatus.FAILED);
-        failedPayment.setUserId("user9");
-        failedPayment.setMethod("credit_card");
-        failedPayment.setAmount(50.0);
+        failedPayment.setPaymentMethod("credit_card");
+        failedPayment.setTotalAmount("50.0");
 
         when(paymentRepository.findById(1L)).thenReturn(Optional.of(failedPayment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(failedPayment);
@@ -107,8 +113,7 @@ public class PaymentServiceTest {
         Payment completedPayment = new Payment();
         completedPayment.setId(1L);
         completedPayment.setStatus(PaymentStatus.COMPLETED);
-        completedPayment.setUserId("user11");
-        completedPayment.setMethod("paypal");
+        completedPayment.setPaymentMethod("paypal");
 
         when(paymentRepository.findById(1L)).thenReturn(Optional.of(completedPayment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(completedPayment);
@@ -135,7 +140,7 @@ public class PaymentServiceTest {
     @Test
     void shouldThrowExceptionIfPaymentNotFoundWhenConfirming() {
     when(paymentRepository.findById(99L)).thenReturn(Optional.empty());
-    PaymentResult result = new PaymentResult(99L, true, "TXN-404", null);
+    PaymentResult result = new PaymentResult();
 
     assertThrows(IllegalArgumentException.class, () -> paymentService.confirmPayment(result));
 }
@@ -158,6 +163,47 @@ void shouldThrowIfPaymentStatusNotFound() {
     assertThrows(IllegalArgumentException.class, () -> paymentService.getStatus(42L));
 }
 
+@Test
+void processPayment_Success() {
+    // Arrange
+    PaymentRequest request = new PaymentRequest("credit card","1234567890123456",
+    "John Doe","12","2025","123",false,"100.00");
+    request.setSaveCard(false);
+    request.setTotalAmount("100.00");
 
+    Payment savedPayment = new Payment();
+    savedPayment.setId(1L);
+    when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
+
+    // Act
+    PaymentResult result = paymentService.processPayment(request);
+
+    // Assert
+    assertTrue(result.success());
+    assertNotNull(result.getMessage());
+    assertEquals("Payment processed successfully", result.getMessage());
+    assertEquals(1L, result.getPaymentId());
+}
+
+@Test
+void processPayment_InvalidCardNumber() {
+    // Arrange
+    PaymentRequest request = new PaymentRequest("credit card","invalid",
+    "John Doe","12","2025","123",false,"100.00");
+    request.setSaveCard(false);
+    request.setTotalAmount("100.00");
+
+    Payment savedPayment = new Payment();
+    savedPayment.setId(1L);
+    when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
+
+    // Act
+    PaymentResult result = paymentService.processPayment(request);
+
+    // Assert
+    assertFalse(result.success());
+    assertNotNull(result.getMessage());
+    assertTrue(result.getMessage().contains("Payment failed"));
+}
 
 }

@@ -11,28 +11,28 @@ public class PaymentFailedEvent implements Serializable {
     private String customerId;
 
     private Long paymentId;
-    private String failureReason;
     private LocalDateTime timestamp;
     private PaymentStatus status;
+    private boolean isSuccess;
 
     public PaymentFailedEvent(Payment payment) {
         this.paymentId = payment.getId();
-        this.failureReason = payment.getFailureReason(); // örnek alan
-        this.timestamp = LocalDateTime.now();
         this.status = payment.getStatus();
+        this.timestamp = LocalDateTime.now();
     } 
 
+    public boolean isSuccess() {
+        return isSuccess;
+    }
+
+    public void setSuccess(boolean isSuccess) {
+        this.isSuccess = isSuccess;
+    }
     public Long getPaymentId() {
         return paymentId;
     }
     public void setPaymentId(Long paymentId) {
         this.paymentId = paymentId;
-    }
-    public String getFailureReason() {
-        return failureReason;
-    }
-    public void setFailureReason(String failureReason) {
-        this.failureReason = failureReason;
     }
 
     public LocalDateTime getTimestamp() {
@@ -56,5 +56,12 @@ public class PaymentFailedEvent implements Serializable {
 
     public void setCustomerId(String customerId) {
         this.customerId = customerId;
+    }
+    public PaymentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
     }
 }

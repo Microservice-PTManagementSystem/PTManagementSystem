@@ -12,7 +12,7 @@ def slot_reserved_event(reservation_data):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
     channel = connection.channel()
     channel.queue_declare(queue='reservationQueue')
-
+    print("slot_reserved_event WORKED:::" , reservation_data)
     SlotDB_collection = get_collection("SlotDB")
     SlotDB_collection.update_one({"slot_id": reservation_data["slot_id"]}, {"$set": {"slot_status": "reserved"}})
     mongo_insert_data = reservation_data.copy()

@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Facebook, Instagram, Twitter ,LogOut,CircleUser,CircleX} from "lucide-react"
 import styles from "../styles/home.module.css";
 import { signOut} from "next-auth/react";
+
 export default function RegisterSuccess() {
   const { data: session, status } = useSession();
   const router = useRouter();
