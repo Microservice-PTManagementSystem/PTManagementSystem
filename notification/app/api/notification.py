@@ -12,7 +12,7 @@ async def send_notification(notification_data: notification_model):
     return {"response": response}
 
 @router.get("/user_notifications/{user_id}")
-async def get_user_notifications(user_id: str):
-
+async def fetch_user_notifications(user_id: str): 
     result = get_user_notifications(user_id)
     return {"notifications": result}
+

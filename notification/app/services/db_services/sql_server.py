@@ -12,6 +12,7 @@ def insert_notification(user_id, message):
     conn = get_sql_connection()
     cursor = conn.cursor()
 
+    # Tablo adı: Notifications (ilk harf büyük olabilir, senin oluşturduğun isme göre düzenle)
     cursor.execute("INSERT INTO Notifications (UserId, Message) VALUES (?, ?)", (user_id, message))
     conn.commit()
     conn.close()
@@ -30,7 +31,9 @@ def get_notifications_by_user_id(user_id):
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM Notifications WHERE UserId = ?", (user_id,))
-    results = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    results = [dict(zip(columns, row)) for row in cursor.fetchall()]
+
     conn.close()
     return results
 
