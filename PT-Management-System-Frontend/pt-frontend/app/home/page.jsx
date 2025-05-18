@@ -64,25 +64,28 @@ export default function Home() {
       return;
     }
     console.log(" id",session?.user?.id)
-    /*try {
-      const response = await fetch("http://localhost:8004/make_reservation/make_reservation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          slot_id: selectedSlot.slot_id,
-          user_id: session?.user?.id,
-          timestamp:new Date().toISOString(),
-        }),
-      });*/
-
-      //const data = await response.json();
-      alert("An appointment has been made.");
+    
+     alert("An appointment has been made.");
       if (selectedSlot?.slot_id && session?.user?.id) {
         //localStorage.setItem("slotId", selectedSlot.slot_id);
         //localStorage.setItem("userId", session.user.id);
-        router.push("/payment")
+        const userId=session?.user?.id;
+        console.log( "user şd ",userId)
+        const response = await fetch(`http://localhost:8008/api/Auth/GetPaymentInfo/${userId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
+        });
+        if(response.ok){
+          console.log( "payment info",response)
+          router.push("/payment")
+        }
+      
+
+
+        
+        
       } else {
         console.warn("slotId or userId missing. Not storing to localStorage.");
 }
@@ -92,19 +95,10 @@ export default function Home() {
       setShowModal(false);
       setChangeActive(false);
       setSelectedSlot(null);
-      
-    /*} catch (error) {
-      console.error("Error fetching slots:", error);
-      alert("Rezervasyon sırasında hata oluştu.");
-      
-    }*/
+    
   };
 
-  /*const checkAppointment =async (e) => {
-    router.push("/payment");
-  }*/
-
-
+ 
 
   
   const handleSubmit =async (e) => {

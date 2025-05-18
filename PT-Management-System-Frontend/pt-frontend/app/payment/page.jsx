@@ -63,6 +63,7 @@ export default function CheckoutPage() {
 
   const [storedSlotId, setStoredSlotId] = useState(null);
   const [storedUserId, setStoredUserId] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(300); 
 
   useEffect(() => {
     const slotId = localStorage.getItem("slotId");
@@ -145,6 +146,26 @@ export default function CheckoutPage() {
       alert("An error occurred while confirming your appointment.");
     }
   };*/
+  useEffect(() => {
+    if (timeLeft === 0) {
+      alert("Time expired. Redirecting...");
+      router.push("/home"); // veya "/home", "/timeout" gibi istediğin sayfa
+      return;
+    }
+  
+    const timer = setTimeout(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000); // her saniye geri say
+  
+    return () => clearTimeout(timer);
+  }, [timeLeft]);
+
+  const formatTime = (seconds) => {
+    const m = String(Math.floor(seconds / 60)).padStart(2, "0");
+    const s = String(seconds % 60).padStart(2, "0");
+    return `${m}:${s}`;
+  };
+  
   const handleConfirmAppointment = async () => {
     //const storedSlotId = localStorage.getItem("slotId")
     //const storedUserId = localStorage.getItem("userId")
@@ -263,6 +284,18 @@ export default function CheckoutPage() {
               </div>
               <span>CONFIRMATION</span>
             </div>
+          </div>
+        </div>
+        {/* Countdown Timer */}
+        <div className="mb-6">
+          <p className="text-sm text-gray-600">Complete your payment within:</p>
+          <div className="text-2xl font-semibold text-red-700">{formatTime(timeLeft)}</div>
+
+          <div className="w-full h-2 mt-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-red-700 transition-all duration-1000"
+              style={{ width: `${(timeLeft / 300) * 100}%` }}
+            ></div>
           </div>
         </div>
 
