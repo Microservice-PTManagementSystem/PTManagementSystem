@@ -15,6 +15,11 @@ def make_reservation(data):
     """    collection = get_collection()
     collection.insert_one(data)"""
 
+    collection = get_collection("SlotDB")
+
+    result = collection.find_one({"slot_id" : data["slot_id"]})
+
+    data["hourly_price"] = result["hourly_price"]
     slot_reserved_event(data)
 
     return {"successs": True}
@@ -41,7 +46,8 @@ def create_slot(data):
                 "slot_id": str(uuid.uuid4()),
                 "slot_status": "released",
                 "start_time": current_time,  # Save datetime object
-                "end_time": next_hour  # Save datetime object
+                "end_time": next_hour,  # Save datetime object
+                "hourly_price": data["hourly_price"]
             }
 
             # Insert slot into database

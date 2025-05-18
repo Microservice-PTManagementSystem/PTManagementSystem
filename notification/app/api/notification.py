@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 from models.notification_model import notification_model
 from controllers.notification_controller import send_notification1
+from controllers.notification_controller import get_user_notifications
 
 router = APIRouter(prefix="/send_notification", tags=["notification"])
 
@@ -9,3 +10,9 @@ router = APIRouter(prefix="/send_notification", tags=["notification"])
 async def send_notification(notification_data: notification_model):
     response = send_notification1(notification_data)
     return {"response": response}
+
+@router.get("/user_notifications/{user_id}")
+async def get_user_notifications(user_id: str):
+
+    result = get_user_notifications(user_id)
+    return {"notifications": result}
