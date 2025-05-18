@@ -137,7 +137,8 @@ namespace PTManagementSystem.Infrastructure.Repositories
             {
                 CardHolderName = user.PaymentInfo.CardHolderName,
                 CardNumber = user.PaymentInfo.CardNumber,
-                ExpiryDate = user.PaymentInfo.ExpiryDate,
+                ExpiryDay = user.PaymentInfo.ExpiryDay,
+                ExpiryYear = user.PaymentInfo.ExpiryYear,
                 CVV = user.PaymentInfo.CVV,
                 BillingAddress = user.PaymentInfo.BillingAddress
             };
