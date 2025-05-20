@@ -13,7 +13,7 @@ def datetime_serializer(obj):
     raise TypeError("Type not serializable")
 
 def reservation_timeout_checker(slot_id):
-    time.sleep(10) 
+    time.sleep(180) 
     collection = get_collection("AppointmentDB")
     appointment = collection.find_one({"slot_id": slot_id})
 
