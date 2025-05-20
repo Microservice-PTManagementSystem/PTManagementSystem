@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.example.paymentDemo.model.Payment;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,19 +14,20 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PaymentSucceededEvent {
+    @JsonProperty("slot_id")
     private String slotId;
-    private String trainerId;
-    private String customerId;
-
-    private Long paymentId;
-    private Double amount;
-    private String method;
+    @JsonProperty("user_id")
+    private String userId;
+    @JsonProperty("totalAmount")
+    private String totalAmount;
+    @JsonProperty("paymentMethod")
+    private String paymentMethod;
+    @JsonProperty("timestamp")
     private LocalDateTime timestamp;
  
-    public PaymentSucceededEvent(String slotId, String trainerId, String customerId) {
+    public PaymentSucceededEvent(String slotId, String userId) {
         this.slotId = slotId;
-        this.trainerId = trainerId;
-        this.customerId = customerId;
+        this.userId = userId;
     }
 
     public String getslotId() {
@@ -35,39 +37,23 @@ public class PaymentSucceededEvent {
     public void setslotId(String slotId) {
         this.slotId = slotId;
     }
-
-    public String getTrainerId() {
-        return trainerId;
+    public String getUserId() {
+        return userId;
     }
-
-    public void setTrainerId(String trainerId) {
-        this.trainerId = trainerId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
-
-    public String getCustomerId() {
-        return customerId;
+    public String getTotalAmount() {
+        return totalAmount;
     }
-
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
     }
-    public Long getPaymentId() {
-        return paymentId;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
-    public void setPaymentId(Long paymentId) {
-        this.paymentId = paymentId;
-    }
-    public Double getAmount() {
-        return amount;
-    }
-    public void setAmount(Double amount) {
-        this.amount = amount;
-    }
-    public String getMethod() {
-        return method;
-    }
-    public void setMethod(String method) {
-        this.method = method;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
     public LocalDateTime getTimestamp() {
         return timestamp;
@@ -77,9 +63,9 @@ public class PaymentSucceededEvent {
     }
     
     public PaymentSucceededEvent(Payment payment) {
-        this.paymentId = payment.getId();
-        this.amount = payment.getAmount();
-        this.method = payment.getMethod();
+        this.userId = payment.getUserId();
+        this.totalAmount = payment.getTotalAmount();
+        this.paymentMethod = payment.getPaymentMethod();
         this.timestamp = LocalDateTime.now();
     }
 }

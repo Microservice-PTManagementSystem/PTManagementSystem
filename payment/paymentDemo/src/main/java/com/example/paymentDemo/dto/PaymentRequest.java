@@ -1,58 +1,94 @@
 package com.example.paymentDemo.dto;
 
-import lombok.NoArgsConstructor;
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PaymentRequest {
-    private String userId;
-    private double amount;
-    private String method;
-    private String billingDetails;
-    private Long appointmentId; 
+    @JsonProperty("paymentMethod")
+    private String paymentMethod;
+    @JsonProperty("cardNumber")
+    private String cardNumber;
+    @JsonProperty("cardHolder")
+    private String cardHolder;
+    @JsonProperty("expiryMonth")
+    private String expiryMonth;
+    @JsonProperty("expiryYear")
+    private String expiryYear;
+    @JsonProperty("cvc")
+    private String cvc;
+    @JsonProperty("saveCard")
+    private boolean saveCard;
+    @JsonProperty("totalAmount")
+    private String totalAmount;
+    private String slotId;
 
-    public PaymentRequest(String userId, double amount, String method, String billingDetails, Long appointmentId) {
-        this.userId = userId;
-        this.amount = amount;
-        this.method = method;
-        this.billingDetails = billingDetails;
-        this.appointmentId = appointmentId;
+    public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, boolean saveCard, String totalAmount) {
+        this.paymentMethod = paymentMethod;
+        this.cardNumber = cardNumber;
+        this.cardHolder = cardHolder;
+        this.expiryMonth = expiryMonth;
+        this.expiryYear = expiryYear;
+        this.cvc = cvc;
+        this.saveCard = saveCard;
+        this.totalAmount = totalAmount;
+    }   
+    public String getSlotId() {
+        return slotId;
     }
-    // Getters and setters
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public double getAmount() {
-        return amount;
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
     }
 
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
-
-    public String getMethod() {
-        return method;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
-
-    public void setMethod(String method) {
-        this.method = method;
+    public String getCardNumber() {
+        return cardNumber;
     }
-    public String getBillingDetails() {
-        return billingDetails;
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
-    public void setBillingDetails(String billingDetails) {
-        this.billingDetails = billingDetails;
+    public String getCardHolder() {
+        return cardHolder;
     }
-    public Long getAppointmentId() {
-        return appointmentId;
+    public void setCardHolder(String cardHolder) {
+        this.cardHolder = cardHolder;
     }
-    public void setAppointmentId(Long appointmentId) {
-        this.appointmentId = appointmentId;
+    public String getExpiryMonth() {
+        return expiryMonth;
+    }
+    public void setExpiryMonth(String expiryMonth) {
+        this.expiryMonth = expiryMonth;
+    }
+    public String getExpiryYear() {
+        return expiryYear;
+    }   
+    public void setExpiryYear(String expiryYear) {
+        this.expiryYear = expiryYear;
+    }
+    public String getCvc() {
+        return cvc;
+    }
+    public void setCvc(String cvc) {
+        this.cvc = cvc;
+    }
+    public boolean isSaveCard() {
+        return saveCard;
+    }
+    public void setSaveCard(boolean saveCard) {
+        this.saveCard = saveCard;
+    }
+    public String getTotalAmount() {
+        return totalAmount;
+    }
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
+        
     }
 }

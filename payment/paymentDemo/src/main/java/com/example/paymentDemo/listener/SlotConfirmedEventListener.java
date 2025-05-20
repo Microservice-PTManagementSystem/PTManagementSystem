@@ -25,8 +25,7 @@ public class SlotConfirmedEventListener {
 
         PaymentSucceededEvent paymentSucceeded = new PaymentSucceededEvent(
             event.getSlotId(),
-            "customerId",
-            "trainerId"
+            event.getUserId()
         );
 
         //paymentService.processPayment(event); 

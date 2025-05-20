@@ -1,8 +1,9 @@
 package com.example.paymentDemo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * Entity representing a payment in the system.
@@ -17,39 +18,38 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private String userId;  // userId türü Long idi değiştirdim
-    private Long appointmentId;
-    private Double amount;
-    private String method;
-    private String billingDetails;
-
-    @Column(name = "failure_reason")
-    private String failureReason;
-
+    private String id;
+    @JsonProperty("user_id")
+    private String userId;
+    @JsonProperty("slot_id")
+    private String slotId;
+    @JsonProperty("paymentMethod")
+    private String paymentMethod;
+    @JsonProperty("cardNumber")
+    private String cardNumber;
+    @JsonProperty("cardHolder")
+    private String cardHolder;
+    @JsonProperty("expiryMonth")
+    private String expiryMonth;
+    @JsonProperty("expiryYear")
+    private String expiryYear;
+    @JsonProperty("cvc")
+    private String cvc;
+    @JsonProperty("saveCard")
+    private boolean saveCard;
+    @JsonProperty("totalAmount")
+    private String totalAmount;
+    private String appointmentId;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status; // PaymentStatus kullanılmalı 
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    public void onPrePersist() {
-        this.createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    public void onPreUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 
     // Getter ve Setter'lar
-    public Long getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     public String getUserId() {
@@ -59,37 +59,83 @@ public class Payment {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-
-    public Long getAppointmentId() {
+    public String getAppointmentId() {
         return appointmentId;
     }
-
-    public void setAppointmentId(Long appointmentId) {
+    public void setAppointmentId(String appointmentId) {
         this.appointmentId = appointmentId;
     }
 
-    public Double getAmount() {
-        return amount;
+    public String getSlotId() {
+        return slotId;
     }
 
-    public void setAmount(Double amount) {
-        this.amount = amount;
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
     }
 
-    public String getMethod() {
-        return method;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
 
-    public void setMethod(String method) {
-        this.method = method;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
-    public String getBillingDetails() {
-        return billingDetails;
+    public String getCardNumber() {
+        return cardNumber;
     }
 
-    public void setBillingDetails(String billingDetails) {
-        this.billingDetails = billingDetails;
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public String getCardHolder() {
+        return cardHolder;
+    }
+
+    public void setCardHolder(String cardHolder) {
+        this.cardHolder = cardHolder;
+    }
+
+    public String getExpiryMonth() {
+        return expiryMonth;
+    }
+
+    public void setExpiryMonth(String expiryMonth) {
+        this.expiryMonth = expiryMonth;
+    }
+
+    public String getExpiryYear() {
+        return expiryYear;
+    }
+
+    public void setExpiryYear(String expiryYear) {
+        this.expiryYear = expiryYear;
+    }
+
+    public String getCvc() {
+        return cvc;
+    }
+
+    public void setCvc(String cvc) {
+        this.cvc = cvc;
+    }
+
+    public boolean isSaveCard() {
+        return saveCard;
+    }
+
+    public void setSaveCard(boolean saveCard) {
+        this.saveCard = saveCard;
+    }
+
+    public String getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
     }
 
     public PaymentStatus getStatus() {
@@ -98,28 +144,5 @@ public class Payment {
 
     public void setStatus(PaymentStatus status) {
         this.status = status;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-    public String getFailureReason() {
-        return failureReason;
-    }
-    
-    public void setFailureReason(String failureReason) {
-        this.failureReason = failureReason;
     }
 }
