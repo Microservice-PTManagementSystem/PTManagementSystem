@@ -69,15 +69,20 @@ export default function Home() {
       const data = await response.json();
       alert("An appointment has been made.");
 
+      router.push("/payment")
+
       setShowModal(false);
       setChangeActive(false);
       setSelectedSlot(null);
+      
     } catch (error) {
       console.error("Error fetching slots:", error);
       alert("Rezervasyon sırasında hata oluştu.");
       
     }
   };
+
+
 
   
   const handleSubmit =async (e) => {
@@ -446,28 +451,3 @@ export default function Home() {
     </div>
   );
 }
-/*
-<div>
-            <label className="block text-sm font-medium mb-2">Session Frequency</label>
-            <select
-              value={frequency}
-              onChange={(e) => setFrequency(e.target.value)}
-              required
-              className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-            >
-              <option value="">-- Choose Frequency --</option>
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-            </select>
-          </div>
-*/ 
-/* <p><span className="font-semibold">Date and time:</span> ${new Date(slot.start_time).toLocaleDateString()} - ${start_time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} to ${slot.end_time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
- <p><span className="font-semibold">Start:</span> {new Date(slot.start_time).toLocaleString()}</p>
-                  <p><span className="font-semibold">End:</span> {new Date(slot.end_time).toLocaleString()}</p>*/
-/* <a 
-                  onClick={() => signOut({ callbackUrl: "/auth/signin" })}
-                  className="cursor-pointer text-sm hover:text-orange-500"
-                  >
-                  <LogOut size={20} />
-                </a>*/
