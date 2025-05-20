@@ -4,11 +4,11 @@ namespace PTManagementSystem.Domain.Events
 {
     public class PaymentInfoRequested
     {
-        public string KeycloakId { get; }
+        public string userId { get; }
 
-        public PaymentInfoRequested(string keycloakId)
+        public PaymentInfoRequested(string userId)
         {
-            KeycloakId = keycloakId;
+            userId = userId;
         }
     }
 } 

@@ -2,28 +2,38 @@ using System.Threading.Tasks;
 using PTManagementSystem.Domain.Events;
 using PTManagementSystem.Application.Interfaces;
 using PTManagementSystem.Domain.Entities;
+using PTManagementSystem.Presentation.DTOs;
 using MongoDB.Driver;
+using AutoMapper;
 
 namespace PTManagementSystem.Application.Consumers
 {
     public class PaymentInfoRequestedConsumer
     {
         private readonly IMessageBroker _messageBroker;
-        private readonly IMongoCollection<User> _userCollection;
+        private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public PaymentInfoRequestedConsumer(IMessageBroker messageBroker, IMongoCollection<User> userCollection)
+        public PaymentInfoRequestedConsumer(
+            IMessageBroker messageBroker,
+            IUserRepository userRepository,
+            IMapper mapper)
         {
             _messageBroker = messageBroker;
-            _userCollection = userCollection;
+            _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task Handle(PaymentInfoRequested @event)
         {
-            var user = await _userCollection.Find(u => u.KeycloakId == @event.KeycloakId).FirstOrDefaultAsync();
+            var paymentInfo = await _userRepository.GetPaymentInfoAsync(@event.userId);
             
-            if (user != null)
+            if (paymentInfo != null)
             {
-                var paymentInfoSentEvent = new PaymentInfoSentEvent(user.KeycloakId, user.PaymentInfo);
+                
+                var paymentInfoDto = _mapper.Map<PaymentInfoDto>(paymentInfo);
+
+                var paymentInfoSentEvent = new PaymentInfoSentEvent(@event.userId, paymentInfoDto);
                 await _messageBroker.PublishAsync(paymentInfoSentEvent);
             }
         }
