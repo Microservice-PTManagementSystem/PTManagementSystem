@@ -67,7 +67,7 @@ services:
             condition: service_healthy
       environment:
          - RABBITMQ_HOST=rabbitmq
-         - SQLSERVER__ConnectionString=Server=tcp:ptmanagement.database.windows.net,1433;Initial Catalog=notificationDB;Persist Security Info=False;User ID=ptadmin;Password=Akdenizcse07;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;
+         - SQLSERVER__ConnectionString=Driver={ODBC Driver 18 for SQL Server};Server=tcp:ptmanagement.database.windows.net,1433;Database=notificationDB;Uid=ptadmin;Pwd=Akdenizcse07;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;
  
       ports:
          - "8002:8000"
