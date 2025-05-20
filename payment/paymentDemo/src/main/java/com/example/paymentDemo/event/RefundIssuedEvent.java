@@ -3,6 +3,8 @@ package com.example.paymentDemo.event;
 import com.example.paymentDemo.model.Payment;
 
 import com.example.paymentDemo.model.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,8 +14,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class RefundIssuedEvent {
     private String paymentId;
+    @JsonProperty("user_id")
     private String userId;
     private PaymentStatus status;
+    @JsonProperty("paymentMethod")
     private String paymentMethod;
  
     public RefundIssuedEvent(Payment payment) {

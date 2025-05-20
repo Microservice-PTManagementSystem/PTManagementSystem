@@ -73,7 +73,6 @@ public class PaymentServiceTest {
         PaymentResult result = new PaymentResult();
         result.setSlotId("1");
         result.setSuccess(true);
-        result.setMessage("Payment processed successfully");
 
         Payment confirmed = paymentService.confirmPayment(result);
 
@@ -93,7 +92,6 @@ public class PaymentServiceTest {
         PaymentResult result = new PaymentResult();
         result.setSlotId("1");
         result.setSuccess(false);
-        result.setMessage("Payment failed");
 
         Payment failed = paymentService.confirmPayment(result);
 
@@ -189,8 +187,6 @@ void processPayment_Success() {
 
     // Assert
     assertTrue(result.success());
-    assertNotNull(result.getMessage());
-    assertEquals("Payment processed successfully", result.getMessage());
     assertEquals("1", result.getSlotId());
 }
 
@@ -211,8 +207,6 @@ void processPayment_InvalidCardNumber() {
 
     // Assert
     assertFalse(result.success());
-    assertNotNull(result.getMessage());
-    assertTrue(result.getMessage().contains("Payment failed"));
 }
 
 }

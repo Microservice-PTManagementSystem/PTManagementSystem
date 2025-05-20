@@ -101,7 +101,6 @@ public class PaymentControllerIntegrationTest {
         PaymentResult result = new PaymentResult();
         result.setPaymentId(p.getId());
         result.setSuccess(true);
-        result.setMessage("Payment processed successfully");
         String json = objectMapper.writeValueAsString(result);
 
         // Act & Assert
@@ -142,7 +141,6 @@ public class PaymentControllerIntegrationTest {
         PaymentResult result = new PaymentResult();
         result.setSlotId(p.getSlotId());
         result.setSuccess(false);
-        result.setMessage("Payment failed");
         String json = objectMapper.writeValueAsString(result);
 
         // Act & Assert

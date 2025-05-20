@@ -5,19 +5,22 @@ import java.time.LocalDateTime;
 
 import com.example.paymentDemo.model.Payment;
 import com.example.paymentDemo.model.PaymentStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PaymentFailedEvent implements Serializable {
+    @JsonProperty("slot_id")
     private String slotId;
+    @JsonProperty("user_id")
     private String userId;
     //private String reason;
-
-    private LocalDateTime timestamp;
+    @JsonProperty("timestamp")
+    private String timestamp;
     private PaymentStatus status;
     private boolean isSuccess;
 
     public PaymentFailedEvent(Payment payment) {
         this.status = payment.getStatus();
-        this.timestamp = LocalDateTime.now();
+        this.timestamp = timestamp;
     } 
     public PaymentFailedEvent(String userId, String slotId) {
        this.userId = userId;
@@ -37,13 +40,7 @@ public class PaymentFailedEvent implements Serializable {
     }
     public void setUserId(String userId) {
         this.userId = userId;
-    }/*
-    public String getReason() {
-        return reason;
     }
-    public void setReason(String reason) {
-        this.reason = reason;
-    }*/
     public boolean isSuccess() {
         return isSuccess;
     }
@@ -52,10 +49,10 @@ public class PaymentFailedEvent implements Serializable {
         this.isSuccess = isSuccess;
     }
 
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
     public PaymentStatus getStatus() {

@@ -43,8 +43,8 @@ public class PaymentController {
         Payment payment = paymentService.confirmPayment(result);
         PaymentResult response = new PaymentResult();
         response.setSuccess(payment.getStatus() == PaymentStatus.COMPLETED);
-        response.setMessage(payment.getStatus() == PaymentStatus.COMPLETED ? 
-            "Payment succeeded" : "Payment failed");
+        //response.setMessage(payment.getStatus() == PaymentStatus.COMPLETED ? 
+         //   "Payment succeeded" : "Payment failed");
         return ResponseEntity.ok(response);
     }
 

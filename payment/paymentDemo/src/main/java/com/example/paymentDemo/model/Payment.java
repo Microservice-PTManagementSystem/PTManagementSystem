@@ -1,5 +1,7 @@
 package com.example.paymentDemo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 import jakarta.persistence.*;
 
@@ -17,16 +19,25 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
-
+    @JsonProperty("user_id")
     private String userId;
+    @JsonProperty("slot_id")
     private String slotId;
+    @JsonProperty("paymentMethod")
     private String paymentMethod;
+    @JsonProperty("cardNumber")
     private String cardNumber;
+    @JsonProperty("cardHolder")
     private String cardHolder;
+    @JsonProperty("expiryMonth")
     private String expiryMonth;
+    @JsonProperty("expiryYear")
     private String expiryYear;
+    @JsonProperty("cvc")
     private String cvc;
+    @JsonProperty("saveCard")
     private boolean saveCard;
+    @JsonProperty("totalAmount")
     private String totalAmount;
     private String appointmentId;
 

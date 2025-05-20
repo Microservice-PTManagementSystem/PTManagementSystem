@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.example.paymentDemo.model.Payment;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,11 +14,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PaymentSucceededEvent {
+    @JsonProperty("slot_id")
     private String slotId;
+    @JsonProperty("user_id")
     private String userId;
-
+    @JsonProperty("totalAmount")
     private String totalAmount;
+    @JsonProperty("paymentMethod")
     private String paymentMethod;
+    @JsonProperty("timestamp")
     private LocalDateTime timestamp;
  
     public PaymentSucceededEvent(String slotId, String userId) {

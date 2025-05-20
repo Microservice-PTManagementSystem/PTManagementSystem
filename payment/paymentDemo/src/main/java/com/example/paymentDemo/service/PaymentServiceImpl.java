@@ -116,7 +116,6 @@ public class PaymentServiceImpl implements PaymentService {
                             request.getCardNumber().matches("\\d{16}");
         
         result.setSuccess(isValidCard);
-        result.setMessage(isValidCard ? "Payment processed successfully" : "Payment failed");
         result.setCardNumber(request.getCardNumber());
         result.setCardHolder(request.getCardHolder());
         result.setExpiryMonth(request.getExpiryMonth());

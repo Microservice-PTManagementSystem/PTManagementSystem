@@ -1,17 +1,27 @@
 package com.example.paymentDemo.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PaymentRequest {
+    @JsonProperty("paymentMethod")
     private String paymentMethod;
+    @JsonProperty("cardNumber")
     private String cardNumber;
+    @JsonProperty("cardHolder")
     private String cardHolder;
+    @JsonProperty("expiryMonth")
     private String expiryMonth;
+    @JsonProperty("expiryYear")
     private String expiryYear;
+    @JsonProperty("cvc")
     private String cvc;
+    @JsonProperty("saveCard")
     private boolean saveCard;
+    @JsonProperty("totalAmount")
     private String totalAmount;
 
     public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, boolean saveCard, String totalAmount) {
