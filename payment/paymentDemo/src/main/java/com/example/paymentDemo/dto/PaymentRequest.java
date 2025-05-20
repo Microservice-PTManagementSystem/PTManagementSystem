@@ -23,6 +23,7 @@ public class PaymentRequest {
     private boolean saveCard;
     @JsonProperty("totalAmount")
     private String totalAmount;
+    private String slotId;
 
     public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, boolean saveCard, String totalAmount) {
         this.paymentMethod = paymentMethod;
@@ -34,6 +35,12 @@ public class PaymentRequest {
         this.saveCard = saveCard;
         this.totalAmount = totalAmount;
     }   
+    public String getSlotId() {
+        return slotId;
+    }
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
+    }
 
     public String getPaymentMethod() {
         return paymentMethod;

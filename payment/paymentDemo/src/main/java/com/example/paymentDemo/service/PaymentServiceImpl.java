@@ -107,6 +107,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setSaveCard(request.isSaveCard());
         payment.setTotalAmount(request.getTotalAmount());
         payment.setStatus(PaymentStatus.PENDING);
+        payment.setSlotId(request.getSlotId());
 
         Payment savedPayment = paymentRepository.save(payment);
 
@@ -125,6 +126,7 @@ public class PaymentServiceImpl implements PaymentService {
         result.setTotalAmount(request.getTotalAmount());
         result.setPaymentMethod(request.getPaymentMethod());
         result.setPaymentId(savedPayment.getId());
+        result.setSlotId(savedPayment.getSlotId());
 
         return result;
     }
