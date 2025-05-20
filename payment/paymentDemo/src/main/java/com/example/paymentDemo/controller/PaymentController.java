@@ -48,13 +48,13 @@ public class PaymentController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/retry/{paymentId}")
+    @PostMapping("/retry/{slotId}")
     public ResponseEntity<Payment> retryPayment(@PathVariable String slotId) {
         Payment payment = paymentService.retryPayment(slotId);
         return ResponseEntity.ok(payment);
     }
 
-    @PostMapping("/refund/{paymentId}")
+    @PostMapping("/refund/{slotId}")
     public ResponseEntity<Payment> issueRefund(@PathVariable String slotId) {
         Payment payment = paymentService.issueRefund(slotId);
         return ResponseEntity.ok(payment);
