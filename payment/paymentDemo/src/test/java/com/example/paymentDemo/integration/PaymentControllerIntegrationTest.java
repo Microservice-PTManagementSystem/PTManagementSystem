@@ -140,7 +140,7 @@ public class PaymentControllerIntegrationTest {
 
         // Create payment result with failure
         PaymentResult result = new PaymentResult();
-        result.setPaymentId(p.getId());
+        result.setSlotId(p.getSlotId());
         result.setSuccess(false);
         result.setMessage("Payment failed");
         String json = objectMapper.writeValueAsString(result);
@@ -154,7 +154,7 @@ public class PaymentControllerIntegrationTest {
             .andExpect(jsonPath("$.message").value("Payment failed"));
 
         // Verify DB updated
-        Payment updated = paymentRepository.findById(p.getId()).get();
+        Payment updated = paymentRepository.findBySlotId(p.getSlotId()).get();
         assertThat(updated.getStatus()).isEqualTo(PaymentStatus.FAILED);
 
         verify(rabbitTemplate).convertAndSend(
