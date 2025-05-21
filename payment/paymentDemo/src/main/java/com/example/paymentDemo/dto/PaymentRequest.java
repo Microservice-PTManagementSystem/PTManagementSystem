@@ -1,58 +1,77 @@
 package com.example.paymentDemo.dto;
 
-import lombok.NoArgsConstructor;
 import lombok.Data;
-
+import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PaymentRequest {
-    private String userId;
-    private double amount;
-    private String method;
-    private String billingDetails;
-    private Long appointmentId; 
+    private String paymentMethod;
+    private String cardNumber;
+    private String cardHolder;
+    private String expiryMonth;
+    private String expiryYear;
+    private String cvc;
+    private boolean saveCard;
+    private String totalAmount;
 
-    public PaymentRequest(String userId, double amount, String method, String billingDetails, Long appointmentId) {
-        this.userId = userId;
-        this.amount = amount;
-        this.method = method;
-        this.billingDetails = billingDetails;
-        this.appointmentId = appointmentId;
-    }
-    // Getters and setters
-    public String getUserId() {
-        return userId;
-    }
+    public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, boolean saveCard, String totalAmount) {
+        this.paymentMethod = paymentMethod;
+        this.cardNumber = cardNumber;
+        this.cardHolder = cardHolder;
+        this.expiryMonth = expiryMonth;
+        this.expiryYear = expiryYear;
+        this.cvc = cvc;
+        this.saveCard = saveCard;
+        this.totalAmount = totalAmount;
+    }   
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public String getPaymentMethod() {
+        return paymentMethod;
     }
-
-    public double getAmount() {
-        return amount;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
-
-    public void setAmount(double amount) {
-        this.amount = amount;
+    public String getCardNumber() {
+        return cardNumber;
     }
-
-    public String getMethod() {
-        return method;
+    public void setCardNumber(String cardNumber) {
+        this.cardNumber = cardNumber;
     }
-
-    public void setMethod(String method) {
-        this.method = method;
+    public String getCardHolder() {
+        return cardHolder;
     }
-    public String getBillingDetails() {
-        return billingDetails;
+    public void setCardHolder(String cardHolder) {
+        this.cardHolder = cardHolder;
     }
-    public void setBillingDetails(String billingDetails) {
-        this.billingDetails = billingDetails;
+    public String getExpiryMonth() {
+        return expiryMonth;
     }
-    public Long getAppointmentId() {
-        return appointmentId;
+    public void setExpiryMonth(String expiryMonth) {
+        this.expiryMonth = expiryMonth;
     }
-    public void setAppointmentId(Long appointmentId) {
-        this.appointmentId = appointmentId;
+    public String getExpiryYear() {
+        return expiryYear;
+    }   
+    public void setExpiryYear(String expiryYear) {
+        this.expiryYear = expiryYear;
+    }
+    public String getCvc() {
+        return cvc;
+    }
+    public void setCvc(String cvc) {
+        this.cvc = cvc;
+    }
+    public boolean isSaveCard() {
+        return saveCard;
+    }
+    public void setSaveCard(boolean saveCard) {
+        this.saveCard = saveCard;
+    }
+    public String getTotalAmount() {
+        return totalAmount;
+    }
+    public void setTotalAmount(String totalAmount) {
+        this.totalAmount = totalAmount;
+        
     }
 }

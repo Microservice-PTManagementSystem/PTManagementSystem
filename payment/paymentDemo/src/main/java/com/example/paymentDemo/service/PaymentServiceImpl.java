@@ -29,13 +29,15 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment initiatePayment(PaymentRequest request) {
         Payment payment = new Payment();
-        payment.setUserId(request.getUserId());
-        payment.setAppointmentId(request.getAppointmentId());
-        payment.setAmount(request.getAmount());
-        payment.setMethod(request.getMethod());
-        payment.setBillingDetails(request.getBillingDetails());
+        payment.setPaymentMethod(request.getPaymentMethod());
+        payment.setCardNumber(request.getCardNumber());
+        payment.setCardHolder(request.getCardHolder());
+        payment.setExpiryMonth(request.getExpiryMonth());
+        payment.setExpiryYear(request.getExpiryYear());
+        payment.setCvc(request.getCvc());
+        payment.setSaveCard(request.isSaveCard());
+        payment.setTotalAmount(request.getTotalAmount());
         payment.setStatus(PaymentStatus.PENDING);
-        payment.setCreatedAt(LocalDateTime.now());
 
         Payment saved = paymentRepository.save(payment);
         rabbitTemplate.convertAndSend(PAYMENT_EXCHANGE, "payment.initiated", new PaymentInitiatedEvent(saved));
@@ -47,12 +49,11 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = paymentRepository.findById(result.getPaymentId())
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
-        if (result.isSuccess()) {
+        if (result.success()) {
             payment.setStatus(PaymentStatus.COMPLETED);
             rabbitTemplate.convertAndSend(PAYMENT_EXCHANGE, "payment.succeeded", new PaymentSucceededEvent(payment));
         } else {
             payment.setStatus(PaymentStatus.FAILED);
-            payment.setFailureReason(result.getFailureReason());
             rabbitTemplate.convertAndSend(PAYMENT_EXCHANGE, "payment.failed", new PaymentFailedEvent(payment));
         }
 
@@ -92,6 +93,41 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepository.findById(paymentId)
                 .map(Payment::getStatus)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
+    }
+
+    @Override
+    public PaymentResult processPayment(PaymentRequest request) {
+        Payment payment = new Payment();
+        payment.setPaymentMethod(request.getPaymentMethod());
+        payment.setCardNumber(request.getCardNumber());
+        payment.setCardHolder(request.getCardHolder());
+        payment.setExpiryMonth(request.getExpiryMonth());
+        payment.setExpiryYear(request.getExpiryYear());
+        payment.setCvc(request.getCvc());
+        payment.setSaveCard(request.isSaveCard());
+        payment.setTotalAmount(request.getTotalAmount());
+        payment.setStatus(PaymentStatus.PENDING);
+
+        Payment savedPayment = paymentRepository.save(payment);
+
+        PaymentResult result = new PaymentResult();
+        // Check if card number is valid (simple validation for demo)
+        boolean isValidCard = request.getCardNumber() != null && 
+                            request.getCardNumber().matches("\\d{16}");
+        
+        result.setSuccess(isValidCard);
+        result.setMessage(isValidCard ? "Payment processed successfully" : "Payment failed");
+        result.setCardNumber(request.getCardNumber());
+        result.setCardHolder(request.getCardHolder());
+        result.setExpiryMonth(request.getExpiryMonth());
+        result.setExpiryYear(request.getExpiryYear());
+        result.setCvc(request.getCvc());
+        result.setSaveCard(request.isSaveCard());
+        result.setTotalAmount(request.getTotalAmount());
+        result.setPaymentMethod(request.getPaymentMethod());
+        result.setPaymentId(savedPayment.getId());
+
+        return result;
     }
 
 }

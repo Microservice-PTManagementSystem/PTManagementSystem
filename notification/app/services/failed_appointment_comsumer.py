@@ -4,23 +4,25 @@ from app.services.db_services.sql_server import insert_notification
 
 def callback(ch, method, properties, body):
     try:
-        print(f"Received cancel appointment event: ", flush=True)
+        print(f"Received failed appointment event: ", flush=True)
         message = json.loads(body)
         print("Message content:", message, flush=True)
 
-        
+             
         user_id = message.get("user_id")
-        notif_message = message.get("message", "Appointment Canceled.")
+        notif_message = message.get("message", "Appointment Failed.")
 
         insert_notification(user_id, notif_message)
 
         print("Notification saved to DB!", flush=True)
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
+    
+
         
         
     except Exception as e:
-        print(f"Error Notifiy service consumer appointmentCanceled message: {e}", flush=True)
+        print(f"Error Notifiy service consumer appointmentFailed message: {e}", flush=True)
     
     
     
@@ -29,19 +31,19 @@ def callback(ch, method, properties, body):
 """def process_reservation_notification(reservation_data):
     print(f"Reservation date: {reservation_data['appointment_date']}", flush=True)"""
     
-def start_cancel_consumer():
+def failed_start_consumer():
     try:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
         print("Connected to RabbitMQ", flush=True)  
         channel = connection.channel()
-        channel.queue_declare(queue='cancellationQueue') 
+        channel.queue_declare(queue='appointmentFailed') 
 
-        channel.basic_consume(queue='cancellationQueue', on_message_callback=callback)
+        channel.basic_consume(queue='appointmentFailed', on_message_callback=callback)
 
-        print("Waiting for cancel appointment events...", flush=True)
+        print("Waiting for appointment failed events...", flush=True)
         channel.start_consuming()
     except Exception as e:
         print(f"Error connecting to RabbitMQ: {e}", flush=True)
 
 if __name__ == "__main__":
-    start_cancel_consumer()
+    failed_start_consumer()

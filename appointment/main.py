@@ -1,27 +1,33 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.appointment import router as appointment_router
-from app.services.slot_services.slot_confirmed_event import start_consumer
+from app.services.slot_services.slot_confirmed_event import start_payment_succeeded_consumer, start_payment_failed_consumer
+
+
+import threading
+import uvicorn
 
 app = FastAPI(title="API", description="", version="1.0")
 
-# CORS ayarları - Her yerden gelen istekleri kabul et
+# CORS ayarları
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Tüm domainlere izin ver
+    allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["*"],  # Tüm HTTP metodlara izin ver
-    allow_headers=["*"],  # Tüm headerlara izin ver
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Router'ı dahil et
 app.include_router(appointment_router)
 
-# Kafka (veya başka bir şey) dinleyicisini thread'de başlat
+def start_all_consumers():
+    succeeded_thread = threading.Thread(target=start_payment_succeeded_consumer, daemon=True)
+    failed_thread = threading.Thread(target=start_payment_failed_consumer, daemon=True)
+
+    succeeded_thread.start()
+    failed_thread.start()
+
 if __name__ == "__main__":
-    import uvicorn
-    import threading
-    consumer_thread = threading.Thread(target=start_consumer)
-    consumer_thread.daemon = True  # Ana uygulama kapanırken thread de kapansın
-    consumer_thread.start()
+    start_all_consumers()
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
