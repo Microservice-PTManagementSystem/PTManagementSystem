@@ -14,11 +14,35 @@ export default function SettingsPage() {
 
   const [trainerMap, setTrainerMap] = useState({});
 
+    /*useEffect(() => {
     
+    const fetchTrainerMap = async () => {
+        try {
+        const response = await fetch("http://localhost:8004/trainers/get_all_trainers");
+        const data = await response.json();
+
+        const map = {};
+        data.forEach(trainer => {
+            map[trainer.id] = trainer.name; // id'ye göre isim eşleşmesi
+        });
+
+        setTrainerMap(map);
+        } catch (error) {
+        console.error("Error fetching trainers:", error);
+        }
+    };
+
+    fetchTrainerMap();
+    }, []);*/
 
 
   const checkAppointments =async (e) => {
     
+
+    /*if (!session?.user?.id) {
+      alert("Trainer not found.");
+      return;
+    }*/
     
     try {
       const response = await fetch("http://localhost:8004/make_reservation/get_active_reservations_by_user_id", {
@@ -33,7 +57,6 @@ export default function SettingsPage() {
 
       const data =await response.json();
       console.log(data)
-      console.log("card number",data[0].cardNumber)
       //setAppointments(data || []);
       setAppointments(data );
       console.log("appointments",appointments)
@@ -256,32 +279,13 @@ export default function SettingsPage() {
             {activeTab === "paymentInfo" && (
               <>
                 <h1 className="text-2xl font-bold mb-6 text-gray-600">Payment Informations</h1>
-                <TextButton className="text-gray-600 mb-4 ">Click to add card</TextButton>
+                <TextButton className="text-gray-600 mb-4">Click to add card</TextButton>
 
-                <div className="space-y-4 text-gray-600 mt-10">
-                  {Array.from(
-                    new Map(
-                      appointments.map((item) => [
-                        // Benzersiz kartı anahtar olarak belirliyoruz (kart numarası + holder)
-                        `${item.cardNumber}-${item.cardHolder}`,
-                        item,
-                      ])
-                    ).values()
-                  ).map((card, index) => (
-                    <div
-                      key={index}
-                      className="border rounded-xl p-4 shadow-md bg-white"
-                    >
-                      <p><strong>Card Holder:</strong> {card.cardHolder}</p>
-                      <p><strong>Card Number:</strong> •••• •••• •••• {card.cardNumber.slice(-4)}</p>
-                      <p><strong>Expiry:</strong> {card.expiryMonth}/{card.expiryYear}</p>
-                      <p><strong>Payment Method:</strong> {card.paymentMethod}</p>
-                    </div>
-                  ))}
+                <div className="space-y-4 text-gray-600">
+                  
                 </div>
               </>
             )}
-
           </div>
         </div>
       </div>

@@ -70,7 +70,7 @@ function LogInForm() {
   };
 
   const handleSignInWithKeycloak = async () => {
-    await signIn("keycloak",{callbackUrl: "http://localhost:3000/register-success",}); 
+    await signIn("keycloak",{callbackUrl:"/register-success"}); 
     console.log("-------------------GİRİŞ İŞLEMİ BAŞARILI---------------");
   };
 
@@ -107,7 +107,20 @@ function LogInForm() {
           <h2 className="text-2xl font-bold text-gray-700">Sign In</h2>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
-          
+          <Input
+            type="email"
+            name="email"
+            placeholder="Email address"
+            value={formData.email}
+            onChange={handleChange}
+          />
+          <Input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+          />
 
           <Button
             className="w-full bg-black py-3 text-white hover:bg-gray-800"

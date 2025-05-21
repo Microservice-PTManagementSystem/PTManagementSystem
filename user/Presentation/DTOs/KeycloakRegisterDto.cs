@@ -3,7 +3,7 @@
     public class KeycloakRegisterDto
     {
        // public string KeycloakUserId { get; set; } = string.Empty;
-       public required string token { get; set; }
-       public required string role { get; set; }
+       public string token { get; set; }
+       public string role { get; set; }
     }
 }

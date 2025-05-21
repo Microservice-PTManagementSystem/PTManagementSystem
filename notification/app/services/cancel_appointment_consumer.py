@@ -1,6 +1,5 @@
 import pika
 import json
-from app.services.db_services.sql_server import insert_notification
 
 def callback(ch, method, properties, body):
     try:
@@ -8,13 +7,8 @@ def callback(ch, method, properties, body):
         message = json.loads(body)
         print("Message content:", message, flush=True)
 
-        
-        user_id = message.get("user_id")
-        notif_message = message.get("message", "Appointment Canceled.")
+        print("Message Received and notification sending... (BURASINI TAMAMLA!!!!)") 
 
-        insert_notification(user_id, notif_message)
-
-        print("Notification saved to DB!", flush=True)
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
         

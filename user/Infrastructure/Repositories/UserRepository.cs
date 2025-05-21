@@ -135,12 +135,11 @@ namespace PTManagementSystem.Infrastructure.Repositories
 
             return new PaymentInfoDto
             {
-                cardHolder= user.PaymentInfo.CardHolderName,
-                cardNumber = user.PaymentInfo.CardNumber,
-                expiryMonth = user.PaymentInfo.ExpiryMonth,
-                expiryYear = user.PaymentInfo.ExpiryYear,
-                cvc = user.PaymentInfo.CVC,
-               // BillingAddress = user.PaymentInfo.BillingAddress
+                CardHolderName = user.PaymentInfo.CardHolderName,
+                CardNumber = user.PaymentInfo.CardNumber,
+                ExpiryDate = user.PaymentInfo.ExpiryDate,
+                CVV = user.PaymentInfo.CVV,
+                BillingAddress = user.PaymentInfo.BillingAddress
             };
         }
 

@@ -6,7 +6,7 @@ namespace PTManagementSystem.Presentation.DTOs
     {
         public Guid Id { get; set; }
         public string KeycloakId { get; set; } = string.Empty;
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }
         public string Email { get; set; } = string.Empty;
         public bool IsEmailConfirmed { get; set; }
         public UserType UserType { get; set; }

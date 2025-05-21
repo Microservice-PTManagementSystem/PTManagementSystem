@@ -12,7 +12,6 @@ class Slot(BaseModel):
     daily_working_end_hour : str
     start_date: date
     end_date: date
-    hourly_price: str
 
    
 class GetSlot(BaseModel):
