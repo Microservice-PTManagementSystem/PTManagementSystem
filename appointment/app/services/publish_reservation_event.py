@@ -1,3 +1,4 @@
+"""
 import pika
 import json
  
@@ -14,3 +15,4 @@ def publish_reservation_event(reservation_data):
  
     print(" [x] Sent 'reservationMade' event")
     connection.close()
+"""

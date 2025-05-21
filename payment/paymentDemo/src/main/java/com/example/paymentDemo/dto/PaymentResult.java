@@ -1,7 +1,5 @@
 package com.example.paymentDemo.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -13,39 +11,40 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class PaymentResult {
+    private Long paymentId;
     private boolean success;
-    @JsonProperty("cardNumber")
+    private String message;
     private String cardNumber;
-    @JsonProperty("cardHolder")
     private String cardHolder;
-    @JsonProperty("expiryMonth")
     private String expiryMonth;
-    @JsonProperty("expiryYear")
     private String expiryYear;
-    @JsonProperty("cvc")
     private String cvc;
-    @JsonProperty("saveCard")
     private boolean saveCard;
-    @JsonProperty("totalAmount")
     private String totalAmount;
-    @JsonProperty("slot_id")
-    private String slotId;
+    private Long slotId;
     private String paymentMethod;
 
     public boolean success() {
-        return true;
-    }
-    public boolean isSuccess(){
         return success;
-    
     }
-    public void setSuccess(boolean success){
+    public void setSuccess(boolean success) {
         this.success = success;
-    
     }
-    public String getPaymentMethod() {
-        return paymentMethod;
+    public String getMessage() {
+        return message;
     }
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Long getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(Long paymentId) {
+        this.paymentId = paymentId;
+    }
+
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
@@ -95,12 +94,5 @@ public class PaymentResult {
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
-    public String getSlotId() {
-        return slotId;
-    }
-    public void setSlotId(String slotId) {
-        this.slotId = slotId;
-    }
-    
     
 }

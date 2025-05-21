@@ -6,19 +6,16 @@ import com.example.paymentDemo.event.*;
 import com.example.paymentDemo.model.Payment;
 import com.example.paymentDemo.model.PaymentStatus;
 import com.example.paymentDemo.repository.PaymentRepository;
-
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
  
 @Service
 public class PaymentServiceImpl implements PaymentService {
-    @Autowired
-    private PaymentRepository paymentRepository;
+
+    private final PaymentRepository paymentRepository;
     private final RabbitTemplate rabbitTemplate;
 
     private final String PAYMENT_EXCHANGE = "payment.exchange";
@@ -49,7 +46,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     public Payment confirmPayment(PaymentResult result) {
-        Payment payment = paymentRepository.findBySlotId(result.getSlotId())
+        Payment payment = paymentRepository.findById(result.getPaymentId())
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
         if (result.success()) {
@@ -64,8 +61,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment retryPayment(String slotId) {
-        Payment payment = paymentRepository.findBySlotId(slotId)
+    public Payment retryPayment(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
         if (!PaymentStatus.FAILED.equals(payment.getStatus())) {
@@ -80,20 +77,20 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Payment issueRefund(String slotId) {
-        Payment payment = paymentRepository.findBySlotId(slotId)
+    public Payment issueRefund(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
         payment.setStatus(PaymentStatus.REFUNDED);
-        paymentRepository.save(payment);
+        Payment refunded = paymentRepository.save(payment);
 
-        rabbitTemplate.convertAndSend(PAYMENT_EXCHANGE, "payment.refunded", new RefundIssuedEvent(payment));
-        return payment;
+        rabbitTemplate.convertAndSend(PAYMENT_EXCHANGE, "payment.refunded", new RefundIssuedEvent(refunded));
+        return refunded;
     }
 
     @Override
-    public PaymentStatus getStatus(String slotId) {
-        return paymentRepository.findBySlotId(slotId)
+    public PaymentStatus getStatus(Long paymentId) {
+        return paymentRepository.findById(paymentId)
                 .map(Payment::getStatus)
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
     }
@@ -110,7 +107,6 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setSaveCard(request.isSaveCard());
         payment.setTotalAmount(request.getTotalAmount());
         payment.setStatus(PaymentStatus.PENDING);
-        payment.setSlotId(request.getSlotId());
 
         Payment savedPayment = paymentRepository.save(payment);
 
@@ -120,6 +116,7 @@ public class PaymentServiceImpl implements PaymentService {
                             request.getCardNumber().matches("\\d{16}");
         
         result.setSuccess(isValidCard);
+        result.setMessage(isValidCard ? "Payment processed successfully" : "Payment failed");
         result.setCardNumber(request.getCardNumber());
         result.setCardHolder(request.getCardHolder());
         result.setExpiryMonth(request.getExpiryMonth());
@@ -128,28 +125,9 @@ public class PaymentServiceImpl implements PaymentService {
         result.setSaveCard(request.isSaveCard());
         result.setTotalAmount(request.getTotalAmount());
         result.setPaymentMethod(request.getPaymentMethod());
-        result.setSlotId(savedPayment.getSlotId());
+        result.setPaymentId(savedPayment.getId());
 
         return result;
     }
-    @Override
-    public PaymentRequest getSavedCardByUserId(String userId) {
-    Payment payment = paymentRepository.findByUserId(userId)
-        .orElseThrow(() -> new RuntimeException("Kullanıcıya ait kayıtlı kart bulunamadı"));
-
-      PaymentRequest request = new PaymentRequest();
-    request.setPaymentMethod(payment.getPaymentMethod());
-    request.setCardNumber(payment.getCardNumber());
-    request.setCardHolder(payment.getCardHolder());
-    request.setExpiryMonth(payment.getExpiryMonth());
-    request.setExpiryYear(payment.getExpiryYear());
-    request.setCvc(payment.getCvc());
-    request.setSaveCard(payment.isSaveCard());
-    request.setTotalAmount(payment.getTotalAmount());
-    request.setSlotId(payment.getSlotId()); // payment entity'de bu alan varsa
-
-    return request;
-}
-
 
 }
