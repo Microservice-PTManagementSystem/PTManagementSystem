@@ -79,7 +79,7 @@ export default function RegisterSuccess() {
 
             <nav className="hidden md:flex space-x-6">
               <Link href="/" className="text-sm hover:text-orange-500">Home</Link>
-              <Link href="/our-trainers" className="text-sm hover:text-orange-500">Our Trainers</Link>
+              
               <Link href="/settings">
                 <span className="text-sm hover:text-orange-500">Settings</span>
               </Link>
