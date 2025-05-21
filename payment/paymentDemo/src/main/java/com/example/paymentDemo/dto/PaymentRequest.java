@@ -3,9 +3,7 @@ package com.example.paymentDemo.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 @Data
-@NoArgsConstructor
 public class PaymentRequest {
     @JsonProperty("paymentMethod")
     private String paymentMethod;
@@ -25,16 +23,16 @@ public class PaymentRequest {
     private String totalAmount;
     private String slotId;
 
-    public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, boolean saveCard, String totalAmount) {
+    public PaymentRequest() {}
+    public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, String totalAmount) {
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;
         this.cardHolder = cardHolder;
         this.expiryMonth = expiryMonth;
         this.expiryYear = expiryYear;
         this.cvc = cvc;
-        this.saveCard = saveCard;
         this.totalAmount = totalAmount;
-    }   
+    }  
     public String getSlotId() {
         return slotId;
     }

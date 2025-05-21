@@ -24,10 +24,11 @@ public class PaymentSucceededEvent {
     private String paymentMethod;
     @JsonProperty("timestamp")
     private LocalDateTime timestamp;
+    private boolean success;
  
-    public PaymentSucceededEvent(String slotId, String userId) {
+    public PaymentSucceededEvent(String slotId, boolean success) {
         this.slotId = slotId;
-        this.userId = userId;
+        this.success = success;
     }
 
     public String getslotId() {
@@ -61,9 +62,12 @@ public class PaymentSucceededEvent {
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
+    public boolean isSuccess() {
+        return success;
+    }
     
     public PaymentSucceededEvent(Payment payment) {
-        this.userId = payment.getUserId();
+        this.slotId = payment.getSlotId();
         this.totalAmount = payment.getTotalAmount();
         this.paymentMethod = payment.getPaymentMethod();
         this.timestamp = LocalDateTime.now();

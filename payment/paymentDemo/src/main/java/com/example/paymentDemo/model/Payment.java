@@ -39,7 +39,6 @@ public class Payment {
     private boolean saveCard;
     @JsonProperty("totalAmount")
     private String totalAmount;
-    private String appointmentId;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status; // PaymentStatus kullanılmalı 
@@ -58,12 +57,6 @@ public class Payment {
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-    public String getAppointmentId() {
-        return appointmentId;
-    }
-    public void setAppointmentId(String appointmentId) {
-        this.appointmentId = appointmentId;
     }
 
     public String getSlotId() {

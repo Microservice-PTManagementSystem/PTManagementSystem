@@ -47,7 +47,7 @@ public class PaymentServiceTest {
     @Test
     void shouldInitiatePaymentAndPublishEvent() {
         PaymentRequest request = new PaymentRequest("credit card","1234567890123456",
-        "John Doe","12","2025","123",false,"100.00");
+        "John Doe","12","2025","123","100.00");
 
         Payment savedPayment = new Payment();
         savedPayment.setSlotId("1");
@@ -174,7 +174,7 @@ void shouldThrowIfPaymentStatusNotFound() {
 void processPayment_Success() {
     // Arrange
     PaymentRequest request = new PaymentRequest("credit card","1234567890123456",
-    "John Doe","12","2025","123",false,"100.00");
+    "John Doe","12","2025","123","100.00");
     request.setSaveCard(false);
     request.setTotalAmount("100.00");
 
@@ -194,7 +194,7 @@ void processPayment_Success() {
 void processPayment_InvalidCardNumber() {
     // Arrange
     PaymentRequest request = new PaymentRequest("credit card","invalid",
-    "John Doe","12","2025","123",false,"100.00");
+    "John Doe","12","2025","123","100.00");
     request.setSaveCard(false);
     request.setTotalAmount("100.00");
 

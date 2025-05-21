@@ -34,10 +34,11 @@ public class PaymentResult {
     private String paymentMethod;
 
     public boolean success() {
-        return success;
+        return true;
     }
-    public void setSuccess(boolean success) {
+    public void setSuccess(boolean success){
         this.success = success;
+    
     }
     public String getPaymentId() {
         return paymentId;

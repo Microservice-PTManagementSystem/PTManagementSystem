@@ -56,7 +56,7 @@ public class PaymentControllerIntegrationTest {
     void shouldInitiatePaymentAndPublishEvent() throws Exception {
         // Arrange
         PaymentRequest request = new PaymentRequest("credit card", "1234567890123456",
-            "John Doe", "12", "2025", "123", false, "100.00");
+            "John Doe", "12", "2025", "123", "100.00");
         String json = objectMapper.writeValueAsString(request);
 
         // Act & Assert

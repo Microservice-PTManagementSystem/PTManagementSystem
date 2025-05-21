@@ -6,16 +6,19 @@ import com.example.paymentDemo.event.*;
 import com.example.paymentDemo.model.Payment;
 import com.example.paymentDemo.model.PaymentStatus;
 import com.example.paymentDemo.repository.PaymentRepository;
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
  
 @Service
 public class PaymentServiceImpl implements PaymentService {
-
-    private final PaymentRepository paymentRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
     private final RabbitTemplate rabbitTemplate;
 
     private final String PAYMENT_EXCHANGE = "payment.exchange";
@@ -130,5 +133,24 @@ public class PaymentServiceImpl implements PaymentService {
 
         return result;
     }
+    @Override
+    public PaymentRequest getSavedCardByUserId(String userId) {
+    Payment payment = paymentRepository.findByUserId(userId)
+        .orElseThrow(() -> new RuntimeException("Kullanıcıya ait kayıtlı kart bulunamadı"));
+
+      PaymentRequest request = new PaymentRequest();
+    request.setPaymentMethod(payment.getPaymentMethod());
+    request.setCardNumber(payment.getCardNumber());
+    request.setCardHolder(payment.getCardHolder());
+    request.setExpiryMonth(payment.getExpiryMonth());
+    request.setExpiryYear(payment.getExpiryYear());
+    request.setCvc(payment.getCvc());
+    request.setSaveCard(payment.isSaveCard());
+    request.setTotalAmount(payment.getTotalAmount());
+    request.setSlotId(payment.getSlotId()); // payment entity'de bu alan varsa
+
+    return request;
+}
+
 
 }

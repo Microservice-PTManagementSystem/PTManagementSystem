@@ -6,13 +6,17 @@ import com.example.paymentDemo.model.Payment;
 import com.example.paymentDemo.model.PaymentStatus;
 import com.example.paymentDemo.service.PaymentService;
 import com.example.paymentDemo.repository.PaymentRepository;
+
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
 //import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.*;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
 @RestController
 @RequestMapping("/payment")
@@ -22,10 +26,12 @@ public class PaymentController {
 
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
+    private final RabbitTemplate rabbitTemplate;
 
-    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository) { 
+    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository, RabbitTemplate rabbitTemplate) { 
         this.paymentService = paymentService;
-        this.paymentRepository = paymentRepository; }
+        this.paymentRepository = paymentRepository;
+        this.rabbitTemplate = rabbitTemplate; }
 
 
     @GetMapping("/payment/health")
@@ -69,23 +75,36 @@ public ResponseEntity<PaymentStatus> getStatus(@PathVariable String id) {
         return ResponseEntity.notFound().build();
     }
     }
+    @GetMapping("/getSavedCard")
+    public PaymentRequest getSavedCard(@RequestParam String userId) {
+        PaymentRequest paymentRequest = (PaymentRequest) rabbitTemplate.convertSendAndReceive(
+            "user.exchange",    // exchange
+            "user.getSavedCard",// routing key
+            userId              // mesaj içeriği
+        );
+
+        if(paymentRequest == null) {
+            throw new RuntimeException("Kart bilgisi bulunamadı");
+        }
+
+        return paymentRequest;
+    }
+    
     @PostMapping("/api/paymentConfirm")
 public ResponseEntity<Payment> handleFrontendPayment(@RequestBody Map<String, Object> payload) {
-    String method = (String) payload.get("paymentMethod");
+    String paymentMethod = (String) payload.get("paymentMethod");
     String cardNumber = (String) payload.get("cardNumber");
     String cardHolder = (String) payload.get("cardHolder");
     String expiryMonth = (String) payload.get("expiryMonth");
     String expiryYear = (String) payload.get("expiryYear");
     String cvc = (String) payload.get("cvc");
-    boolean saveCard = Boolean.parseBoolean(payload.get("saveCard").toString());
-    double amount = Double.parseDouble(payload.get("totalAmount").toString());
+    String totalAmount = (String) payload.get("totalAmount");
 
     // Örnek sabit değerler (geliştirme sırasında), sonra gerçek verilerle değiştirilmeli
     String userId = "user-frontend"; // frontend'den alınması önerilir
-    Long appointmentId = 1L; // frontend'e eklenebilir
 
     // PaymentRequest oluştur
-    PaymentRequest request = new PaymentRequest(method,cardNumber,cardHolder,expiryMonth,expiryYear,cvc,saveCard,String.valueOf(amount));
+    PaymentRequest request = new PaymentRequest(paymentMethod, cardNumber, cardHolder, expiryMonth, expiryYear, cvc, totalAmount);
 
     // İşleme başlat
     Payment payment = paymentService.initiatePayment(request);
@@ -98,25 +117,7 @@ public ResponseEntity<Payment> handleFrontendPayment(@RequestBody Map<String, Ob
     return ResponseEntity.ok(paymentService.confirmPayment(result));
 }
 
-    /*
-    @GetMapping("/user")
-    public ResponseEntity<List<Payment>> getPaymentsForUser(@AuthenticationPrincipal Jwt jwt) {
-    String userId = jwt.getClaimAsString("sub"); // Keycloak'tan sub ID
-    List<Payment> payments = paymentService.getPaymentsByUserId(userId);
-    return ResponseEntity.ok(payments);
-    }*/
-   /* @GetMapping("/{paymentId}")
-public ResponseEntity<Payment> getPaymentById(@PathVariable Long paymentId) {
-    return ResponseEntity.ok(
-        paymentRepository.findById(paymentId)
-            .orElseThrow(() -> new IllegalArgumentException("Payment not found"))
-    );
-}
-@GetMapping("/status")
-public ResponseEntity<List<Payment>> getPaymentsByStatus(@RequestParam PaymentStatus status) {
-    return ResponseEntity.ok(paymentRepository.findByStatus(status));
-}
-*/
+
 
 
     

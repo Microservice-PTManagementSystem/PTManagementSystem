@@ -15,7 +15,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class PaymentProcessEvent implements Serializable {
-    private String appointmentId;
     @JsonProperty("user_id")
     private String userId;
     @JsonProperty("paymentMethod")
@@ -38,11 +37,10 @@ public class PaymentProcessEvent implements Serializable {
     private String slotId;
 
     // Constructor for creating from appointment service data
-    public PaymentProcessEvent(String appointmentId, String userId, String paymentMethod, 
+    public PaymentProcessEvent(String userId, String paymentMethod, 
                              String cardNumber, String cardHolder, String expiryMonth, 
                              String expiryYear, String cvc, boolean saveCard, 
                              String totalAmount, String slotId) {
-        this.appointmentId = appointmentId;
         this.userId = userId;
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;

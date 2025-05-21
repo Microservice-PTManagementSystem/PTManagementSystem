@@ -11,11 +11,9 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentInitiatedEvent {
-    private String appointmentId;
     @JsonProperty("user_id")
     private String userId;
-    private Payment saved;
-    private String paymentId;
+    //private Payment saved;
     @JsonProperty("slot_id")
     private String slotId;
     @JsonProperty("paymentMethod")
@@ -37,20 +35,11 @@ public class PaymentInitiatedEvent {
     // getters and setters
 
     public PaymentInitiatedEvent(Payment saved) {
-        this.saved = saved;
+        //this.saved = saved;
         this.userId = userId;
         this.totalAmount = saved.getTotalAmount();
-        this.appointmentId = appointmentId;
     } 
     
-    public String getAppointmentId() {
-        return appointmentId;
-    }
-
-    public void setAppointmentId(String appointmentId) {
-        this.appointmentId = appointmentId;
-    }
-
     public String getUserId() {
         return userId;
     }
@@ -58,12 +47,8 @@ public class PaymentInitiatedEvent {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    public Payment getSaved() {
-        return saved;
-    }
-    public void setSaved(Payment saved) {
-        this.saved = saved;
-    }
+   
+    
     public String getSlotId() {
         return slotId;
     }
@@ -79,13 +64,7 @@ public class PaymentInitiatedEvent {
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
-    public String getPaymentId() {
-        return paymentId;
-    }
 
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
-    }
     public String getPaymentMethod() {
         return paymentMethod;
     }

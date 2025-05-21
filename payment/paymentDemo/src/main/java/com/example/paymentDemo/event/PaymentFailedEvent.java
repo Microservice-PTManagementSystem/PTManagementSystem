@@ -16,14 +16,14 @@ public class PaymentFailedEvent implements Serializable {
     @JsonProperty("timestamp")
     private String timestamp;
     private PaymentStatus status;
-    private boolean isSuccess;
+    private boolean isFailed;
 
     public PaymentFailedEvent(Payment payment) {
         this.status = payment.getStatus();
         this.timestamp = timestamp;
     } 
-    public PaymentFailedEvent(String userId, String slotId) {
-       this.userId = userId;
+    public PaymentFailedEvent(boolean isFailed, String slotId) {
+       this.isFailed = isFailed;
        this.slotId = slotId;
        //this.reason = reason;
         
@@ -41,12 +41,12 @@ public class PaymentFailedEvent implements Serializable {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    public boolean isSuccess() {
-        return isSuccess;
+    public boolean isFailed() {
+        return isFailed;
     }
 
-    public void setSuccess(boolean isSuccess) {
-        this.isSuccess = isSuccess;
+    public void setFailed(boolean isFailed) {
+        this.isFailed = isFailed;
     }
 
     public String getTimestamp() {

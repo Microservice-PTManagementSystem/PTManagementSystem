@@ -37,7 +37,9 @@ public class SlotReservedEvent {
 
     @JsonProperty("totalAmount")
     private String totalAmount;
-    
+    public Object Payment;
+    private boolean savedCardUse;
+    private boolean success;
     
 
     public SlotReservedEvent() {
@@ -136,9 +138,16 @@ public class SlotReservedEvent {
         return saveCard;
     }
 
-    public void setSaveCard(boolean saveCard) {
+    public void setSavedCard(boolean saveCard) {
         this.saveCard = saveCard;
-    }   
+    }  
+
+    public boolean isSavedCardUse() {
+        return savedCardUse;
+    }
+    public void setSaveCardUse(boolean savedCardUse) {
+        this.savedCardUse = savedCardUse;
+    } 
 
     public String getTotalAmount() {
         return totalAmount;
@@ -147,5 +156,10 @@ public class SlotReservedEvent {
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
+
+    public boolean success(boolean success){
+        return true;
+    }
+    
 
 }

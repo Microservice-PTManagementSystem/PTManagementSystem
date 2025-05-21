@@ -17,5 +17,7 @@ public interface PaymentService {
     PaymentStatus getStatus(String slotId);
    // List<Payment> getPaymentsByUserId(String userId);
     PaymentResult processPayment(PaymentRequest request);
+    PaymentRequest getSavedCardByUserId(String userId);
+
 }
  
