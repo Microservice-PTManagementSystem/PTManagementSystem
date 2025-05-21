@@ -59,8 +59,8 @@ public class RabbitMQConfig {
     }   
 
     @Bean
-    public Queue getSavedCardQueue() {
-        return new Queue("getSavedCardQueue");
+    public Queue PaymentInfoRequested() {
+        return new Queue("PaymentInfoRequested");
     }
 
     @Bean
@@ -68,9 +68,9 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(reservationQueue).to(paymentExchange).with("reservation.created");
     }
     @Bean
-    public Binding getSavedCardBinding(@Qualifier("getSavedCardQueue") Queue getSavedCardQueue,
+    public Binding PaymentInfoRequestedBinding(@Qualifier("PaymentInfoRequested") Queue PaymentInfoRequested,
                                    @Qualifier("userExchange") TopicExchange userExchange) {
-    return BindingBuilder.bind(getSavedCardQueue).to(userExchange).with("user.getSavedCard");
+    return BindingBuilder.bind(PaymentInfoRequested).to(userExchange).with("user.getSavedCard");
     }
     @Bean
     public Binding paymentSucceededBinding(Queue PaymentSucceededQueue, @Qualifier("paymentExchange") TopicExchange paymentExchange) {

@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.http.HttpStatus;
+
+import com.example.paymentDemo.event.CardRequestEvent;
 
 @RestController
 @RequestMapping("/payment")
@@ -75,19 +78,30 @@ public ResponseEntity<PaymentStatus> getStatus(@RequestParam String slotId) {
         return ResponseEntity.notFound().build();
     }
     }
-    @GetMapping("/getSavedCard")
-    public PaymentRequest getSavedCard(@RequestParam String userId) {
-        PaymentRequest paymentRequest = (PaymentRequest) rabbitTemplate.convertSendAndReceive(
-            "user.exchange",    // exchange
-            "user.getSavedCard",// routing key
-            userId              // mesaj içeriği
-        );
+   @PostMapping("/getSavedCard")
+public ResponseEntity<String> getSavedCard(
+        @RequestBody CardRequestEvent request) {
 
-        if(paymentRequest == null) {
-            throw new RuntimeException("Kart bilgisi bulunamadı");
-        }
-
-        return paymentRequest;
+    // Kayıtlı kartı kullanmak istemiyorsa direkt "fail" dön
+    if (!request.isUseSavedCard()) {
+        return ResponseEntity.ok("fail");
     }
+
+    // Kart bilgisi alınmaya çalışılır
+    PaymentRequest paymentRequest = (PaymentRequest) rabbitTemplate.convertSendAndReceive(
+        "user.exchange",
+        "user.getSavedCard",
+        request.getUserId()
+    );
+
+    if (paymentRequest == null) {
+        return ResponseEntity.ok("fail");
+    }
+
+    return ResponseEntity.ok("success");
+}
+
+
+
     
 }

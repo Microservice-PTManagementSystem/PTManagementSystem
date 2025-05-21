@@ -12,6 +12,23 @@ import lombok.NoArgsConstructor;
 public class CardRequestEvent {
     @JsonProperty("user_id")
     private String userId;
+    @JsonProperty("useSavedCard")
+    private boolean useSavedCard;
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public boolean isUseSavedCard() {
+        return useSavedCard;
+    }
+
+    public void setUseSavedCard(boolean useSavedCard) {
+        this.useSavedCard = useSavedCard;
+    }
     
 }

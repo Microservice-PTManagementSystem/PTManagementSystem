@@ -48,7 +48,7 @@ public class SlotConfirmedEventListener {
         rabbitTemplate.convertAndSend("PaymentFailedEvent", paymentFailed);
         System.out.println("PaymentFailedEvent Published! "+ paymentFailed );
     }
-    @RabbitListener(queues = "getSavedCardQueue")
+    @RabbitListener(queues = "PaymentInfoRequested")
     public PaymentRequest handleGetSavedCard(String userId) {
     Payment payment = paymentRepository.findByUserId(userId)
         .orElseThrow(() -> new RuntimeException("Kullanıcıya ait kayıtlı kart bulunamadı"));
@@ -67,7 +67,5 @@ public class SlotConfirmedEventListener {
 
     return request;
     }
-
-
-
+    
 }
