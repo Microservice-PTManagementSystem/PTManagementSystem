@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.example.paymentDemo.model.Payment;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,16 +14,21 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PaymentSucceededEvent {
+    @JsonProperty("slot_id")
     private String slotId;
+    @JsonProperty("user_id")
     private String userId;
-
+    @JsonProperty("totalAmount")
     private String totalAmount;
+    @JsonProperty("paymentMethod")
     private String paymentMethod;
+    @JsonProperty("timestamp")
     private LocalDateTime timestamp;
+    private boolean success;
  
-    public PaymentSucceededEvent(String slotId, String userId) {
+    public PaymentSucceededEvent(String slotId, boolean success) {
         this.slotId = slotId;
-        this.userId = userId;
+        this.success = success;
     }
 
     public String getslotId() {
@@ -47,6 +53,7 @@ public class PaymentSucceededEvent {
     public String getPaymentMethod() {
         return paymentMethod;
     }
+
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
@@ -56,9 +63,12 @@ public class PaymentSucceededEvent {
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
+    public boolean isSuccess() {
+        return success;
+    }
     
     public PaymentSucceededEvent(Payment payment) {
-        this.userId = payment.getUserId();
+        this.slotId = payment.getSlotId();
         this.totalAmount = payment.getTotalAmount();
         this.paymentMethod = payment.getPaymentMethod();
         this.timestamp = LocalDateTime.now();

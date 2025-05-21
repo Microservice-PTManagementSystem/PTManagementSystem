@@ -7,6 +7,8 @@ import com.example.paymentDemo.model.PaymentStatus;
 import com.example.paymentDemo.service.PaymentService;
 import com.example.paymentDemo.repository.PaymentRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,17 +16,25 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.http.HttpStatus;
+
+import com.example.paymentDemo.event.CardRequestEvent;
+
 @RestController
 @RequestMapping("/payment")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
+@Tag(name = "Payment API", description = "Ödeme işlemleri için endpointler")
 public class PaymentController {
 
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
+    private final RabbitTemplate rabbitTemplate;
 
-    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository) { 
+    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository, RabbitTemplate rabbitTemplate) { 
         this.paymentService = paymentService;
-        this.paymentRepository = paymentRepository; }
+        this.paymentRepository = paymentRepository;
+        this.rabbitTemplate = rabbitTemplate; }
 
 
     @GetMapping("/payment/health")
@@ -39,83 +49,58 @@ public class PaymentController {
     } //bunu düzelt
 
     @PostMapping("/confirm")
-    public ResponseEntity<PaymentResult> confirmPayment(@RequestBody PaymentResult result) {
+    public ResponseEntity<Payment> confirmPayment(@RequestBody PaymentResult result) {
         Payment payment = paymentService.confirmPayment(result);
         PaymentResult response = new PaymentResult();
         response.setSuccess(payment.getStatus() == PaymentStatus.COMPLETED);
-        response.setMessage(payment.getStatus() == PaymentStatus.COMPLETED ? 
-            "Payment succeeded" : "Payment failed");
-        return ResponseEntity.ok(response);
-    }
-
-    @PostMapping("/retry/{paymentId}")
-    public ResponseEntity<Payment> retryPayment(@PathVariable Long paymentId) {
-        Payment payment = paymentService.retryPayment(paymentId);
+        //response.setMessage(payment.getStatus() == PaymentStatus.COMPLETED ? 
+         //   "Payment succeeded" : "Payment failed");
         return ResponseEntity.ok(payment);
     }
 
-    @PostMapping("/refund/{paymentId}")
-    public ResponseEntity<Payment> issueRefund(@PathVariable Long paymentId) {
-        Payment payment = paymentService.issueRefund(paymentId);
+    @PostMapping("/retry")
+    public ResponseEntity<Payment> retryPayment(@RequestParam String slotId) {
+        Payment payment = paymentService.retryPayment(slotId);
         return ResponseEntity.ok(payment);
     }
-    @GetMapping("/status/{id}")
-public ResponseEntity<PaymentStatus> getStatus(@PathVariable Long id) {
+
+    @PostMapping("/refund")
+    public ResponseEntity<Payment> issueRefund(@RequestParam String slotId) {
+        Payment payment = paymentService.issueRefund(slotId);
+        return ResponseEntity.ok(payment);
+    }
+    @GetMapping("/status")
+public ResponseEntity<PaymentStatus> getStatus(@RequestParam String slotId) {
     try {
-        PaymentStatus status = paymentService.getStatus(id);
+        PaymentStatus status = paymentService.getStatus(slotId);
         return ResponseEntity.ok(status);
     } catch (IllegalArgumentException e) {
         return ResponseEntity.notFound().build();
     }
     }
-    @PostMapping("/api/paymentConfirm")
-public ResponseEntity<Payment> handleFrontendPayment(@RequestBody Map<String, Object> payload) {
-    String method = (String) payload.get("paymentMethod");
-    String cardNumber = (String) payload.get("cardNumber");
-    String cardHolder = (String) payload.get("cardHolder");
-    String expiryMonth = (String) payload.get("expiryMonth");
-    String expiryYear = (String) payload.get("expiryYear");
-    String cvc = (String) payload.get("cvc");
-    boolean saveCard = Boolean.parseBoolean(payload.get("saveCard").toString());
-    double amount = Double.parseDouble(payload.get("totalAmount").toString());
+   @PostMapping("/getSavedCard")
+public ResponseEntity<String> getSavedCard(
+        @RequestBody CardRequestEvent request) {
 
-    // Örnek sabit değerler (geliştirme sırasında), sonra gerçek verilerle değiştirilmeli
-    String userId = "user-frontend"; // frontend'den alınması önerilir
-    Long appointmentId = 1L; // frontend'e eklenebilir
+    // Kayıtlı kartı kullanmak istemiyorsa direkt "fail" dön
+    if (!request.isUseSavedCard()) {
+        return ResponseEntity.ok("fail");
+    }
 
-    // PaymentRequest oluştur
-    PaymentRequest request = new PaymentRequest(method,cardNumber,cardHolder,expiryMonth,expiryYear,cvc,saveCard,String.valueOf(amount));
-
-    // İşleme başlat
-    Payment payment = paymentService.initiatePayment(request);
-
-    // Varsayalım işlem başarılı (demo için)
-    PaymentResult result = new PaymentResult();
-    result.setPaymentId(payment.getId()); 
-
-    // Onayla ve sonucu dön
-    return ResponseEntity.ok(paymentService.confirmPayment(result));
-}
-
-    /*
-    @GetMapping("/user")
-    public ResponseEntity<List<Payment>> getPaymentsForUser(@AuthenticationPrincipal Jwt jwt) {
-    String userId = jwt.getClaimAsString("sub"); // Keycloak'tan sub ID
-    List<Payment> payments = paymentService.getPaymentsByUserId(userId);
-    return ResponseEntity.ok(payments);
-    }*/
-   /* @GetMapping("/{paymentId}")
-public ResponseEntity<Payment> getPaymentById(@PathVariable Long paymentId) {
-    return ResponseEntity.ok(
-        paymentRepository.findById(paymentId)
-            .orElseThrow(() -> new IllegalArgumentException("Payment not found"))
+    // Kart bilgisi alınmaya çalışılır
+    PaymentRequest paymentRequest = (PaymentRequest) rabbitTemplate.convertSendAndReceive(
+        "user.exchange",
+        "user.getSavedCard",
+        request.getUserId()
     );
+
+    if (paymentRequest == null) {
+        return ResponseEntity.ok("fail");
+    }
+
+    return ResponseEntity.ok("success");
 }
-@GetMapping("/status")
-public ResponseEntity<List<Payment>> getPaymentsByStatus(@RequestParam PaymentStatus status) {
-    return ResponseEntity.ok(paymentRepository.findByStatus(status));
-}
-*/
+
 
 
     
