@@ -58,6 +58,14 @@ public class SlotReservedEvent {
         this.cvc=cvc;
         this.saveCard=saveCard;
         this.totalAmount=totalAmount;
+        this.paymentMethod=paymentMethod;
+        this.cardNumber=cardNumber;
+        this.cardHolder=cardHolder;
+        this.expiryMonth=expiryMonth;
+        this.expiryYear=expiryYear;
+        this.cvc=cvc;
+        this.saveCard=saveCard;
+        this.totalAmount=totalAmount;
 
 
     }
