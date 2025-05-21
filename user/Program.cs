@@ -11,6 +11,11 @@ using PTManagementSystem.Application.UseCases.Commands;
 using PTManagementSystem.Application.UseCases.Queries;
 using PTManagementSystem.Infrastructure.Config;
 using DotNetEnv;
+using PTManagementSystem.Application.Consumers;
+using PTManagementSystem.Domain.Events;
+using MongoDB.Driver;
+using Microsoft.Extensions.Options;
+using PTManagementSystem.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +54,18 @@ builder.Services.Configure<KeycloakSettings>(
 builder.Services.AddSingleton<UserDbContext>();
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("DatabaseSettings"));
+
+// MongoDB Collection
+builder.Services.AddSingleton<IMongoCollection<User>>(sp =>
+{
+    var settings = sp.GetRequiredService<IOptions<DatabaseSettings>>().Value;
+    var client = new MongoClient(settings.ConnectionString);
+    var database = client.GetDatabase(settings.DatabaseName);
+    return database.GetCollection<User>("Users");
+});
+
+// Consumer Registration
+builder.Services.AddScoped<PaymentInfoRequestedConsumer>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
@@ -111,5 +128,16 @@ app.UseCors(corsPolicyName);
 app.UseAuthorization();
 
 app.MapControllers();
+
+// RabbitMQ Subscription Setup
+var messageBroker = app.Services.GetRequiredService<IMessageBroker>();
+
+await messageBroker.SubscribeAsync<PaymentInfoRequested>(async @event =>
+{
+    using var scope = app.Services.CreateScope();
+    var consumer = scope.ServiceProvider.GetRequiredService<PaymentInfoRequestedConsumer>();
+    await consumer.Handle(@event);
+});
+
 
 app.Run();

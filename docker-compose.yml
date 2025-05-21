@@ -67,6 +67,8 @@ services:
             condition: service_healthy
       environment:
          - RABBITMQ_HOST=rabbitmq
+         - SQLSERVER__ConnectionString=Driver={ODBC Driver 18 for SQL Server};Server=tcp:ptmanagement.database.windows.net,1433;Database=notificationDB;Uid=ptadmin;Pwd=Akdenizcse07;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;
+ 
       ports:
          - "8002:8000"
       networks:
@@ -82,8 +84,8 @@ services:
          keycloak:
             condition: service_started
       environment:
-         - MongoDB__ConnectionString= mongodb+srv://userService:ptUser@userservice.fue8ynf.mongodb.net/?retryWrites=true&w=majority&appName=userService
-         - MongoDB__DatabaseName= UserDB
+         - MongoDB__ConnectionString=mongodb+srv://userService:ptUser@userservice.fue8ynf.mongodb.net/?retryWrites=true&w=majority&appName=userService
+         - MongoDB__DatabaseName=UserDB
          - RABBITMQ_HOST=rabbitmq
          - KEYCLOAK_URL=http://keycloak:8080
          - KEYCLOAK_REALM=ptmanagement
@@ -96,6 +98,7 @@ services:
       networks:
          - mynetwork
 
+
    appointment:
       build:
          context: .
@@ -106,6 +109,9 @@ services:
             condition: service_healthy
       environment:
          - RABBITMQ_HOST=rabbitmq
+         - MongoDB__ConnectionString=mongodb+srv://dorukyelken:XBBoy9I7ZoWnp887@cluster0.hupvg8a.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+         - MongoDB__AppointmentDBName=AppointmentDB
+         - MongoDB__SlotDBName=SlotDB
       ports:
          - "8004:8000"
       networks:

@@ -1,31 +1,23 @@
 package com.example.paymentDemo.service;
 
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import org.mockito.MockitoAnnotations;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-
 import com.example.paymentDemo.dto.PaymentRequest;
 import com.example.paymentDemo.dto.PaymentResult;
-import com.example.paymentDemo.event.PaymentFailedEvent;
-import com.example.paymentDemo.event.PaymentInitiatedEvent;
-import com.example.paymentDemo.event.PaymentSucceededEvent;
-import com.example.paymentDemo.event.RefundIssuedEvent;
+import com.example.paymentDemo.event.*;
 import com.example.paymentDemo.model.Payment;
 import com.example.paymentDemo.model.PaymentStatus;
 import com.example.paymentDemo.repository.PaymentRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 public class PaymentServiceTest {
  
@@ -46,10 +38,10 @@ public class PaymentServiceTest {
     @Test
     void shouldInitiatePaymentAndPublishEvent() {
         PaymentRequest request = new PaymentRequest("credit card","1234567890123456",
-        "John Doe","12","2025","123","100.00");
+        "John Doe","12","2025","123",false,"100.00");
 
         Payment savedPayment = new Payment();
-        savedPayment.setSlotId("1");
+        savedPayment.setId(1L);
         savedPayment.setStatus(PaymentStatus.PENDING);
 
         when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
@@ -63,15 +55,16 @@ public class PaymentServiceTest {
     @Test
     void shouldConfirmPaymentAndPublishSucceededEvent() {
         Payment payment = new Payment();
-        payment.setSlotId("1");
+        payment.setId(1L);
         payment.setStatus(PaymentStatus.PENDING);
 
-        when(paymentRepository.findBySlotId("1")).thenReturn(Optional.of(payment));
+        when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
         PaymentResult result = new PaymentResult();
-        result.setSlotId("1");
+        result.setPaymentId(1L);
         result.setSuccess(true);
+        result.setMessage("Payment processed successfully");
 
         Payment confirmed = paymentService.confirmPayment(result);
 
@@ -82,19 +75,18 @@ public class PaymentServiceTest {
     @Test
     void shouldFailPaymentAndPublishFailedEvent() {
         Payment payment = new Payment();
-        payment.setSlotId("1");
+        payment.setId(1L);
         payment.setStatus(PaymentStatus.PENDING);
 
-        when(paymentRepository.findBySlotId("1")).thenReturn(Optional.of(payment));
+        when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
         PaymentResult result = new PaymentResult();
-        result.setSlotId("1");
-        PaymentResult result1 = Mockito.spy(new PaymentResult());
-        when(result1.success()).thenReturn(false);
-        result1.setSlotId("1");
+        result.setPaymentId(1L);
+        result.setSuccess(false);
+        result.setMessage("Payment failed");
 
-        Payment failed = paymentService.confirmPayment(result1);
+        Payment failed = paymentService.confirmPayment(result);
 
         assertEquals(PaymentStatus.FAILED, failed.getStatus());
         verify(rabbitTemplate).convertAndSend(eq("payment.exchange"), eq("payment.failed"), any(PaymentFailedEvent.class));
@@ -103,15 +95,15 @@ public class PaymentServiceTest {
     @Test
     void shouldRetryPaymentIfFailed() {
         Payment failedPayment = new Payment();
-        failedPayment.setSlotId("1");
+        failedPayment.setId(1L);
         failedPayment.setStatus(PaymentStatus.FAILED);
         failedPayment.setPaymentMethod("credit_card");
         failedPayment.setTotalAmount("50.0");
 
-        when(paymentRepository.findBySlotId("1")).thenReturn(Optional.of(failedPayment));
+        when(paymentRepository.findById(1L)).thenReturn(Optional.of(failedPayment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(failedPayment);
 
-        paymentService.retryPayment("1");
+        paymentService.retryPayment(1L);
 
         verify(rabbitTemplate).convertAndSend(eq("payment.exchange"), eq("payment.initiated"), any(PaymentInitiatedEvent.class));
     }
@@ -119,14 +111,14 @@ public class PaymentServiceTest {
     @Test
     void shouldIssueRefundAndPublishRefundEvent() {
         Payment completedPayment = new Payment();
-        completedPayment.setSlotId("1");
+        completedPayment.setId(1L);
         completedPayment.setStatus(PaymentStatus.COMPLETED);
         completedPayment.setPaymentMethod("paypal");
 
-        when(paymentRepository.findBySlotId("1")).thenReturn(Optional.of(completedPayment));
+        when(paymentRepository.findById(1L)).thenReturn(Optional.of(completedPayment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(completedPayment);
 
-        paymentService.issueRefund("1");
+        paymentService.issueRefund(1L);
 
         assertEquals(PaymentStatus.REFUNDED, completedPayment.getStatus());
         verify(rabbitTemplate).convertAndSend(eq("payment.exchange"), eq("payment.refunded"), any(RefundIssuedEvent.class));
@@ -135,19 +127,19 @@ public class PaymentServiceTest {
     @Test
     void shouldReturnCorrectPaymentStatus() {
         Payment payment = new Payment();
-        payment.setSlotId("1");
+        payment.setId(1L);
         payment.setStatus(PaymentStatus.COMPLETED);
 
-        when(paymentRepository.findBySlotId("1")).thenReturn(Optional.of(payment));
+        when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
 
-        PaymentStatus status = paymentService.getStatus("1");
+        PaymentStatus status = paymentService.getStatus(1L);
 
         assertEquals(PaymentStatus.COMPLETED, status);
     }
 
     @Test
     void shouldThrowExceptionIfPaymentNotFoundWhenConfirming() {
-    when(paymentRepository.findBySlotId("99")).thenReturn(Optional.empty());
+    when(paymentRepository.findById(99L)).thenReturn(Optional.empty());
     PaymentResult result = new PaymentResult();
 
     assertThrows(IllegalArgumentException.class, () -> paymentService.confirmPayment(result));
@@ -156,31 +148,31 @@ public class PaymentServiceTest {
 @Test
 void shouldThrowExceptionIfPaymentNotFailedWhenRetrying() {
     Payment payment = new Payment();
-    payment.setSlotId("1");
+    payment.setId(1L);
     payment.setStatus(PaymentStatus.COMPLETED);
 
-    when(paymentRepository.findBySlotId("1")).thenReturn(Optional.of(payment));
+    when(paymentRepository.findById(1L)).thenReturn(Optional.of(payment));
 
-    assertThrows(IllegalStateException.class, () -> paymentService.retryPayment("1"));
+    assertThrows(IllegalStateException.class, () -> paymentService.retryPayment(1L));
 }
 
 @Test
 void shouldThrowIfPaymentStatusNotFound() {
-    when(paymentRepository.findBySlotId("42")).thenReturn(Optional.empty());
+    when(paymentRepository.findById(42L)).thenReturn(Optional.empty());
 
-    assertThrows(IllegalArgumentException.class, () -> paymentService.getStatus("42"));
+    assertThrows(IllegalArgumentException.class, () -> paymentService.getStatus(42L));
 }
 
 @Test
 void processPayment_Success() {
     // Arrange
     PaymentRequest request = new PaymentRequest("credit card","1234567890123456",
-    "John Doe","12","2025","123","100.00");
+    "John Doe","12","2025","123",false,"100.00");
     request.setSaveCard(false);
     request.setTotalAmount("100.00");
 
     Payment savedPayment = new Payment();
-    savedPayment.setSlotId("1");
+    savedPayment.setId(1L);
     when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
 
     // Act
@@ -188,30 +180,30 @@ void processPayment_Success() {
 
     // Assert
     assertTrue(result.success());
-    assertEquals("1", result.getSlotId());
+    assertNotNull(result.getMessage());
+    assertEquals("Payment processed successfully", result.getMessage());
+    assertEquals(1L, result.getPaymentId());
 }
-/*
+
 @Test
 void processPayment_InvalidCardNumber() {
     // Arrange
     PaymentRequest request = new PaymentRequest("credit card","invalid",
-    "John Doe","12","2025","123","100.00");
+    "John Doe","12","2025","123",false,"100.00");
     request.setSaveCard(false);
     request.setTotalAmount("100.00");
 
     Payment savedPayment = new Payment();
-    savedPayment.setSlotId("1");
+    savedPayment.setId(1L);
     when(paymentRepository.save(any(Payment.class))).thenReturn(savedPayment);
 
     // Act
     PaymentResult result = paymentService.processPayment(request);
-    System.out.println("Card number in request: " + request.getCardNumber());
-    System.out.println("Card number in result: " + result.getCardNumber());
-    System.out.println("Validation result: " + result.success());
-
 
     // Assert
-    assertFalse(result.iSuccess());
-}*/
+    assertFalse(result.success());
+    assertNotNull(result.getMessage());
+    assertTrue(result.getMessage().contains("Payment failed"));
+}
 
 }

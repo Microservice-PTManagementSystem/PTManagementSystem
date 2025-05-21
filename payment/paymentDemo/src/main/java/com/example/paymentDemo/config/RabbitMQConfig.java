@@ -1,11 +1,9 @@
 package com.example.paymentDemo.config;
 
 import org.springframework.amqp.core.*;
-import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,6 +23,47 @@ public class RabbitMQConfig {
     public TopicExchange paymentExchange() {
         return new TopicExchange(EXCHANGE);
     }
+  /* 
+    @Bean
+    public Queue initiatedQueue() {
+        return new Queue(INITIATED_QUEUE,true);
+    }
+
+    @Bean
+    public Queue succeededQueue() {
+        return new Queue(SUCCEEDED_QUEUE,true);
+    }
+
+    @Bean
+    public Queue failedQueue() {
+        return new Queue(FAILED_QUEUE,true);
+    }
+
+    @Bean
+    public Queue refundedQueue() {
+        return new Queue(REFUNDED_QUEUE,true);
+    }*/
+    /* 
+    @Bean
+    public Binding succeededBinding() {
+        return BindingBuilder.bind(succeededQueue())
+            .to(paymentExchange())
+            .with("payment.succeeded");
+    }*/
+    /* 
+    @Bean
+    public Binding failedBinding() {
+        return BindingBuilder.bind(failedQueue())
+            .to(paymentExchange())
+            .with("payment.failed");
+    }
+    @Bean
+    public Binding refundedBinding() {
+        return BindingBuilder.bind(refundedQueue())
+            .to(paymentExchange())
+            .with("payment.refunded");
+    }*/
+
 
     @Bean
     public Jackson2JsonMessageConverter jsonMessageConverter() {
@@ -38,61 +77,43 @@ public class RabbitMQConfig {
         rabbitTemplate.setMessageConverter(new Jackson2JsonMessageConverter()); //jsonMessageConverter?
         return rabbitTemplate;
     }
+/* 
+    @Bean
+    public Binding initiatedBinding() {
+        return BindingBuilder.bind(initiatedQueue())
+            .to(paymentExchange())
+            .with("payment.initiated");
+    }
+  */
 
     @Bean
     public Queue reservationQueue() {
         return new Queue("reservationQueue", false); // durable olsun
     }
 
-
     @Bean
     public Queue PaymentSucceededQueue() {
         return new Queue("PaymentSucceededEvent", true);
     }
-    @Bean
-    public Queue paymentFailedQueue() {
-    return new Queue("PaymentFailedEvent", true);
-    }
-    @Bean
-    public TopicExchange userExchange() {
-    return new TopicExchange("user.exchange");
-    }   
 
-    @Bean
-    public Queue PaymentInfoRequested() {
-        return new Queue("PaymentInfoRequested");
-    }
-
-    @Bean
-    public Binding reservationQueueBinding(Queue reservationQueue, @Qualifier("paymentExchange") TopicExchange paymentExchange) {
-        return BindingBuilder.bind(reservationQueue).to(paymentExchange).with("reservation.created");
-    }
-    @Bean
-    public Binding PaymentInfoRequestedBinding(@Qualifier("PaymentInfoRequested") Queue PaymentInfoRequested,
-                                   @Qualifier("userExchange") TopicExchange userExchange) {
-    return BindingBuilder.bind(PaymentInfoRequested).to(userExchange).with("user.getSavedCard");
-    }
-    @Bean
-    public Binding paymentSucceededBinding(Queue PaymentSucceededQueue, @Qualifier("paymentExchange") TopicExchange paymentExchange) {
-        return BindingBuilder.bind(PaymentSucceededQueue).to(paymentExchange).with("payment.succeeded");
-    }
-    @Bean
-    public Binding paymentFailedBinding(Queue paymentFailedQueue, @Qualifier("paymentExchange") TopicExchange paymentExchange) {
-        return BindingBuilder.bind(paymentFailedQueue).to(paymentExchange).with("payment.failed");
-    }
-
-
-    /*
-    @Bean
-    public Binding reservationQueueBinding(Queue reservationQueue, TopicExchange exchange) {
-         return BindingBuilder.bind(reservationQueue).to(exchange).with("reservation.created");
+     @Bean
+     public Binding reservationQueueBinding(Queue reservationQueue, TopicExchange paymentExchange) {
+         return BindingBuilder.bind(reservationQueue).to(paymentExchange).with("reservation.created");
      }
+    //  @Bean
+    //  public Binding paymentSucceededBinding(Queue paymentSucceededQueue, TopicExchange topicExchange) {
+    //      return BindingBuilder.bind(paymentSucceededQueue).to(topicExchange).with("PaymentSucceeded");
+    //  }
+
     @Bean
-    public Binding paymentSucceededBinding(Queue paymentSucceededQueue, TopicExchange exchange) {
-    return BindingBuilder.bind(paymentSucceededQueue).to(exchange).with("payment.succeeded");
+    public Queue processQueue() {
+        return new Queue(PROCESS_QUEUE);
     }
+
     @Bean
-    public Binding paymentFailedBinding(Queue paymentFailedQueue, TopicExchange exchange) {
-    return BindingBuilder.bind(paymentFailedQueue).to(exchange).with("payment.failed");
-    }*/
+    public Binding processBinding() {
+        return BindingBuilder.bind(processQueue())
+            .to(paymentExchange())
+            .with("payment.process");
+    }
 }

@@ -7,8 +7,6 @@ import com.example.paymentDemo.model.PaymentStatus;
 import com.example.paymentDemo.service.PaymentService;
 import com.example.paymentDemo.repository.PaymentRepository;
 
-import io.swagger.v3.oas.annotations.tags.Tag;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -16,25 +14,17 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.http.HttpStatus;
-
-import com.example.paymentDemo.event.CardRequestEvent;
-
 @RestController
 @RequestMapping("/payment")
-//@CrossOrigin(origins = "*")
-@Tag(name = "Payment API", description = "Ödeme işlemleri için endpointler")
+@CrossOrigin(origins = "*")
 public class PaymentController {
 
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
-    private final RabbitTemplate rabbitTemplate;
 
-    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository, RabbitTemplate rabbitTemplate) { 
+    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository) { 
         this.paymentService = paymentService;
-        this.paymentRepository = paymentRepository;
-        this.rabbitTemplate = rabbitTemplate; }
+        this.paymentRepository = paymentRepository; }
 
 
     @GetMapping("/payment/health")
@@ -49,58 +39,83 @@ public class PaymentController {
     } //bunu düzelt
 
     @PostMapping("/confirm")
-    public ResponseEntity<Payment> confirmPayment(@RequestBody PaymentResult result) {
+    public ResponseEntity<PaymentResult> confirmPayment(@RequestBody PaymentResult result) {
         Payment payment = paymentService.confirmPayment(result);
         PaymentResult response = new PaymentResult();
         response.setSuccess(payment.getStatus() == PaymentStatus.COMPLETED);
-        //response.setMessage(payment.getStatus() == PaymentStatus.COMPLETED ? 
-         //   "Payment succeeded" : "Payment failed");
+        response.setMessage(payment.getStatus() == PaymentStatus.COMPLETED ? 
+            "Payment succeeded" : "Payment failed");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/retry/{paymentId}")
+    public ResponseEntity<Payment> retryPayment(@PathVariable Long paymentId) {
+        Payment payment = paymentService.retryPayment(paymentId);
         return ResponseEntity.ok(payment);
     }
 
-    @PostMapping("/retry")
-    public ResponseEntity<Payment> retryPayment(@RequestParam String slotId) {
-        Payment payment = paymentService.retryPayment(slotId);
+    @PostMapping("/refund/{paymentId}")
+    public ResponseEntity<Payment> issueRefund(@PathVariable Long paymentId) {
+        Payment payment = paymentService.issueRefund(paymentId);
         return ResponseEntity.ok(payment);
     }
-
-    @PostMapping("/refund")
-    public ResponseEntity<Payment> issueRefund(@RequestParam String slotId) {
-        Payment payment = paymentService.issueRefund(slotId);
-        return ResponseEntity.ok(payment);
-    }
-    @GetMapping("/status")
-public ResponseEntity<PaymentStatus> getStatus(@RequestParam String slotId) {
+    @GetMapping("/status/{id}")
+public ResponseEntity<PaymentStatus> getStatus(@PathVariable Long id) {
     try {
-        PaymentStatus status = paymentService.getStatus(slotId);
+        PaymentStatus status = paymentService.getStatus(id);
         return ResponseEntity.ok(status);
     } catch (IllegalArgumentException e) {
         return ResponseEntity.notFound().build();
     }
     }
-   @PostMapping("/getSavedCard")
-public ResponseEntity<String> getSavedCard(
-        @RequestBody CardRequestEvent request) {
+    @PostMapping("/api/paymentConfirm")
+public ResponseEntity<Payment> handleFrontendPayment(@RequestBody Map<String, Object> payload) {
+    String method = (String) payload.get("paymentMethod");
+    String cardNumber = (String) payload.get("cardNumber");
+    String cardHolder = (String) payload.get("cardHolder");
+    String expiryMonth = (String) payload.get("expiryMonth");
+    String expiryYear = (String) payload.get("expiryYear");
+    String cvc = (String) payload.get("cvc");
+    boolean saveCard = Boolean.parseBoolean(payload.get("saveCard").toString());
+    double amount = Double.parseDouble(payload.get("totalAmount").toString());
 
-    // Kayıtlı kartı kullanmak istemiyorsa direkt "fail" dön
-    if (!request.isUseSavedCard()) {
-        return ResponseEntity.ok("fail");
-    }
+    // Örnek sabit değerler (geliştirme sırasında), sonra gerçek verilerle değiştirilmeli
+    String userId = "user-frontend"; // frontend'den alınması önerilir
+    Long appointmentId = 1L; // frontend'e eklenebilir
 
-    // Kart bilgisi alınmaya çalışılır
-    PaymentRequest paymentRequest = (PaymentRequest) rabbitTemplate.convertSendAndReceive(
-        "user.exchange",
-        "user.getSavedCard",
-        request.getUserId()
-    );
+    // PaymentRequest oluştur
+    PaymentRequest request = new PaymentRequest(method,cardNumber,cardHolder,expiryMonth,expiryYear,cvc,saveCard,String.valueOf(amount));
 
-    if (paymentRequest == null) {
-        return ResponseEntity.ok("fail");
-    }
+    // İşleme başlat
+    Payment payment = paymentService.initiatePayment(request);
 
-    return ResponseEntity.ok("success");
+    // Varsayalım işlem başarılı (demo için)
+    PaymentResult result = new PaymentResult();
+    result.setPaymentId(payment.getId()); 
+
+    // Onayla ve sonucu dön
+    return ResponseEntity.ok(paymentService.confirmPayment(result));
 }
 
+    /*
+    @GetMapping("/user")
+    public ResponseEntity<List<Payment>> getPaymentsForUser(@AuthenticationPrincipal Jwt jwt) {
+    String userId = jwt.getClaimAsString("sub"); // Keycloak'tan sub ID
+    List<Payment> payments = paymentService.getPaymentsByUserId(userId);
+    return ResponseEntity.ok(payments);
+    }*/
+   /* @GetMapping("/{paymentId}")
+public ResponseEntity<Payment> getPaymentById(@PathVariable Long paymentId) {
+    return ResponseEntity.ok(
+        paymentRepository.findById(paymentId)
+            .orElseThrow(() -> new IllegalArgumentException("Payment not found"))
+    );
+}
+@GetMapping("/status")
+public ResponseEntity<List<Payment>> getPaymentsByStatus(@RequestParam PaymentStatus status) {
+    return ResponseEntity.ok(paymentRepository.findByStatus(status));
+}
+*/
 
 
     

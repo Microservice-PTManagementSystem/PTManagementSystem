@@ -2,20 +2,22 @@ package com.example.paymentDemo.listener;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.example.paymentDemo.model.Payment;
-import com.example.paymentDemo.repository.PaymentRepository;
+import com.example.paymentDemo.event.PaymentInitiatedEvent;
+import com.example.paymentDemo.event.PaymentFailedEvent;
+import com.example.paymentDemo.event.RefundIssuedEvent;
 
-import com.example.paymentDemo.event.*;
-import com.example.paymentDemo.dto.*;
+import com.example.paymentDemo.event.PaymentSucceededEvent;
+import com.example.paymentDemo.event.SlotReservedEvent;
 
 @Component
 public class SlotConfirmedEventListener {
-    @Autowired
-    private PaymentRepository paymentRepository;
+
     private final RabbitTemplate rabbitTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(SlotConfirmedEventListener.class);
     //private final PaymentService paymentService;
 
     public SlotConfirmedEventListener(RabbitTemplate rabbitTemplate) {
@@ -30,42 +32,36 @@ public class SlotConfirmedEventListener {
 
         PaymentSucceededEvent paymentSucceeded = new PaymentSucceededEvent(
             event.getSlotId(),
-            true
-
+            event.getUserId()
         );
 
         //paymentService.processPayment(event); 
         rabbitTemplate.convertAndSend("PaymentSucceededEvent", paymentSucceeded);
         System.out.println("PaymentSucceededEvent Published! "+ paymentSucceeded );
     }
-    @RabbitListener(queues = "PaymentFailedEvent")
-    public void handlePaymentFailed(PaymentFailedEvent event) {
-        System.out.println("[PAYMENT] Message received: " + event);
-        PaymentFailedEvent paymentFailed =new PaymentFailedEvent(
-            false,
-            event.getSlotId());
-        //paymentService.processPayment(event);
-        rabbitTemplate.convertAndSend("PaymentFailedEvent", paymentFailed);
-        System.out.println("PaymentFailedEvent Published! "+ paymentFailed );
-    }
-    @RabbitListener(queues = "PaymentInfoRequested")
-    public PaymentRequest handleGetSavedCard(String userId) {
-    Payment payment = paymentRepository.findByUserId(userId)
-        .orElseThrow(() -> new RuntimeException("Kullanıcıya ait kayıtlı kart bulunamadı"));
+    /* 
 
-    // userId ile DB'den kart bilgisi çekilir
-    PaymentRequest request = new PaymentRequest();
-    request.setPaymentMethod(payment.getPaymentMethod());
-    request.setCardNumber(payment.getCardNumber());
-    request.setCardHolder(payment.getCardHolder());
-    request.setExpiryMonth(payment.getExpiryMonth());
-    request.setExpiryYear(payment.getExpiryYear());
-    request.setCvc(payment.getCvc());
-    request.setSaveCard(payment.isSaveCard());
-    request.setTotalAmount(payment.getTotalAmount());
-    request.setSlotId(payment.getSlotId());
-
-    return request;
+    @RabbitListener(queues = "paymentInitiatedEvent")
+    public void handlePaymentInitiated(PaymentInitiatedEvent event) {
+        logger.info("Payment Initiated Event Received - Payment ID: {}, Amount: {}, Method: {}", 
+            event.getPaymentId(), event.getTotalAmount(), event.getPaymentMethod());
     }
     
+    @RabbitListener(queues = "paymentSucceededEvent")
+    public void handlePaymentSucceeded(PaymentSucceededEvent event) {
+        logger.info("Payment Succeeded Event Received - Payment ID: {}, Amount: {}, Method: {}", 
+            event.getPaymentId(), event.getTotalAmount(), event.getPaymentMethod());
+    }
+
+    @RabbitListener(queues = "paymentFailedEvent")
+    public void handlePaymentFailed(PaymentFailedEvent event) {
+        logger.info("Payment Failed Event Received - Payment ID: {}, Status: {}", 
+            event.getPaymentId(), event.getStatus());
+    }
+
+    @RabbitListener(queues = "paymentRefundedEvent")
+    public void handlePaymentRefunded(RefundIssuedEvent event) {
+        logger.info("Payment Refunded Event Received - Payment ID: {}", 
+            event.getPaymentId());
+    }*/
 }
