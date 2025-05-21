@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RefundIssuedEvent {
-    private String paymentId;
     @JsonProperty("user_id")
     private String userId;
     private PaymentStatus status;
@@ -21,16 +20,8 @@ public class RefundIssuedEvent {
     private String paymentMethod;
  
     public RefundIssuedEvent(Payment payment) {
-        this.paymentId = payment.getId();
         this.userId = payment.getUserId();
         this.status = payment.getStatus();
         this.paymentMethod = payment.getPaymentMethod();
-    }
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
     }
 }

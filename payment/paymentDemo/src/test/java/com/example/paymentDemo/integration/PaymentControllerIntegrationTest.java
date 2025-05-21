@@ -99,7 +99,6 @@ public class PaymentControllerIntegrationTest {
 
         // Create payment result with success
         PaymentResult result = new PaymentResult();
-        result.setPaymentId(p.getId());
         result.setSuccess(true);
         String json = objectMapper.writeValueAsString(result);
 

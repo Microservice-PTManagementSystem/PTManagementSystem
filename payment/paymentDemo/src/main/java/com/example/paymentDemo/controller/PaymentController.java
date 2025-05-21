@@ -46,30 +46,30 @@ public class PaymentController {
     } //bunu düzelt
 
     @PostMapping("/confirm")
-    public ResponseEntity<PaymentResult> confirmPayment(@RequestBody PaymentResult result) {
+    public ResponseEntity<Payment> confirmPayment(@RequestBody PaymentResult result) {
         Payment payment = paymentService.confirmPayment(result);
         PaymentResult response = new PaymentResult();
         response.setSuccess(payment.getStatus() == PaymentStatus.COMPLETED);
         //response.setMessage(payment.getStatus() == PaymentStatus.COMPLETED ? 
          //   "Payment succeeded" : "Payment failed");
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(payment);
     }
 
-    @PostMapping("/retry/{slotId}")
-    public ResponseEntity<Payment> retryPayment(@PathVariable String slotId) {
+    @PostMapping("/retry")
+    public ResponseEntity<Payment> retryPayment(@RequestParam String slotId) {
         Payment payment = paymentService.retryPayment(slotId);
         return ResponseEntity.ok(payment);
     }
 
-    @PostMapping("/refund/{slotId}")
-    public ResponseEntity<Payment> issueRefund(@PathVariable String slotId) {
+    @PostMapping("/refund")
+    public ResponseEntity<Payment> issueRefund(@RequestParam String slotId) {
         Payment payment = paymentService.issueRefund(slotId);
         return ResponseEntity.ok(payment);
     }
-    @GetMapping("/status/{id}")
-public ResponseEntity<PaymentStatus> getStatus(@PathVariable String id) {
+    @GetMapping("/status")
+public ResponseEntity<PaymentStatus> getStatus(@RequestParam String slotId) {
     try {
-        PaymentStatus status = paymentService.getStatus(id);
+        PaymentStatus status = paymentService.getStatus(slotId);
         return ResponseEntity.ok(status);
     } catch (IllegalArgumentException e) {
         return ResponseEntity.notFound().build();
@@ -89,36 +89,5 @@ public ResponseEntity<PaymentStatus> getStatus(@PathVariable String id) {
 
         return paymentRequest;
     }
-    
-    @PostMapping("/api/paymentConfirm")
-public ResponseEntity<Payment> handleFrontendPayment(@RequestBody Map<String, Object> payload) {
-    String paymentMethod = (String) payload.get("paymentMethod");
-    String cardNumber = (String) payload.get("cardNumber");
-    String cardHolder = (String) payload.get("cardHolder");
-    String expiryMonth = (String) payload.get("expiryMonth");
-    String expiryYear = (String) payload.get("expiryYear");
-    String cvc = (String) payload.get("cvc");
-    String totalAmount = (String) payload.get("totalAmount");
-
-    // Örnek sabit değerler (geliştirme sırasında), sonra gerçek verilerle değiştirilmeli
-    String userId = "user-frontend"; // frontend'den alınması önerilir
-
-    // PaymentRequest oluştur
-    PaymentRequest request = new PaymentRequest(paymentMethod, cardNumber, cardHolder, expiryMonth, expiryYear, cvc, totalAmount);
-
-    // İşleme başlat
-    Payment payment = paymentService.initiatePayment(request);
-
-    // Varsayalım işlem başarılı (demo için)
-    PaymentResult result = new PaymentResult();
-    result.setPaymentId(payment.getId()); 
-
-    // Onayla ve sonucu dön
-    return ResponseEntity.ok(paymentService.confirmPayment(result));
-}
-
-
-
-
     
 }

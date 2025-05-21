@@ -13,7 +13,6 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class PaymentResult {
-    private String paymentId;
     private boolean success;
     @JsonProperty("cardNumber")
     private String cardNumber;
@@ -39,13 +38,6 @@ public class PaymentResult {
     public void setSuccess(boolean success){
         this.success = success;
     
-    }
-    public String getPaymentId() {
-        return paymentId;
-    }
-
-    public void setPaymentId(String paymentId) {
-        this.paymentId = paymentId;
     }
     public String getPaymentMethod() {
         return paymentMethod;

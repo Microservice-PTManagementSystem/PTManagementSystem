@@ -22,6 +22,7 @@ public class PaymentRequest {
     @JsonProperty("totalAmount")
     private String totalAmount;
     private String slotId;
+    private String userId;
 
     public PaymentRequest() {}
     public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, String totalAmount) {
@@ -88,5 +89,11 @@ public class PaymentRequest {
     public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
         
+    }
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

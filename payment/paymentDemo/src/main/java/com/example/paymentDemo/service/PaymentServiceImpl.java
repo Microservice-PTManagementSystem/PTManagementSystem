@@ -85,10 +85,10 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new IllegalArgumentException("Payment not found"));
 
         payment.setStatus(PaymentStatus.REFUNDED);
-        Payment refunded = paymentRepository.save(payment);
+        paymentRepository.save(payment);
 
-        rabbitTemplate.convertAndSend(PAYMENT_EXCHANGE, "payment.refunded", new RefundIssuedEvent(refunded));
-        return refunded;
+        rabbitTemplate.convertAndSend(PAYMENT_EXCHANGE, "payment.refunded", new RefundIssuedEvent(payment));
+        return payment;
     }
 
     @Override
@@ -128,7 +128,6 @@ public class PaymentServiceImpl implements PaymentService {
         result.setSaveCard(request.isSaveCard());
         result.setTotalAmount(request.getTotalAmount());
         result.setPaymentMethod(request.getPaymentMethod());
-        result.setPaymentId(savedPayment.getId());
         result.setSlotId(savedPayment.getSlotId());
 
         return result;
