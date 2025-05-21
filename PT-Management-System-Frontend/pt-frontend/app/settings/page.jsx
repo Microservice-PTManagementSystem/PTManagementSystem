@@ -33,7 +33,7 @@ export default function SettingsPage() {
 
       const data =await response.json();
       console.log(data)
-      console.log("card number",data[0].cardNumber)
+      //console.log("card number",data[0].cardNumber)
       //setAppointments(data || []);
       setAppointments(data );
       console.log("appointments",appointments)
@@ -73,7 +73,7 @@ export default function SettingsPage() {
 
             <nav className="hidden md:flex space-x-6">
               <Link href="/" className="text-sm hover:text-orange-500">Home</Link>
-              <Link href="/our-trainers" className="text-sm hover:text-orange-500">Our Trainers</Link>
+            
               <Link href="/settings">
                 <span className="text-sm hover:text-orange-500">Settings</span>
               </Link>

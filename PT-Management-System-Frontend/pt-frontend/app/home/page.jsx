@@ -20,6 +20,8 @@ export default function Home() {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [changeActive,setChangeActive]=useState(false);
   const [paymentInfo,setPaymentInfo]=useState([]);
+  const [showPopup, setShowPopup] = useState(false);
+  const [getSavedCard,setGetSavedCard]=useState(false);
   const router = useRouter();
   const { data: session } = useSession();  
 
@@ -51,6 +53,8 @@ export default function Home() {
       localStorage.setItem("slotId", selectedSlot.slot_id);
       localStorage.setItem("userId", session.user.id);
       console.log("Slot ve User ID kaydedildi!");
+      const userId=localStorage.getItem("userId");
+      console.log("user id",userId)
     }
   }, [selectedSlot, session]);
   
@@ -68,8 +72,32 @@ export default function Home() {
   
     const userId = session.user.id.trim();
     const slotId = selectedSlot.slot_id;
+
+    console.log( "slot id ",slotId);
+    console.log("user if",userId);
+
   
     try {
+      const reservationResponse = await fetch(`http://localhost:8004/make_reservation/make_reservation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          slot_id: slotId,
+          user_id: userId,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      const reservationInfo = await reservationResponse.json();
+
+      /*if(reservationInfo.successs!="true"){
+        return;
+      }*/
+      setShowModal(false);
+      console.log("reservation info",reservationInfo)
+          
       const paymentInfoResponse = await fetch(`http://localhost:8008/api/Auth/GetPaymentInfo/${userId}`, {
         method: "GET",
         headers: {
@@ -81,49 +109,50 @@ export default function Home() {
       console.log("payment info response",paymentInfo)
   
       const {
-        CardHolderName,
-        CardNumber,
-        ExpiryDay,
-        ExpiryYear,
-        CVV,
-        BillingAddress,
+        cardHolder,
+        cardNumber,
+        expiryMonth,
+        expiryYear,
+        cvc,
+        
       } = paymentInfo;
   
-      const isSavedInfoAvailable = CardHolderName && CardNumber && ExpiryDay && ExpiryYear && CVV;
+      const isSavedInfoAvailable = cardHolder && cardNumber && expiryMonth && expiryYear && cvc;
       console.log("saved info",isSavedInfoAvailable)
 
       if (isSavedInfoAvailable) {
-        
-        const paymentResponse = await fetch("http://localhost:8004/make_reservation/make_reservation", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cardNumber: CardNumber,
-            cardHolder: CardHolderName,
-            expiryMonth: ExpiryDay,
-            expiryYear: ExpiryYear,
-            cvc: CVV,
-            saveCard: true,
-            totalAmount: total.toString(), 
-            paymentMethod: "savedCard",
-            slot_id: slotId,
-            user_id: userId,
-            timestamp: new Date().toISOString(),
-          }),
-        });
+
+        setShowPopup(true);
+
+        if(getSavedCard){
+
+          const paymentCardInfo= await fetch(`http://localhost:8006/payment/getSavedCard`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body:{
+              user_id:userId,
+              useSavedCard:true,
+            }
+          });
   
-        const paymentResult = await paymentResponse.json();
-  
-        if (paymentResult.successs) {
-          alert("Your appointment has been confirmed.");
-          router.push("/home");
-        } else {
-          alert("Payment failed: " + (paymentResult.message || "Please try again."));
+          const paymentInfo = await paymentCardInfo.json();
+          console.log("payment info response",paymentInfo)
+          if(paymentInfo.ok){
+            alert("Your transaction has been sent to the bank, you can check it from appointments section. ")
+            router.push('/settings')
+          }
+          
+
+        }else{
+          localStorage.setItem("userId", userId);
+          localStorage.setItem("slotId", slotId);
+          router.push("/payment");
         }
+
       } else {
-        // Kayıtlı bilgi yoksa ödeme sayfasına yönlendir
+        
         localStorage.setItem("userId", userId);
         localStorage.setItem("slotId", slotId);
         router.push("/payment");
@@ -206,7 +235,6 @@ export default function Home() {
 
             <nav className="hidden md:flex space-x-6">
               <Link href="/" className="text-sm hover:text-orange-500">Home</Link>
-              <Link href="/our-trainers" className="text-sm hover:text-orange-500">Our Trainers</Link>
               <Link href="/settings">
                 <span className="text-sm hover:text-orange-500">Settings</span>
               </Link>
@@ -242,8 +270,6 @@ export default function Home() {
         </div>
       </header>
 
-
-
       <div className="bg-black text-white text-center py-2 text-xs">
         <div className="container mx-auto">
           <p>PERSONAL GYM TRAINERS</p>
@@ -252,37 +278,35 @@ export default function Home() {
 
       <section className="relative bg-black text-white">
   
-  <div className="absolute inset-0 bg-black/70 z-10"></div>
-  
-  
-  <div className="relative h-[500px]">
-    <Image
-      src="/gym_background.jpg"  
-      alt="Gym background"
-      layout="fill"  
-      objectFit="cover" 
-      className="z-0" 
-    />
-  </div>
+        <div className="absolute inset-0 bg-black/70 z-10"></div>
+    
+    
+        <div className="relative h-[500px]">
+          <Image
+            src="/gym_background.jpg"  
+            alt="Gym background"
+            layout="fill"  
+            objectFit="cover" 
+            className="z-0" 
+          />
+        </div>
 
   
-  <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-20">
-    <h1 className="text-4xl md:text-5xl font-bold mb-2">BE READY TO</h1>
-    <h2 className="text-4xl md:text-5xl font-bold mb-6">BECOME HEALTHY</h2>
-    <p className="max-w-2xl mb-8 text-gray-300">
-      A gym is more than a place to work out. It's a place to grow, to push yourself, to discover what you're
-      capable of. Join us and transform your life.
-    </p>
-    <p className="max-w-2xl mb-8 text-gray-300">
-      "Discipline, Agility, Lift, Muscle, Strength"
-    </p>
-    <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full">
-      JOIN NOW
-    </button>
-  </div>
-</section>
-
-
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-20">
+          <h1 className="text-4xl md:text-5xl font-bold mb-2">BE READY TO</h1>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">BECOME HEALTHY</h2>
+          <p className="max-w-2xl mb-8 text-gray-300">
+            A gym is more than a place to work out. It's a place to grow, to push yourself, to discover what you're
+            capable of. Join us and transform your life.
+          </p>
+          <p className="max-w-2xl mb-8 text-gray-300">
+            "Discipline, Agility, Lift, Muscle, Strength"
+          </p>
+          <button className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-8 rounded-full">
+            JOIN NOW
+          </button>
+        </div>
+      </section>
 
       <section className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-4">
@@ -351,146 +375,179 @@ export default function Home() {
       </section>
 
       <section className="bg-gray-800 text-white py-16 relative">
-      <div className="absolute inset-0 bg-black/50 z-10"></div>
-      <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/placeholder.svg?height=500&width=1200')" }}></div>
+        <div className="absolute inset-0 bg-black/50 z-10"></div>
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url('/placeholder.svg?height=500&width=1200')" }}></div>
 
-      <div className="container mx-auto px-4 relative z-20 max-w-2xl bg-black/80 p-8 rounded-xl shadow-lg">
-        <h2 className="text-3xl font-bold text-center mb-8 text-orange-500">BOOK A PERSONAL TRAINER</h2>
+        <div className="container mx-auto px-4 relative z-20 max-w-2xl bg-black/80 p-8 rounded-xl shadow-lg">
+          <h2 className="text-3xl font-bold text-center mb-8 text-orange-500">BOOK A PERSONAL TRAINER</h2>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label className="block text-sm font-medium mb-2">Select Trainer</label>
-            <select
-                value={trainer}
-                onChange={(e) => setTrainer(e.target.value)}
-                required
-                className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                <option value="">-- Choose a Trainer --</option>
-                {trainers.map((t) => (
-                  <option key={t.id} value={t.name}>{t.name}</option>
-                ))}
-              </select>
-          </div>
-
-          
-
-          <div>
-            <label className="block text-sm font-medium mb-2">Select Date</label>
-            <div className="flex gap-x-4">
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                required
-                className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-                required
-                className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
-              />
-
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-sm font-medium mb-2">Select Trainer</label>
+              <select
+                  value={trainer}
+                  onChange={(e) => setTrainer(e.target.value)}
+                  required
+                  className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  <option value="">-- Choose a Trainer --</option>
+                  {trainers.map((t) => (
+                    <option key={t.id} value={t.name}>{t.name}</option>
+                  ))}
+                </select>
             </div>
+
             
-          </div>
 
-          <button
-            type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full transition duration-300"
-          >
-            Control
-          </button>
-        </form>
-      </div>
-    </section>
-    {showModal && (
-  <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-    <div className="bg-gray-900 text-white p-6 rounded-lg max-h-[95vh] w-full max-w-2xl mx-4 overflow-y-auto">
-      {!changeActive ? (
-        <>
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-xl font-semibold h-20 mb-1 text-orange-400">Available appointment dates</h3>
+            <div>
+              <label className="block text-sm font-medium mb-2">Select Date</label>
+              <div className="flex gap-x-4">
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  required
+                  className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  required
+                  className="w-full px-4 py-2 rounded-lg bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+
+              </div>
+              
+            </div>
+
             <button
-              onClick={() => {
-                setShowModal(false);
-                setChangeActive(false);
-                setSelectedSlot(null);
-              }}
-              className="bg-red-400 hover:bg-orange-600 text-white px-2 py-2 rounded-full"
+              type="submit"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full transition duration-300"
             >
-              <CircleX />
+              Control
             </button>
-          </div>
+          </form>
+        </div>
+      </section>
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+          <div className="bg-gray-900 text-white p-6 rounded-lg max-h-[95vh] w-full max-w-2xl mx-4 overflow-y-auto">
+            {!changeActive ? (
+              <>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-xl font-semibold h-20 mb-1 text-orange-400">Available appointment dates</h3>
+                  <button
+                    onClick={() => {
+                      setShowModal(false);
+                      setChangeActive(false);
+                      setSelectedSlot(null);
+                    }}
+                    className="bg-red-400 hover:bg-orange-600 text-white px-2 py-2 rounded-full"
+                  >
+                    <CircleX />
+                  </button>
+                </div>
 
-          {slots.length > 0 ? (
-            <ul className="space-y-2 max-h-[450px] overflow-y-auto">
-              {slots.map((slot, idx) => {
-                const start = new Date(slot.start_time);
-                const end = new Date(slot.end_time);
-                const status = slot.slot_status;
+                {slots.length > 0 ? (
+                  <ul className="space-y-2 max-h-[450px] overflow-y-auto">
+                    {slots.map((slot, idx) => {
+                      const start = new Date(slot.start_time);
+                      const end = new Date(slot.end_time);
+                      const status = slot.slot_status;
+                      const price=slot.hourly_price;
 
-                return (
-                  <li key={idx} className="bg-gray-800 p-3 rounded">
-                    <p>
-                      <span className="font-semibold">Date and time:</span>{" "}
-                      {start.toLocaleDateString()} -{" "}
-                      {start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} to{" "}
-                      {end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                    </p>
-                    <p><span className="font-semibold">Status:</span> {status}</p>
+                      return (
+                        <li key={idx} className="bg-gray-800 p-3 rounded">
+                          <p>
+                            <span className="font-semibold">Date and time:</span>{" "}
+                            {start.toLocaleDateString()} -{" "}
+                            {start.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} to{" "}
+                            {end.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                          </p>
+                          <p><span className="font-semibold">Status:</span> {status}</p>
+                          <p><span className="font-semibold">Price:</span> {price}</p>
+                          <button
+                            onClick={() => {
+                              setSelectedSlot(slot);
+                              setChangeActive(true);
+                            }}
+                            className="bg-orange-400 hover:bg-orange-500 text-white text-sm px-2 py-2 mt-5 rounded-full"
+                          >
+                            Make an appointment
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-center text-sm text-red-400">
+                    No available appointments were found on the dates you were looking for.
+                  </p>
+                )}
+              </>
+            ) : (
+              <>
+                <h3 className="text-xl font-semibold mb-4 text-orange-400">Appointment Confirmation</h3>
+                <div className="space-y-3 text-sm">
+                  <p><span className="font-semibold">User:</span> {session?.user?.name}</p>
+                  <p><span className="font-semibold">Start:</span> {new Date(selectedSlot?.start_time).toLocaleString()}</p>
+                  <p><span className="font-semibold">End:</span> {new Date(selectedSlot?.end_time).toLocaleString()}</p>
+                  <p className="mt-4">Do you confirm your appointment?</p>
+                  <div className="flex justify-end gap-4 mt-4">
                     <button
-                      onClick={() => {
-                        setSelectedSlot(slot);
-                        setChangeActive(true);
-                      }}
-                      className="bg-orange-400 hover:bg-orange-500 text-white text-sm px-2 py-2 mt-5 rounded-full"
+                      className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full"
+                      onClick={makeReservation}
                     >
-                      Make an appointment
+                      Confirm
                     </button>
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <p className="text-center text-sm text-red-400">
-              No available appointments were found on the dates you were looking for.
-            </p>
-          )}
-        </>
-      ) : (
-        <>
-          <h3 className="text-xl font-semibold mb-4 text-orange-400">Appointment Confirmation</h3>
-          <div className="space-y-3 text-sm">
-            <p><span className="font-semibold">User:</span> {session?.user?.name}</p>
-            <p><span className="font-semibold">Start:</span> {new Date(selectedSlot?.start_time).toLocaleString()}</p>
-            <p><span className="font-semibold">End:</span> {new Date(selectedSlot?.end_time).toLocaleString()}</p>
-            <p className="mt-4">Do you confirm your appointment?</p>
-            <div className="flex justify-end gap-4 mt-4">
+                    <button
+                      className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-full"
+                      onClick={() => {
+                        setChangeActive(false);
+                        setSelectedSlot(null);
+                      }}
+                    >
+                      Back
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+      {showPopup && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-xl font-semibold mb-4">Kayıtlı Kart Bilgisi</h2>
+            <p>Kayıtlı kart bilgilerinizi kullanmak ister misiniz?</p>
+            <div className="mt-4 flex justify-end gap-4">
               <button
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full"
-                onClick={makeReservation}
+                onClick={() => {
+                  // Kart bilgilerini formda kullan
+                  console.log("Kayıtlı kart bilgileri kullanılacak.");
+                  setGetSavedCard(true)
+                  setShowPopup(false);
+                }}
+                className="bg-blue-500 text-white px-4 py-2 rounded"
               >
-                Confirm
+                Evet
               </button>
               <button
-                className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-full"
                 onClick={() => {
-                  setChangeActive(false);
-                  setSelectedSlot(null);
+                  
+                  console.log("Kullanıcı yeni kart bilgisi girecek.");
+                  setShowPopup(false);
                 }}
+                className="bg-gray-300 px-4 py-2 rounded"
               >
-                Back
+                Hayır
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
-    </div>
-  </div>
-)}
 
 
 
