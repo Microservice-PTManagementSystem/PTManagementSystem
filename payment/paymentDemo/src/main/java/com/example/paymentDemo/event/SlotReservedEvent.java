@@ -35,8 +35,8 @@ public class SlotReservedEvent {
     @JsonProperty("saveCard")
     private boolean saveCard;
 
-    @JsonProperty("totalAmount")
-    private String totalAmount;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
     public Object Payment;
     private boolean savedCardUse;
     private boolean success;
@@ -46,7 +46,7 @@ public class SlotReservedEvent {
     }   
 
     public SlotReservedEvent(String slotId,String userId,String timestamp,String paymentMethod,
-    String cardNumber,String cardHolder,String expiryMonth,String expiryYear,String cvc,boolean saveCard,String totalAmount  ) {
+    String cardNumber,String cardHolder,String expiryMonth,String expiryYear,String cvc,boolean saveCard,String hourlyPrice  ) {
         this.userId =userId;
         this.timestamp = timestamp;
         this.slotId=slotId;
@@ -57,7 +57,7 @@ public class SlotReservedEvent {
         this.expiryYear=expiryYear;
         this.cvc=cvc;
         this.saveCard=saveCard;
-        this.totalAmount=totalAmount;
+        this.hourlyPrice=hourlyPrice;
         this.paymentMethod=paymentMethod;
         this.cardNumber=cardNumber;
         this.cardHolder=cardHolder;
@@ -65,7 +65,6 @@ public class SlotReservedEvent {
         this.expiryYear=expiryYear;
         this.cvc=cvc;
         this.saveCard=saveCard;
-        this.totalAmount=totalAmount;
 
 
     }
@@ -157,12 +156,11 @@ public class SlotReservedEvent {
         this.savedCardUse = savedCardUse;
     } 
 
-    public String getTotalAmount() {
-        return totalAmount;
-    }
+    public String getHourlyPrice() {
+        return hourlyPrice;}
 
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setHourlyPrice(String hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
     }
 
     public boolean success(boolean success){

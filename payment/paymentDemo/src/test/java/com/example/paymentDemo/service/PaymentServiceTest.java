@@ -106,7 +106,7 @@ public class PaymentServiceTest {
         failedPayment.setSlotId("1");
         failedPayment.setStatus(PaymentStatus.FAILED);
         failedPayment.setPaymentMethod("credit_card");
-        failedPayment.setTotalAmount("50.0");
+        failedPayment.setHourlyPrice("50.0");
 
         when(paymentRepository.findBySlotId("1")).thenReturn(Optional.of(failedPayment));
         when(paymentRepository.save(any(Payment.class))).thenReturn(failedPayment);
@@ -177,7 +177,7 @@ void processPayment_Success() {
     PaymentRequest request = new PaymentRequest("credit card","1234567890123456",
     "John Doe","12","2025","123","100.00");
     request.setSaveCard(false);
-    request.setTotalAmount("100.00");
+    request.setHourlyPrice("100.00");
 
     Payment savedPayment = new Payment();
     savedPayment.setSlotId("1");

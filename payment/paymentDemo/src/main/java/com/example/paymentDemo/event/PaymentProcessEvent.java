@@ -31,8 +31,8 @@ public class PaymentProcessEvent implements Serializable {
     private String cvc;
     @JsonProperty("saveCard")
     private boolean saveCard;
-    @JsonProperty("totalAmount")
-    private String totalAmount;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
     @JsonProperty("slot_id")
     private String slotId;
 
@@ -40,7 +40,7 @@ public class PaymentProcessEvent implements Serializable {
     public PaymentProcessEvent(String userId, String paymentMethod, 
                              String cardNumber, String cardHolder, String expiryMonth, 
                              String expiryYear, String cvc, boolean saveCard, 
-                             String totalAmount, String slotId) {
+                             String hourlyPrice, String slotId) {
         this.userId = userId;
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;
@@ -49,7 +49,7 @@ public class PaymentProcessEvent implements Serializable {
         this.expiryYear = expiryYear;
         this.cvc = cvc;
         this.saveCard = saveCard;
-        this.totalAmount = totalAmount;
+        this.hourlyPrice = hourlyPrice; 
         this.slotId = slotId;
     }
 } 

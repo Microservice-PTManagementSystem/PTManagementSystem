@@ -62,7 +62,7 @@ public class SlotConfirmedEventListener {
     request.setExpiryYear(payment.getExpiryYear());
     request.setCvc(payment.getCvc());
     request.setSaveCard(payment.isSaveCard());
-    request.setTotalAmount(payment.getTotalAmount());
+    request.setHourlyPrice(payment.getHourlyPrice());
     request.setSlotId(payment.getSlotId());
 
     return request;

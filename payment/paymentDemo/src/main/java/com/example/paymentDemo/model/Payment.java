@@ -37,8 +37,8 @@ public class Payment {
     private String cvc;
     @JsonProperty("saveCard")
     private boolean saveCard;
-    @JsonProperty("totalAmount")
-    private String totalAmount;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status; // PaymentStatus kullanılmalı 
@@ -123,12 +123,12 @@ public class Payment {
         this.saveCard = saveCard;
     }
 
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getHourlyPrice() {
+        return hourlyPrice;
     }
 
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setHourlyPrice(String hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
     }
 
     public PaymentStatus getStatus() {

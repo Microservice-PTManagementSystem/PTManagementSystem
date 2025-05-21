@@ -19,20 +19,20 @@ public class PaymentRequest {
     private String cvc;
     @JsonProperty("saveCard")
     private boolean saveCard;
-    @JsonProperty("totalAmount")
-    private String totalAmount;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
     private String slotId;
     private String userId;
 
     public PaymentRequest() {}
-    public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, String totalAmount) {
+    public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, String hourlyPrice) {
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;
         this.cardHolder = cardHolder;
         this.expiryMonth = expiryMonth;
         this.expiryYear = expiryYear;
         this.cvc = cvc;
-        this.totalAmount = totalAmount;
+        this.hourlyPrice = hourlyPrice;
     }  
     public String getSlotId() {
         return slotId;
@@ -83,11 +83,11 @@ public class PaymentRequest {
     public void setSaveCard(boolean saveCard) {
         this.saveCard = saveCard;
     }
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getHourlyPrice() {
+        return hourlyPrice;
     }
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setHourlyPrice(String hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
         
     }
     public String getUserId() {

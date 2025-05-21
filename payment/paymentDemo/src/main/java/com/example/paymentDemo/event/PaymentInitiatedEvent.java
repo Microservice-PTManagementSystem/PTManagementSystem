@@ -30,14 +30,14 @@ public class PaymentInitiatedEvent {
     private String cvc;
     @JsonProperty("saveCard")
     private boolean saveCard;
-    @JsonProperty("totalAmount")
-    private String totalAmount;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
     // getters and setters
 
     public PaymentInitiatedEvent(Payment saved) {
         //this.saved = saved;
         this.userId = userId;
-        this.totalAmount = saved.getTotalAmount();
+        this.hourlyPrice = hourlyPrice;
     } 
     
     public String getUserId() {
@@ -57,12 +57,12 @@ public class PaymentInitiatedEvent {
     }
 
 
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getHourlyPrice() {
+        return hourlyPrice;
     }
 
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setHourlyPrice(String hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
     }
 
     public String getPaymentMethod() {

@@ -39,7 +39,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setExpiryYear(request.getExpiryYear());
         payment.setCvc(request.getCvc());
         payment.setSaveCard(request.isSaveCard());
-        payment.setTotalAmount(request.getTotalAmount());
+        payment.setHourlyPrice(request.getHourlyPrice());
         payment.setStatus(PaymentStatus.PENDING);
 
         Payment saved = paymentRepository.save(payment);
@@ -108,7 +108,7 @@ public class PaymentServiceImpl implements PaymentService {
         payment.setExpiryYear(request.getExpiryYear());
         payment.setCvc(request.getCvc());
         payment.setSaveCard(request.isSaveCard());
-        payment.setTotalAmount(request.getTotalAmount());
+        payment.setHourlyPrice(request.getHourlyPrice());
         payment.setStatus(PaymentStatus.PENDING);
         payment.setSlotId(request.getSlotId());
 
@@ -126,7 +126,7 @@ public class PaymentServiceImpl implements PaymentService {
         result.setExpiryYear(request.getExpiryYear());
         result.setCvc(request.getCvc());
         result.setSaveCard(request.isSaveCard());
-        result.setTotalAmount(request.getTotalAmount());
+        result.setHourlyPrice(request.getHourlyPrice());
         result.setPaymentMethod(request.getPaymentMethod());
         result.setSlotId(savedPayment.getSlotId());
 
@@ -145,7 +145,7 @@ public class PaymentServiceImpl implements PaymentService {
     request.setExpiryYear(payment.getExpiryYear());
     request.setCvc(payment.getCvc());
     request.setSaveCard(payment.isSaveCard());
-    request.setTotalAmount(payment.getTotalAmount());
+    request.setHourlyPrice(payment.getHourlyPrice());
     request.setSlotId(payment.getSlotId()); // payment entity'de bu alan varsa
 
     return request;

@@ -18,8 +18,8 @@ public class PaymentSucceededEvent {
     private String slotId;
     @JsonProperty("user_id")
     private String userId;
-    @JsonProperty("totalAmount")
-    private String totalAmount;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
     @JsonProperty("paymentMethod")
     private String paymentMethod;
     @JsonProperty("timestamp")
@@ -44,11 +44,11 @@ public class PaymentSucceededEvent {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getHourlyPrice() {
+        return hourlyPrice;
     }
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setHourlyPrice(String hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
     }
     public String getPaymentMethod() {
         return paymentMethod;
@@ -69,7 +69,7 @@ public class PaymentSucceededEvent {
     
     public PaymentSucceededEvent(Payment payment) {
         this.slotId = payment.getSlotId();
-        this.totalAmount = payment.getTotalAmount();
+        this.hourlyPrice = payment.getHourlyPrice();
         this.paymentMethod = payment.getPaymentMethod();
         this.timestamp = LocalDateTime.now();
     }

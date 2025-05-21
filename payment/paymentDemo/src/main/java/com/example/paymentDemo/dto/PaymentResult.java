@@ -26,8 +26,8 @@ public class PaymentResult {
     private String cvc;
     @JsonProperty("saveCard")
     private boolean saveCard;
-    @JsonProperty("totalAmount")
-    private String totalAmount;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
     @JsonProperty("slot_id")
     private String slotId;
     private String paymentMethod;
@@ -89,11 +89,11 @@ public class PaymentResult {
     public void setSaveCard(boolean saveCard) { 
         this.saveCard = saveCard;
     }
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getHourlyPrice() {
+        return hourlyPrice;
     }
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setHourlyPrice(String hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
     }
     public String getSlotId() {
         return slotId;
