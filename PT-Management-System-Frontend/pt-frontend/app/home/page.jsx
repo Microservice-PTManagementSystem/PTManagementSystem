@@ -22,6 +22,7 @@ export default function Home() {
   const [paymentInfo,setPaymentInfo]=useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [getSavedCard,setGetSavedCard]=useState(false);
+  const [showSavedCardPopup, setShowSavedCardPopup] = useState(false);
   const router = useRouter();
   const { data: session } = useSession();  
 
@@ -46,6 +47,8 @@ export default function Home() {
       imageUrl: "/raphael.jpeg",
     },
   ];
+
+
 
   useEffect(() => {
     console.log( "use effect çalışıyor")
@@ -91,7 +94,7 @@ export default function Home() {
       });
 
       const reservationInfo = await reservationResponse.json();
-
+      //setPendingReservationInfo({ userId, slotId });
       /*if(reservationInfo.successs!="true"){
         return;
       }*/
@@ -121,20 +124,20 @@ export default function Home() {
       console.log("saved info",isSavedInfoAvailable)
 
       if (isSavedInfoAvailable) {
-
+       // setPaymentInfoData(paymentInfo);
         setShowPopup(true);
 
-        if(getSavedCard){
+        /*if(getSavedCard){
 
           const paymentCardInfo= await fetch(`http://localhost:8006/payment/getSavedCard`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            body:{
-              user_id:userId,
-              useSavedCard:true,
-            }
+            body: JSON.stringify({
+              user_id: userId,
+              useSavedCard: true,
+            }),
           });
   
           const paymentInfo = await paymentCardInfo.json();
@@ -149,7 +152,7 @@ export default function Home() {
           localStorage.setItem("userId", userId);
           localStorage.setItem("slotId", slotId);
           router.push("/payment");
-        }
+        }*/
 
       } else {
         
@@ -167,6 +170,39 @@ export default function Home() {
     setSelectedSlot(null);
   };
   
+  const handleUseSavedCard = async () => {
+    //const { userId, slotId } = pendingReservationInfo;
+    const userId = localStorage.getItem("userId");
+    const slotId = localStorage.getItem("slotId");
+    const paymentCardInfo = await fetch(`http://localhost:8006/payment/getSavedCard`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user_id: userId,
+        useSavedCard: true,
+      }),
+    });
+  
+    const result = await paymentCardInfo.json();
+  
+    if (result.ok) {
+      alert("Your transaction has been sent to the bank, you can check it from appointments section.");
+      router.push("/settings");
+    } else {
+      alert("Something went wrong while using saved card.");
+    }
+  
+    setShowPopup(false);
+  };
+  
+  const handleDeclineSavedCard = () => {
+    //const { userId, slotId } = pendingReservationInfo;
+  
+    localStorage.setItem("userId", userId);
+    localStorage.setItem("slotId", slotId);
+    setShowPopup(false);
+    router.push("/payment");
+  };
   
 
  
@@ -520,31 +556,23 @@ export default function Home() {
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-semibold mb-4">Kayıtlı Kart Bilgisi</h2>
-            <p>Kayıtlı kart bilgilerinizi kullanmak ister misiniz?</p>
+            <h2 className="text-xl text-gray-600 font-semibold mb-4">Kayıtlı kart bilgisi bulundu</h2>
+            <p className="text-gray-600">Kayıtlı kart bilgilerinizi kullanmak ister misiniz?</p>
             <div className="mt-4 flex justify-end gap-4">
               <button
-                onClick={() => {
-                  // Kart bilgilerini formda kullan
-                  console.log("Kayıtlı kart bilgileri kullanılacak.");
-                  setGetSavedCard(true)
-                  setShowPopup(false);
-                }}
+                onClick={handleUseSavedCard} // kayıtlı kartla öde
                 className="bg-blue-500 text-white px-4 py-2 rounded"
               >
                 Evet
               </button>
               <button
-                onClick={() => {
-                  
-                  console.log("Kullanıcı yeni kart bilgisi girecek.");
-                  setShowPopup(false);
-                }}
+                onClick={handleDeclineSavedCard} // yeni kart girilecek
                 className="bg-gray-300 px-4 py-2 rounded"
               >
                 Hayır
               </button>
             </div>
+
           </div>
         </div>
       )}
