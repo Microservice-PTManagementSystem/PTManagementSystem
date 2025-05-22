@@ -180,6 +180,19 @@ export default function CheckoutPage() {
   
       if (paymentData.successs) {
         alert("Your appointment has been confirmed.")
+        if(saveCard){
+          const updateInfo = await fetch(`http://localhost:8008/api/Auth/UpdatePaymentInfo/${userId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+  
+          if(updateInfo.ok){
+            alert("kartınız kaydedildi");
+          }
+
+        }
         router.push("/home")
        
       } else {

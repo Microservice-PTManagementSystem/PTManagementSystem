@@ -319,7 +319,7 @@ export default function Home() {
     
         <div className="relative h-[500px]">
           <Image
-            src="/gym_background.jpg"  
+            src="/assets/gym_background.jpg"  
             alt="Gym background"
             layout="fill"  
             objectFit="cover" 
