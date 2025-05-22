@@ -60,7 +60,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue PaymentInfoRequested() {
-        return new Queue("PaymentInfoRequested");
+        return new Queue("PaymentInfoRequested", true);
     }
 
     @Bean

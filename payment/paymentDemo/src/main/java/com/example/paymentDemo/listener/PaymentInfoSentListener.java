@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PaymentInfoSentListener {
 
-    @RabbitListener(queues = "PaymentInfoSent")
+   /* @RabbitListener(queues = "PaymentInfoSentEvent")
     public PaymentRequest handlePaymentInfoSent(PaymentInfoSentEvent event) {
         System.out.println("PaymentInfo alındı: " + event);
 
@@ -24,5 +24,5 @@ public class PaymentInfoSentListener {
         request.setUserId(event.getUserId());
 
         return request;
-    }
+    }*/
 }

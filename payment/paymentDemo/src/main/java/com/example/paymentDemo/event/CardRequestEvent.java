@@ -30,5 +30,11 @@ public class CardRequestEvent {
     public void setUseSavedCard(boolean useSavedCard) {
         this.useSavedCard = useSavedCard;
     }
-    
+    @Override
+    public String toString() {
+        return "CardRequestEvent{" +
+                "userId='" + userId + '\'' +
+                ", useSavedCard=" + useSavedCard +
+                '}';
+    }
 }

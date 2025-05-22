@@ -4,6 +4,7 @@ import com.example.paymentDemo.dto.PaymentRequest;
 import com.example.paymentDemo.dto.PaymentResult;
 import com.example.paymentDemo.model.Payment;
 import com.example.paymentDemo.model.PaymentStatus;
+import com.example.paymentDemo.event.*;
 import com.example.paymentDemo.service.PaymentService;
 import com.example.paymentDemo.repository.PaymentRepository;
 
@@ -79,29 +80,23 @@ public ResponseEntity<PaymentStatus> getStatus(@RequestParam String slotId) {
     }
     }
    @PostMapping("/getSavedCard")
-public ResponseEntity<String> getSavedCard(
-        @RequestBody CardRequestEvent request) {
+public ResponseEntity<String> isUseSavedCard(@RequestBody CardRequestEvent request) {
 
-    // Kayıtlı kartı kullanmak istemiyorsa direkt "fail" dön
-    if (!request.isUseSavedCard()) {
-        return ResponseEntity.ok("fail");
-    }
-
-    // Kart bilgisi alınmaya çalışılır
-    PaymentRequest paymentRequest = (PaymentRequest) rabbitTemplate.convertSendAndReceive(
+    System.out.println("GÖNDERİLEN EVENT: " + request);
+    
+    rabbitTemplate.convertAndSend(
         "user.exchange",
         "user.getSavedCard",
-        request.getUserId()
+        request
     );
 
-    if (paymentRequest == null) {
+    if (request.isUseSavedCard()) {
+        return ResponseEntity.ok("success");
+    } else {
         return ResponseEntity.ok("fail");
     }
-
-    return ResponseEntity.ok("success");
 }
 
 
-
+}
     
-}
