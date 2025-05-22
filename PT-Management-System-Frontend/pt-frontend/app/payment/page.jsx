@@ -154,7 +154,7 @@ export default function CheckoutPage() {
       alert("Appointment or user information missing.");
       return;
     }
-  
+  //user_id: storedUserId,
     try {
       const paymentResponse = await fetch("http://localhost:8006/payment/confirm", {
         method: "POST",
@@ -162,8 +162,7 @@ export default function CheckoutPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          slot_id: storedSlotId,
-          user_id: storedUserId,
+          success:true,
           paymentMethod: selectedPayment,
           cardNumber,
           cardHolder,
@@ -171,7 +170,8 @@ export default function CheckoutPage() {
           expiryYear,
           cvc,
           saveCard,
-          totalAmount: total.toString(),
+          hourly_pricet: total.toString(),
+          slot_id: storedSlotId,
           
         }),
       })

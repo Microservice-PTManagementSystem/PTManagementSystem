@@ -183,9 +183,10 @@ export default function Home() {
       }),
     });
   
-    const result = await paymentCardInfo.json();
-  
-    if (result.ok) {
+    //const result = await paymentCardInfo.json();
+    const result = await paymentCardInfo.text(); 
+
+    if (result.includes("success")) {
       alert("Your transaction has been sent to the bank, you can check it from appointments section.");
       router.push("/settings");
     } else {
@@ -198,8 +199,8 @@ export default function Home() {
   const handleDeclineSavedCard = () => {
     //const { userId, slotId } = pendingReservationInfo;
   
-    localStorage.setItem("userId", userId);
-    localStorage.setItem("slotId", slotId);
+    //localStorage.setItem("userId", userId);
+    //localStorage.setItem("slotId", slotId);
     setShowPopup(false);
     router.push("/payment");
   };
