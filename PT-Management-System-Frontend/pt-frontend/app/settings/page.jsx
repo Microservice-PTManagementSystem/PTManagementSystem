@@ -201,18 +201,18 @@ export default function SettingsPage() {
                   </div>
 
                   <div className="text-gray-600">
-                    <Item label="Name" value= ""/>
+                    <Item label="Name" value= {session?.user?.name}/>
                     <Item label="Date of birth" value=" " />
                     <Item label="Gender" value=" " />
-                    <Item label="Email" value={session?.user?.name} />
+                    <Item label="Email" value={session?.user?.email} />
                   </div>
                 </div>
 
                 <div className="text-gray-600">
                   <h2 className="text-lg font-semibold mb-4 text-gray-600">Account info</h2>
                   <Item label="User id" value={session?.user?.id}/>
-                  <Item label="Username" value="" />
-                  <Item label="Password" value="" />
+                  <Item label="Username" value={session?.user?.username} />
+                
                   
                 </div>
               </>
