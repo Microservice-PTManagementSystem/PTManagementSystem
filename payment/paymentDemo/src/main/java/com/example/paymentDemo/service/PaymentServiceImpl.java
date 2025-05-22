@@ -120,14 +120,14 @@ public class PaymentServiceImpl implements PaymentService {
                             request.getCardNumber().matches("\\d{16}");
         
         result.setSuccess(isValidCard);
-        result.setCardNumber(request.getCardNumber());
+        /*result.setCardNumber(request.getCardNumber());
         result.setCardHolder(request.getCardHolder());
         result.setExpiryMonth(request.getExpiryMonth());
         result.setExpiryYear(request.getExpiryYear());
         result.setCvc(request.getCvc());
         result.setSaveCard(request.isSaveCard());
         result.setHourlyPrice(request.getHourlyPrice());
-        result.setPaymentMethod(request.getPaymentMethod());
+        result.setPaymentMethod(request.getPaymentMethod());*/
         result.setSlotId(savedPayment.getSlotId());
 
         return result;
