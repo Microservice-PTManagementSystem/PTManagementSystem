@@ -10,68 +10,33 @@ public class SlotReservedEvent {
 
     @JsonProperty("user_id")
     private String userId;
-
+    
+    @JsonProperty("reservation_time")
+    private String reservationTime;
     @JsonProperty("timestamp")
     private String timestamp;
-
-    @JsonProperty("paymentMethod")
-    private String paymentMethod;
-
-    @JsonProperty("cardNumber")
-    private String cardNumber;
-
-    @JsonProperty("cardHolder")
-    private String cardHolder;
-
-    @JsonProperty("expiryMonth")
-    private String expiryMonth;
-
-    @JsonProperty("expiryYear")
-    private String expiryYear;
-
-    @JsonProperty("cvc")
-    private String cvc;
-
-    @JsonProperty("saveCard")
-    private boolean saveCard;
-
-    @JsonProperty("hourly_price")
-    private String hourlyPrice;
-    public Object Payment;
-    private boolean savedCardUse;
-    private boolean success;
     
 
     public SlotReservedEvent() {
     }   
 
-    public SlotReservedEvent(String slotId,String userId,String timestamp,String paymentMethod,
-    String cardNumber,String cardHolder,String expiryMonth,String expiryYear,String cvc,boolean saveCard,String hourlyPrice  ) {
+    public SlotReservedEvent(String slotId,String userId,String timestamp, String reservationTime ) {
         this.userId =userId;
         this.timestamp = timestamp;
         this.slotId=slotId;
-        this.paymentMethod=paymentMethod;
-        this.cardNumber=cardNumber;
-        this.cardHolder=cardHolder;
-        this.expiryMonth=expiryMonth;
-        this.expiryYear=expiryYear;
-        this.cvc=cvc;
-        this.saveCard=saveCard;
-        this.hourlyPrice=hourlyPrice;
-        this.paymentMethod=paymentMethod;
-        this.cardNumber=cardNumber;
-        this.cardHolder=cardHolder;
-        this.expiryMonth=expiryMonth;
-        this.expiryYear=expiryYear;
-        this.cvc=cvc;
-        this.saveCard=saveCard;
-
+        this.reservationTime = reservationTime;
 
     }
 
     
 
     // Getters and Setters
+    public String getReservationTime() {
+        return reservationTime;
+    }
+    public void setReservationTime(String reservationTime) {
+        this.reservationTime = reservationTime;
+    }
     public String getSlotId() {
         return slotId;
     }   
@@ -93,79 +58,5 @@ public class SlotReservedEvent {
         this.timestamp = timestamp;
     }
 
-    public String getPaymentMethod() {
-        return paymentMethod;
-    }
-
-    public void setPaymentMethod(String paymentMethod) {
-        this.paymentMethod = paymentMethod;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }       
-
-    public void setCardNumber(String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public String getCardHolder() {
-        return cardHolder;
-    }
-
-    public void setCardHolder(String cardHolder) {
-        this.cardHolder = cardHolder;
-    }
-
-    public String getExpiryMonth() {
-        return expiryMonth;
-    }
-
-    public void setExpiryMonth(String expiryMonth) {
-        this.expiryMonth = expiryMonth;
-    }
-
-    public String getExpiryYear() {
-        return expiryYear;
-    }
-
-    public void setExpiryYear(String expiryYear) {
-        this.expiryYear = expiryYear;
-    }
-
-    public String getCvc() {
-        return cvc;
-    }
-
-    public void setCvc(String cvc) {
-        this.cvc = cvc;
-    }
-
-    public boolean isSaveCard() {
-        return saveCard;
-    }
-
-    public void setSavedCard(boolean saveCard) {
-        this.saveCard = saveCard;
-    }  
-
-    public boolean isSavedCardUse() {
-        return savedCardUse;
-    }
-    public void setSaveCardUse(boolean savedCardUse) {
-        this.savedCardUse = savedCardUse;
-    } 
-
-    public String getHourlyPrice() {
-        return hourlyPrice;}
-
-    public void setHourlyPrice(String hourlyPrice) {
-        this.hourlyPrice = hourlyPrice;
-    }
-
-    public boolean success(boolean success){
-        return true;
-    }
-    
 
 }

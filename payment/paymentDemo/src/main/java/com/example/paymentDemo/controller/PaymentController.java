@@ -15,16 +15,22 @@ import org.springframework.web.bind.annotation.*;
 //import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import com.example.paymentDemo.dto.ConfirmRequest;
 import com.example.paymentDemo.dto.InitiateResponse;
 import com.example.paymentDemo.dto.PaymentRequestNew;
 import com.example.paymentDemo.dto.PaymentResponse;
-import com.example.paymentDemo.event.CardRequestEvent;
+import com.example.paymentDemo.event.PaymentInfoRequested;
+import com.example.paymentDemo.listener.PaymentInfoSentListener;
+import com.example.paymentDemo.util.PaymentInfoHolder;
 
 @RestController
 @RequestMapping("/payment")
@@ -34,12 +40,18 @@ public class PaymentController {
     private final Map<String, PaymentStatus> paymentStatusMap = new ConcurrentHashMap<>();
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
+    @Autowired
     private final RabbitTemplate rabbitTemplate;
+    private final PaymentInfoSentListener listener;
+    @Autowired
+    private PaymentInfoHolder paymentInfoHolder;
 
-    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository, RabbitTemplate rabbitTemplate) { 
+    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository, RabbitTemplate rabbitTemplate, PaymentInfoSentListener listener) { 
         this.paymentService = paymentService;
         this.paymentRepository = paymentRepository;
-        this.rabbitTemplate = rabbitTemplate; }
+        this.rabbitTemplate = rabbitTemplate; 
+        this.listener=listener;
+        }
 
 
     @GetMapping("/payment/health")
@@ -123,24 +135,29 @@ public ResponseEntity<PaymentStatus> getStatus(@RequestParam String slotId) {
         return ResponseEntity.notFound().build();
     }
     }
-   @PostMapping("/getSavedCard")
-public ResponseEntity<String> isUseSavedCard(@RequestBody CardRequestEvent request) {
+    @PostMapping("/getSavedCard")
+    public ResponseEntity<?> getSavedCard(@RequestBody CardRequest request) {
+        String userId = request.getUserId();
 
-    System.out.println("GÖNDERİLEN EVENT: " + request);
-    
-    rabbitTemplate.convertAndSend(
-        "user.exchange",
-        "user.getSavedCard",
-        request
-    );
+        // 1. Cevap bekleyecek yapıyı oluştur
+        CompletableFuture<PaymentInfoDto> future = paymentInfoHolder.createFuture(userId);
 
-    if (request.isUseSavedCard()) {
-        return ResponseEntity.ok("success");
-    } else {
-        return ResponseEntity.ok("fail");
+        // 2. .NET UserService'e istek event'i gönder
+        PaymentInfoRequested event = new PaymentInfoRequested(userId);
+        rabbitTemplate.convertAndSend("", "PaymentInfoRequested", event); // direct queue binding varsa exchange boş kalır
+
+        try {
+            // 3. .NET servisinden cevap bekle
+            PaymentInfoDto info = future.get(300, TimeUnit.SECONDS); // 30 saniye içinde cevap gelmeli
+            return ResponseEntity.ok(info);
+
+        } catch (TimeoutException e) {
+            return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("Kullanıcı servisi zamanında cevap vermedi.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bir hata oluştu: " + e.getMessage());
+        }
     }
 }
 
 
-}
     

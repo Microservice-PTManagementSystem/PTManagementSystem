@@ -1,11 +1,12 @@
-package com.example.paymentDemo.event;
+package com.example.paymentDemo.dto;
+
 import com.example.paymentDemo.dto.PaymentInfoDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PaymentInfoSentEvent {
     @JsonProperty("user_id")
     private String userId;
-    @JsonProperty("payment_info")
+    @JsonProperty("paymentInfo")
     private PaymentInfoDto paymentInfo;
 
     public PaymentInfoSentEvent() {

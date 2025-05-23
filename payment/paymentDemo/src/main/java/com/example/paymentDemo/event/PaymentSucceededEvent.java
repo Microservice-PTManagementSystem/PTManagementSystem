@@ -23,7 +23,9 @@ public class PaymentSucceededEvent {
     @JsonProperty("paymentMethod")
     private String paymentMethod;
     @JsonProperty("timestamp")
-    private LocalDateTime timestamp;
+    private String timestamp;
+    @JsonProperty("reservation_time")
+    private String reservationTime;
     private boolean success;
  
     public PaymentSucceededEvent(String slotId, boolean success) {
@@ -57,10 +59,10 @@ public class PaymentSucceededEvent {
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
     public boolean isSuccess() {
@@ -71,6 +73,6 @@ public class PaymentSucceededEvent {
         this.slotId = payment.getSlotId();
         this.hourlyPrice = payment.getHourlyPrice();
         this.paymentMethod = payment.getPaymentMethod();
-        this.timestamp = LocalDateTime.now();
+        
     }
 }
