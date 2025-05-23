@@ -26,6 +26,7 @@ namespace PTManagementSystem.Application.Consumers
 
         public async Task Handle(PaymentInfoRequested @event)
         {
+            Console.WriteLine($"[PaymentInfoRequestedConsumer] Payment info requested for userId: {@event.userId}");
             var paymentInfo = await _userRepository.GetPaymentInfoAsync(@event.userId);
             
             if (paymentInfo != null)

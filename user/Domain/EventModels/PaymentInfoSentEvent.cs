@@ -6,12 +6,12 @@ namespace PTManagementSystem.Domain.Events
 {
     public class PaymentInfoSentEvent
     {
-        public string KeycloakId { get; }
+        public string userId { get; }
         public PaymentInfoDto PaymentInfo { get; }
 
-        public PaymentInfoSentEvent(string keycloakId, PaymentInfoDto paymentInfo)
+        public PaymentInfoSentEvent(string userId, PaymentInfoDto paymentInfo)
         {
-            KeycloakId = keycloakId;
+            userId = userId;
             PaymentInfo = paymentInfo;
         }
     }

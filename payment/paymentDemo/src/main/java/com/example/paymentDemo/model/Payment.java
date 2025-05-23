@@ -1,5 +1,7 @@
 package com.example.paymentDemo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.*;
 import jakarta.persistence.*;
 
@@ -16,29 +18,37 @@ public class Payment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    private String id;
+    @JsonProperty("user_id")
     private String userId;
-    private Long slotId;
+    @JsonProperty("slot_id")
+    private String slotId;
+    @JsonProperty("paymentMethod")
     private String paymentMethod;
+    @JsonProperty("cardNumber")
     private String cardNumber;
+    @JsonProperty("cardHolder")
     private String cardHolder;
+    @JsonProperty("expiryMonth")
     private String expiryMonth;
+    @JsonProperty("expiryYear")
     private String expiryYear;
+    @JsonProperty("cvc")
     private String cvc;
+    @JsonProperty("saveCard")
     private boolean saveCard;
-    private String totalAmount;
-    private Long appointmentId;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus status; // PaymentStatus kullanılmalı 
 
 
     // Getter ve Setter'lar
-    public Long getId() {
+    public String getId() {
         return id;
     }
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
     public String getUserId() {
@@ -48,18 +58,12 @@ public class Payment {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    public Long getAppointmentId() {
-        return appointmentId;
-    }
-    public void setAppointmentId(Long appointmentId) {
-        this.appointmentId = appointmentId;
-    }
 
-    public Long getSlotId() {
+    public String getSlotId() {
         return slotId;
     }
 
-    public void setSlotId(Long slotId) {
+    public void setSlotId(String slotId) {
         this.slotId = slotId;
     }
 
@@ -119,12 +123,12 @@ public class Payment {
         this.saveCard = saveCard;
     }
 
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getHourlyPrice() {
+        return hourlyPrice;
     }
 
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setHourlyPrice(String hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
     }
 
     public PaymentStatus getStatus() {

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.example.paymentDemo.model.Payment;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,16 +14,23 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PaymentSucceededEvent {
+    @JsonProperty("slot_id")
     private String slotId;
+    @JsonProperty("user_id")
     private String userId;
-
-    private String totalAmount;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
+    @JsonProperty("paymentMethod")
     private String paymentMethod;
-    private LocalDateTime timestamp;
+    @JsonProperty("timestamp")
+    private String timestamp;
+    @JsonProperty("reservation_time")
+    private String reservationTime;
+    private boolean success;
  
-    public PaymentSucceededEvent(String slotId, String userId) {
+    public PaymentSucceededEvent(String slotId, boolean success) {
         this.slotId = slotId;
-        this.userId = userId;
+        this.success = success;
     }
 
     public String getslotId() {
@@ -38,29 +46,33 @@ public class PaymentSucceededEvent {
     public void setUserId(String userId) {
         this.userId = userId;
     }
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getHourlyPrice() {
+        return hourlyPrice;
     }
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setHourlyPrice(String hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
     }
     public String getPaymentMethod() {
         return paymentMethod;
     }
+
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
     }
-    public LocalDateTime getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
-    public void setTimestamp(LocalDateTime timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
+    }
+    public boolean isSuccess() {
+        return success;
     }
     
     public PaymentSucceededEvent(Payment payment) {
-        this.userId = payment.getUserId();
-        this.totalAmount = payment.getTotalAmount();
+        this.slotId = payment.getSlotId();
+        this.hourlyPrice = payment.getHourlyPrice();
         this.paymentMethod = payment.getPaymentMethod();
-        this.timestamp = LocalDateTime.now();
+        
     }
 }

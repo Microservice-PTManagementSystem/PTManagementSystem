@@ -8,17 +8,14 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, Long> {
+public interface PaymentRepository extends JpaRepository<Payment, String> {
 
-    // Payment'i userId ve appointmentId ile sorgulama
-    Optional<Payment> findByUserIdAndAppointmentId(String userId, Long appointmentId);
-    
     // Ödeme durumu ile ödeme sorgulama
     List<Payment> findByStatus(PaymentStatus status);
 
-    // Payment Id ile ödeme arama
-    Optional<Payment> findById(Long id);
-    //List<Payment> findByUserId(String userId);
+    // slot Id ile ödeme arama
+    Optional<Payment> findBySlotId(String slotId);
+    Optional<Payment> findByUserId(String userId);
 
 }
  

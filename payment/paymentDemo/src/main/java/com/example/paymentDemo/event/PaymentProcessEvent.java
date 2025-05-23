@@ -2,29 +2,45 @@ package com.example.paymentDemo.event;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Getter;
+import lombok.Setter;
 
 @Data
 @NoArgsConstructor
+@Getter
+@Setter
 public class PaymentProcessEvent implements Serializable {
-    private Long appointmentId;
+    @JsonProperty("user_id")
     private String userId;
+    @JsonProperty("paymentMethod")
     private String paymentMethod;
+    @JsonProperty("cardNumber")
     private String cardNumber;
+    @JsonProperty("cardHolder")
     private String cardHolder;
+    @JsonProperty("expiryMonth")
     private String expiryMonth;
+    @JsonProperty("expiryYear")
     private String expiryYear;
+    @JsonProperty("cvc")
     private String cvc;
+    @JsonProperty("saveCard")
     private boolean saveCard;
-    private String totalAmount;
-    private Long slotId;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
+    @JsonProperty("slot_id")
+    private String slotId;
 
     // Constructor for creating from appointment service data
-    public PaymentProcessEvent(Long appointmentId, String userId, String paymentMethod, 
+    public PaymentProcessEvent(String userId, String paymentMethod, 
                              String cardNumber, String cardHolder, String expiryMonth, 
                              String expiryYear, String cvc, boolean saveCard, 
-                             String totalAmount, Long slotId) {
-        this.appointmentId = appointmentId;
+                             String hourlyPrice, String slotId) {
         this.userId = userId;
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;
@@ -33,7 +49,7 @@ public class PaymentProcessEvent implements Serializable {
         this.expiryYear = expiryYear;
         this.cvc = cvc;
         this.saveCard = saveCard;
-        this.totalAmount = totalAmount;
+        this.hourlyPrice = hourlyPrice; 
         this.slotId = slotId;
     }
 } 

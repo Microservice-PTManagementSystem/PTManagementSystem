@@ -1,29 +1,45 @@
 package com.example.paymentDemo.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-@Data
-@NoArgsConstructor
-public class PaymentRequest {
-    private String paymentMethod;
-    private String cardNumber;
-    private String cardHolder;
-    private String expiryMonth;
-    private String expiryYear;
-    private String cvc;
-    private boolean saveCard;
-    private String totalAmount;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-    public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, boolean saveCard, String totalAmount) {
+import lombok.Data;
+@Data
+public class PaymentRequest {
+    @JsonProperty("paymentMethod")
+    private String paymentMethod;
+    @JsonProperty("cardNumber")
+    private String cardNumber;
+    @JsonProperty("cardHolder")
+    private String cardHolder;
+    @JsonProperty("expiryMonth")
+    private String expiryMonth;
+    @JsonProperty("expiryYear")
+    private String expiryYear;
+    @JsonProperty("cvc")
+    private String cvc;
+    @JsonProperty("saveCard")
+    private boolean saveCard;
+    @JsonProperty("hourly_price")
+    private String hourlyPrice;
+    private String slotId;
+    private String userId;
+
+    public PaymentRequest() {}
+    public PaymentRequest(String paymentMethod, String cardNumber, String cardHolder, String expiryMonth, String expiryYear, String cvc, String hourlyPrice) {
         this.paymentMethod = paymentMethod;
         this.cardNumber = cardNumber;
         this.cardHolder = cardHolder;
         this.expiryMonth = expiryMonth;
         this.expiryYear = expiryYear;
         this.cvc = cvc;
-        this.saveCard = saveCard;
-        this.totalAmount = totalAmount;
-    }   
+        this.hourlyPrice = hourlyPrice;
+    }  
+    public String getSlotId() {
+        return slotId;
+    }
+    public void setSlotId(String slotId) {
+        this.slotId = slotId;
+    }
 
     public String getPaymentMethod() {
         return paymentMethod;
@@ -67,11 +83,17 @@ public class PaymentRequest {
     public void setSaveCard(boolean saveCard) {
         this.saveCard = saveCard;
     }
-    public String getTotalAmount() {
-        return totalAmount;
+    public String getHourlyPrice() {
+        return hourlyPrice;
     }
-    public void setTotalAmount(String totalAmount) {
-        this.totalAmount = totalAmount;
+    public void setHourlyPrice(String hourlyPrice) {
+        this.hourlyPrice = hourlyPrice;
         
+    }
+    public String getUserId() {
+        return userId;
+    }
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }
