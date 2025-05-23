@@ -11,7 +11,8 @@ export default NextAuth({
         console.log("PROFILE CALLBACK:", profile); 
         return {
           id: profile.sub,
-          name: profile.preferred_username,
+          name: profile.name,
+          username:profile.preferred_username,
           email: profile.email,
         };
       },
@@ -25,6 +26,9 @@ export default NextAuth({
         token.accessToken = account.access_token;
         token.idToken = account.id_token;
         token.id = profile?.sub; 
+        token.name = profile?.name;
+        token.username = profile?.email?.split("@")[0] || "";
+        token.email = profile?.email;
       }
       console.log("JWT CALLBACK - PROFILE:", profile);
       console.log("JWT CALLBACK -:", token.accessToken);
@@ -35,6 +39,9 @@ export default NextAuth({
       session.accessToken = token.accessToken;
       session.idToken = token.idToken;
       session.user.id = token.id;
+      session.user.name = token.name;
+      session.user.username = token.username;
+      session.user.email = token.email;
       return session;
     },
         

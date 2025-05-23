@@ -1,11 +1,13 @@
 package com.example.paymentDemo.controller;
 
-import com.example.paymentDemo.dto.PaymentRequest;
-import com.example.paymentDemo.dto.PaymentResult;
+import com.example.paymentDemo.dto.*;
 import com.example.paymentDemo.model.Payment;
 import com.example.paymentDemo.model.PaymentStatus;
+import com.example.paymentDemo.event.*;
 import com.example.paymentDemo.service.PaymentService;
 import com.example.paymentDemo.repository.PaymentRepository;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,110 +15,149 @@ import org.springframework.web.bind.annotation.*;
 //import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+
+import com.example.paymentDemo.dto.ConfirmRequest;
+import com.example.paymentDemo.dto.InitiateResponse;
+import com.example.paymentDemo.dto.PaymentRequestNew;
+import com.example.paymentDemo.dto.PaymentResponse;
+import com.example.paymentDemo.event.PaymentInfoRequested;
+import com.example.paymentDemo.listener.PaymentInfoSentListener;
+import com.example.paymentDemo.util.PaymentInfoHolder;
 
 @RestController
 @RequestMapping("/payment")
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
+@Tag(name = "Payment API", description = "Ödeme işlemleri için endpointler")
 public class PaymentController {
-
+    private final Map<String, PaymentStatus> paymentStatusMap = new ConcurrentHashMap<>();
     private final PaymentService paymentService;
     private final PaymentRepository paymentRepository;
+    @Autowired
+    private final RabbitTemplate rabbitTemplate;
+    private final PaymentInfoSentListener listener;
+    @Autowired
+    private PaymentInfoHolder paymentInfoHolder;
 
-    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository) { 
+    public PaymentController(PaymentService paymentService, PaymentRepository paymentRepository, RabbitTemplate rabbitTemplate, PaymentInfoSentListener listener) { 
         this.paymentService = paymentService;
-        this.paymentRepository = paymentRepository; }
+        this.paymentRepository = paymentRepository;
+        this.rabbitTemplate = rabbitTemplate; 
+        this.listener=listener;
+        }
 
 
     @GetMapping("/payment/health")
     public String checkHealth() {
         return "Payment Service is running!";
     } 
-
+/*
     @PostMapping("/initiate")
     public ResponseEntity<Payment> initiatePayment(@RequestBody PaymentRequest request) {
         Payment payment = paymentService.initiatePayment(request);
         return ResponseEntity.ok(payment);
-    } //bunu düzelt
+    } */
+   @PostMapping("/initiate")
+public ResponseEntity<InitiateResponse> initiatePayment(@RequestBody PaymentRequestNew request) {
+    // basit bir validasyon örneği
+    if (!request.getCvc().matches("\\d{3}")) {
+        return ResponseEntity.badRequest().body(
+            new InitiateResponse(PaymentStatus.FAILED, "CVC must be exactly 3 digits.",
+                                        request.getSlotId(), request.getUserId())
+        );
+    }
+    paymentStatusMap.put(request.getSlotId(), PaymentStatus.COMPLETED);
+
+    return ResponseEntity.ok(
+        new InitiateResponse(PaymentStatus.COMPLETED, "Payment initiated successfully.",
+                                    request.getSlotId(), request.getUserId())
+    );
+}
 
     @PostMapping("/confirm")
-    public ResponseEntity<PaymentResult> confirmPayment(@RequestBody PaymentResult result) {
-        Payment payment = paymentService.confirmPayment(result);
-        PaymentResult response = new PaymentResult();
-        response.setSuccess(payment.getStatus() == PaymentStatus.COMPLETED);
-        response.setMessage(payment.getStatus() == PaymentStatus.COMPLETED ? 
-            "Payment succeeded" : "Payment failed");
-        return ResponseEntity.ok(response);
+    public ResponseEntity<PaymentResponse> confirmPayment(@RequestBody ConfirmRequest request) {
+        boolean isPaymentSuccessful = !request.getCardNumber().endsWith("0");
+
+        if (!request.getCvc().matches("\\d{3}")) {
+            return ResponseEntity.badRequest().body(
+                new PaymentResponse(PaymentStatus.FAILED, "CVV must be exactly 3 digits.")
+            );
+        }
+
+        // Eğer geçerliyse başarılı döner
+        return ResponseEntity.ok(
+            new PaymentResponse(PaymentStatus.COMPLETED, "Payment confirmed successfully.")
+        );
+    
     }
 
-    @PostMapping("/retry/{paymentId}")
-    public ResponseEntity<Payment> retryPayment(@PathVariable Long paymentId) {
-        Payment payment = paymentService.retryPayment(paymentId);
-        return ResponseEntity.ok(payment);
+    @PostMapping("/retry")
+    public ResponseEntity<PaymentResponse> retryPayment(@RequestBody ConfirmRequest request) {
+        String slotId = request.getSlotId();
+        PaymentStatus currentStatus = paymentStatusMap.get(slotId);
+
+    if (currentStatus == null) {
+        return ResponseEntity.badRequest().body(
+            new PaymentResponse(PaymentStatus.FAILED, "No payment attempt found for slotId: " + slotId)
+        );
     }
 
-    @PostMapping("/refund/{paymentId}")
-    public ResponseEntity<Payment> issueRefund(@PathVariable Long paymentId) {
-        Payment payment = paymentService.issueRefund(paymentId);
-        return ResponseEntity.ok(payment);
+    if (currentStatus == PaymentStatus.COMPLETED) {
+        return ResponseEntity.badRequest().body(
+            new PaymentResponse(PaymentStatus.FAILED, "Payment already completed for slotId: " + slotId)
+        );
     }
-    @GetMapping("/status/{id}")
-public ResponseEntity<PaymentStatus> getStatus(@PathVariable Long id) {
+
+    if (!request.getCvc().matches("\\d{3}")) {
+        return ResponseEntity.badRequest().body(
+            new PaymentResponse(PaymentStatus.FAILED, "Retry failed: CVV must be exactly 3 digits.")
+        );
+    }
+
+    paymentStatusMap.put(slotId, PaymentStatus.COMPLETED);
+    return ResponseEntity.ok(
+        new PaymentResponse(PaymentStatus.COMPLETED, "Retry succeeded: Payment confirmed.")
+    );
+    }
+    @GetMapping("/status")
+public ResponseEntity<PaymentStatus> getStatus(@RequestParam String slotId) {
     try {
-        PaymentStatus status = paymentService.getStatus(id);
+        PaymentStatus status = paymentService.getStatus(slotId);
         return ResponseEntity.ok(status);
     } catch (IllegalArgumentException e) {
         return ResponseEntity.notFound().build();
     }
     }
-    @PostMapping("/api/paymentConfirm")
-public ResponseEntity<Payment> handleFrontendPayment(@RequestBody Map<String, Object> payload) {
-    String method = (String) payload.get("paymentMethod");
-    String cardNumber = (String) payload.get("cardNumber");
-    String cardHolder = (String) payload.get("cardHolder");
-    String expiryMonth = (String) payload.get("expiryMonth");
-    String expiryYear = (String) payload.get("expiryYear");
-    String cvc = (String) payload.get("cvc");
-    boolean saveCard = Boolean.parseBoolean(payload.get("saveCard").toString());
-    double amount = Double.parseDouble(payload.get("totalAmount").toString());
+    @PostMapping("/getSavedCard")
+    public ResponseEntity<?> getSavedCard(@RequestBody CardRequest request) {
+        String userId = request.getUserId();
 
-    // Örnek sabit değerler (geliştirme sırasında), sonra gerçek verilerle değiştirilmeli
-    String userId = "user-frontend"; // frontend'den alınması önerilir
-    Long appointmentId = 1L; // frontend'e eklenebilir
+        // 1. Cevap bekleyecek yapıyı oluştur
+        CompletableFuture<PaymentInfoDto> future = paymentInfoHolder.createFuture(userId);
 
-    // PaymentRequest oluştur
-    PaymentRequest request = new PaymentRequest(method,cardNumber,cardHolder,expiryMonth,expiryYear,cvc,saveCard,String.valueOf(amount));
+        // 2. .NET UserService'e istek event'i gönder
+        PaymentInfoRequested event = new PaymentInfoRequested(userId);
+        rabbitTemplate.convertAndSend("", "PaymentInfoRequested", event); // direct queue binding varsa exchange boş kalır
 
-    // İşleme başlat
-    Payment payment = paymentService.initiatePayment(request);
+        try {
+            // 3. .NET servisinden cevap bekle
+            PaymentInfoDto info = future.get(300, TimeUnit.SECONDS); // 30 saniye içinde cevap gelmeli
+            return ResponseEntity.ok(info);
 
-    // Varsayalım işlem başarılı (demo için)
-    PaymentResult result = new PaymentResult();
-    result.setPaymentId(payment.getId()); 
-
-    // Onayla ve sonucu dön
-    return ResponseEntity.ok(paymentService.confirmPayment(result));
+        } catch (TimeoutException e) {
+            return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body("Kullanıcı servisi zamanında cevap vermedi.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Bir hata oluştu: " + e.getMessage());
+        }
+    }
 }
-
-    /*
-    @GetMapping("/user")
-    public ResponseEntity<List<Payment>> getPaymentsForUser(@AuthenticationPrincipal Jwt jwt) {
-    String userId = jwt.getClaimAsString("sub"); // Keycloak'tan sub ID
-    List<Payment> payments = paymentService.getPaymentsByUserId(userId);
-    return ResponseEntity.ok(payments);
-    }*/
-   /* @GetMapping("/{paymentId}")
-public ResponseEntity<Payment> getPaymentById(@PathVariable Long paymentId) {
-    return ResponseEntity.ok(
-        paymentRepository.findById(paymentId)
-            .orElseThrow(() -> new IllegalArgumentException("Payment not found"))
-    );
-}
-@GetMapping("/status")
-public ResponseEntity<List<Payment>> getPaymentsByStatus(@RequestParam PaymentStatus status) {
-    return ResponseEntity.ok(paymentRepository.findByStatus(status));
-}
-*/
 
 
     
-}

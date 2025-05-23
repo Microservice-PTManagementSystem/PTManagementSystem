@@ -92,66 +92,6 @@ export default function CheckoutPage() {
   const total = price + deliveryCost
 
 
-  /*const handleConfirmAppointment = async () => {
-    if (!selectedSlot?.slot_id || !session?.user?.id) {
-      alert("Appointment or user information missing.");
-      return;
-    }
-  
-    try {
-      
-      const paymentResponse = await fetch("http://localhost:8006/payment-controller/payment/confirm", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          paymentId:0,
-          success:true,
-          message:"message",
-          cardNumber:cardNumber,
-          cardHolder:cardHolder,
-          expiryMonth:expiryMonth,
-          expiryYear:expiryYear,
-          cvc:cvc,
-          saveCard:saveCard,
-          totalAmount: total,
-          user_id: session.user.id,
-          slot_id: selectedSlot.slot_id,
-          paymentMethod: selectedPayment,
-        }),
-      });
-  
-      const paymentData = await paymentResponse.json();
-  
-      if (paymentData.success) {
-        
-        const reservationResponse = await fetch("http://localhost:8004/make_reservation/make_reservation", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            slot_id: selectedSlot.slot_id,
-            user_id: session.user.id,
-            timestamp: new Date().toISOString(),
-          }),
-        });
-  
-        const reservationData = await reservationResponse.json();
-        alert("Your appointment has been confirmed.");
-        setShowModal(false);
-        setChangeActive(false);
-        setSelectedSlot(null);
-  
-      } else {
-        alert("Payment failed: " + (paymentData.message || "Please try again."));
-      }
-    } catch (error) {
-      console.error("Error during confirmation:", error);
-      alert("An error occurred while confirming your appointment.");
-    }
-  };*/
   const validateField = (name, value) => {
     let error = "";
   
@@ -216,12 +156,15 @@ export default function CheckoutPage() {
     }
   
     try {
-      const paymentResponse = await fetch("http://localhost:8004/make_reservation/make_reservation", {
+      const paymentResponse = await fetch("http://localhost:8006/payment/confirm", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          slot_id: storedSlotId,
+          user_id: storedUserId,
+          paymentMethod: selectedPayment,
           cardNumber,
           cardHolder,
           expiryMonth,
@@ -229,10 +172,7 @@ export default function CheckoutPage() {
           cvc,
           saveCard,
           totalAmount: total.toString(),
-          paymentMethod: selectedPayment,
-          slot_id: storedSlotId,
-          user_id: storedUserId,
-          timestamp: new Date().toISOString(),
+          
         }),
       })
   
@@ -240,6 +180,19 @@ export default function CheckoutPage() {
   
       if (paymentData.successs) {
         alert("Your appointment has been confirmed.")
+        if(saveCard){
+          const updateInfo = await fetch(`http://localhost:8008/api/Auth/UpdatePaymentInfo/${userId}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          })
+  
+          if(updateInfo.ok){
+            alert("kartınız kaydedildi");
+          }
+
+        }
         router.push("/home")
        
       } else {
