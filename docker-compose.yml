@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
    rabbitmq:
       image: "rabbitmq:3-management"
@@ -13,45 +15,24 @@ services:
       networks:
          - mynetwork
 
-   # mysql:
-   #    image: mysql:8.0
-   #    container_name: mysql
-   #    restart: always
-   #    environment:
-   #       MYSQL_DATABASE: keycloakdb
-   #       MYSQL_USER: keycloakuser
-   #       MYSQL_PASSWORD: keycloakpass
-   #       MYSQL_ROOT_PASSWORD: rootpass
-   #    volumes:
-   #       - mysql_data:/var/lib/mysql
-   #    ports:
-   #       - "3306:3306"
-   #    networks:
-   #       - mynetwork
-
    keycloak:
       image: quay.io/keycloak/keycloak:24.0.3
       container_name: keycloak
       command: start-dev --import-realm --verbose
-      # depends_on:
-      #    mysql:
-      #       condition: service_started
       volumes:
          - ./keycloak-realm:/opt/keycloak/data/import
-          - ./keycloak-event-listener/event-listener-http-jar-with-dependencies.jar:/opt/keycloak/providers/event-listener-http.jar
-
+         - ./keycloak-event-listener/event-listener-http-jar-with-dependencies.jar:/opt/keycloak/providers/event-listener-http.jar
       environment:
-         KC_DB: mysql
-         KC_DB_URL: jdbc:mysql://keycloakdb.cnm2memqkoty.us-east-2.rds.amazonaws.com:3306/keycloakdb
-         KC_DB_USERNAME: admin
-         KC_DB_PASSWORD: ptmanagementAws
-         KEYCLOAK_ADMIN: sezenhuddam@gmail.com
-         KEYCLOAK_ADMIN_PASSWORD: admin
+         KC_DB: ${KC_DB}
+         KC_DB_URL: ${KC_DB_URL}
+         KC_DB_USERNAME: ${KC_DB_USERNAME}
+         KC_DB_PASSWORD: ${KC_DB_PASSWORD}
+         KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+         KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
          KEYCLOAK_HTTP_ENABLED: true
-         KEYCLOAK_DB_URL: jdbc:mysql://keycloakdb.cnm2memqkoty.us-east-2.rds.amazonaws.com:3306/keycloakdb
+         KEYCLOAK_DB_URL: ${KC_DB_URL}
          KC_SPI_EVENTS_LISTENER_PROVIDERS: +http
          KC_EVENTS_LISTENERS: http
-
       ports:
          - "8080:8080"
       networks:
@@ -66,13 +47,13 @@ services:
          rabbitmq:
             condition: service_healthy
       environment:
-         - RABBITMQ_HOST=rabbitmq
-         - SQLSERVER__ConnectionString=Driver={ODBC Driver 18 for SQL Server};Server=tcp:ptmanagement.database.windows.net,1433;Database=notificationDB;Uid=ptadmin;Pwd=Akdenizcse07;Encrypt=yes;TrustServerCertificate=no;Connection Timeout=30;
- 
+         RABBITMQ_HOST: ${RABBITMQ_HOST}
+         SQLSERVER__ConnectionString: ${SQLSERVER_CONNECTIONSTRING}
       ports:
          - "8002:8000"
       networks:
          - mynetwork
+
    user:
       build:
          context: ./user
@@ -84,20 +65,19 @@ services:
          keycloak:
             condition: service_started
       environment:
-         - MongoDB__ConnectionString=mongodb+srv://userService:ptUser@userservice.fue8ynf.mongodb.net/?retryWrites=true&w=majority&appName=userService
-         - MongoDB__DatabaseName=UserDB
-         - RABBITMQ_HOST=rabbitmq
-         - KEYCLOAK_URL=http://keycloak:8080
-         - KEYCLOAK_REALM=ptmanagement
-         - KEYCLOAK_CLIENT_ID=ptmanagement_clientId
-         - KEYCLOAK_CLIENT_SECRET=gJ3meMw0tG6ZuPqqxa6Qdocf8m6MdccM
-         - ASPNETCORE_ENVIRONMENT=Development
-         - ConnectionStrings__DefaultConnection=Server=keycloakdb.cnm2memqkoty.us-east-2.rds.amazonaws.com:Port=3306;Database=keycloakdb;User=admin;Password=ptmanagementAws;
+         MongoDB__ConnectionString: ${MONGODB_CONNECTIONSTRING}
+         MongoDB__DatabaseName: ${MONGODB_DATABASENAME}
+         RABBITMQ_HOST: ${RABBITMQ_HOST}
+         KEYCLOAK_URL: ${KEYCLOAK_URL}
+         KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+         KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+         KEYCLOAK_CLIENT_SECRET: ${KEYCLOAK_CLIENT_SECRET}
+         ASPNETCORE_ENVIRONMENT: Development
+         ConnectionStrings__DefaultConnection: ${DEFAULT_CONNECTION_STRING}
       ports:
          - "8008:8080"
       networks:
          - mynetwork
-
 
    appointment:
       build:
@@ -108,10 +88,10 @@ services:
          rabbitmq:
             condition: service_healthy
       environment:
-         - RABBITMQ_HOST=rabbitmq
-         - MongoDB__ConnectionString=mongodb+srv://dorukyelken:XBBoy9I7ZoWnp887@cluster0.hupvg8a.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
-         - MongoDB__AppointmentDBName=AppointmentDB
-         - MongoDB__SlotDBName=SlotDB
+         RABBITMQ_HOST: ${RABBITMQ_HOST}
+         MongoDB__ConnectionString: ${MONGODB_APPOINTMENT}
+         MongoDB__AppointmentDBName: ${MONGODB_APPOINTMENT_DB}
+         MongoDB__SlotDBName: ${MONGODB_SLOT_DB}
       ports:
          - "8004:8000"
       networks:
@@ -126,7 +106,7 @@ services:
          rabbitmq:
             condition: service_healthy
       environment:
-         - RABBITMQ_HOST=rabbitmq
+         RABBITMQ_HOST: ${RABBITMQ_HOST}
       ports:
          - "8006:8080"
       networks:
@@ -135,5 +115,6 @@ services:
 networks:
    mynetwork:
       driver: bridge
+
 volumes:
    mysql_data:
